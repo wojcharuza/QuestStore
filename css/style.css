@@ -1,0 +1,50 @@
+.navbar-collapse {
+    justify-content: flex-end;
+}
+
+.header {
+    position: relative;
+    background-image: url('../images/space.jpg');
+
+    background-size: cover;
+    background-position: center;
+}
+
+.navbar{
+    background-color: #1f2833;
+    color: white;
+    text-transform: uppercase;
+}
+
+.overlay{
+    position: absolute;
+    min-height: 100%;
+    min-width: 100%;
+    left: 0;
+    top: 0;
+    background: rgba(244, 244, 244, 0.2);
+}
+
+.description {
+    position: absolute;
+    top: 30%;
+    margin: auto;
+    padding: 2em;
+}
+.description h1 {
+    color: #ffffff;
+}
+.description p {
+    color:#666;
+    font-size: 20px;
+    width: 50%;
+    line-height: 1.5;
+}
+
+.navbar a:hover{
+    color: #4DDABD;
+}
+.navbar a{
+    color: white;
+}
+
