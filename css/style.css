@@ -107,3 +107,30 @@ body {
 .navbar-brand a{
     text-align: right;
 }
+
+.card-body {
+    background: #fff;
+}
+
+.accordion {
+    width: 100%;
+}
+
+.container {
+    padding-top: 10%;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.accordion .btn {
+    background: rgba(255, 255, 255, 0);
+    color: #fff;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.accordion .btn:hover {
+    color: #4DDABD;
+}
