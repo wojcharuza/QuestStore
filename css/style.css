@@ -72,3 +72,11 @@ body {
     color: white;
 }
 
+.navbar-toggler{
+    background-color: white;
+}
+
+.navbar-brand a{
+    text-align: right;
+}
+
