@@ -104,6 +104,24 @@ body {
     background-color: white;
 }
 
-.navbar-brand a{
+
+footer .navbar {
+    justify-content: flex-end;
+}
+
+footer {
     text-align: right;
+}
+
+.card{
+    width: 100%;
+    padding: 0;
+}
+
+.card-header{
+    padding: 0;
+}
+
+#accordion{
+    width: 50%;
 }
