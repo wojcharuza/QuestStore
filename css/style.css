@@ -104,9 +104,15 @@ body {
     background-color: white;
 }
 
-.navbar-brand a{
+
+footer .navbar {
+    justify-content: flex-end;
+}
+
+footer {
     text-align: right;
 }
+
 
 .card-body {
     background: #fff;
