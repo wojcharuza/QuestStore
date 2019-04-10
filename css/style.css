@@ -99,3 +99,11 @@ body {
 .btn:hover {
     background: #3aa28a;
 }
+
+.navbar-toggler{
+    background-color: white;
+}
+
+.navbar-brand a{
+    text-align: right;
+}
