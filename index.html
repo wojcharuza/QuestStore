@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<<<<<<< HEAD
   <meta charset="UTF-8">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link rel="stylesheet"
+        href="http://fonts.googleapis.com/css?family=Comfortaa:100,300,400">
+  <link rel="stylesheet" href="fonts/Equinox.woff"/>
   <title>Title</title>
 </head>
 <body>
@@ -15,15 +17,6 @@
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div class="collapse navbar-collapse " id="navbarSupportedContent">     <ul class="navbar-nav mr-4">
-    <li class="nav-item">
-      <a class="nav-link " data-value="Login" href="#">Login</a></li>
-    <li class="nav-item">
-      <a class="nav-link " data-value="Gallery" href="#">Gallery</a></li>
-    <li class="nav-item">
-      <a class="nav-link " data-value="contact" href="#">Contact</a></li>
-  </ul>
-  </div>
 </nav>
 <!-- header -->
 <header class="header ">
@@ -31,18 +24,32 @@
   <div class="container">
     <div class="description ">
       <h1>
-        Hello ,Welcome To My official Website
-        <p>
-          cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-          proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        Hello ,Welcome To Quest Store!
       </h1>
+      <form>
+        <div class="form-group">
+          <label for="email">Email address:</label>
+          <input type="email" class="form-control" id="email">
+        </div>
+        <div class="form-group">
+          <label for="pwd">Password:</label>
+          <input type="password" class="form-control" id="pwd">
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+      </form>
     </div>
   </div>
 </header>
 
-<div class="footer text-center">
-  <p class="small">Footer</p>
-</div>
+
+
+<nav class="navbar navbar-expand-sm fixed-bottom ">
+  <a class="navbar-brand" href="#">QUEST STORE</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+</nav>
+
 
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
