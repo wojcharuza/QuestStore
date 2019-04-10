@@ -113,15 +113,30 @@ footer {
     text-align: right;
 }
 
-.card{
+
+.card-body {
+    background: #fff;
+}
+
+.accordion {
     width: 100%;
-    padding: 0;
 }
 
-.card-header{
-    padding: 0;
+.container {
+    padding-top: 10%;
 }
 
-#accordion{
-    width: 50%;
+.card {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.accordion .btn {
+    background: rgba(255, 255, 255, 0);
+    color: #fff;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.accordion .btn:hover {
+    color: #4DDABD;
 }
