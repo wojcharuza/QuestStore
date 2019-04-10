@@ -140,3 +140,8 @@ footer {
 .accordion .btn:hover {
     color: #4DDABD;
 }
+
+.card-body div .btn-primary{
+    background-color: #4DDABD;
+    color: white;
+}
