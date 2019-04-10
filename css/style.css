@@ -33,6 +33,9 @@ body {
     background-position: center;
 }
 
+.header h1 {
+}
+
 .navbar{
     background-color: #1f2833;
     color: white;
@@ -46,7 +49,7 @@ body {
     min-width: 100%;
     left: 0;
     top: 0;
-    background: rgba(244, 244, 244, 0.2);
+    background: rgba(244, 244, 244, 0.1);
 }
 
 .description {
@@ -56,7 +59,10 @@ body {
     padding: 2em;
 }
 .description h1 {
-    color: #ffffff;
+    color: #fff;
+    font-family: Equinox, sans-serif;
+    text-transform: uppercase;
+    font-weight: bold;
 }
 .description p {
     color: #ffffff;
@@ -72,3 +78,24 @@ body {
     color: white;
 }
 
+.form-inline {
+    padding: 20px;
+}
+
+.form-group {
+    width: 50%;
+}
+
+.form-group label {
+    font-size: 20px;
+    color: #4DDABD;
+}
+
+.btn {
+    background: #4DDABD;
+    border: 0px ;
+}
+
+.btn:hover {
+    background: #3aa28a;
+}
