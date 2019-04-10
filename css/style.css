@@ -5,7 +5,10 @@ html {
 body {
     height: 100%;
     padding-bottom:30px;
+    font: 300 16px/22px "Comfortaa", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
 }
+
 
 .footer {
     position: fixed;
@@ -34,6 +37,7 @@ body {
     background-color: #1f2833;
     color: white;
     text-transform: uppercase;
+    font-family: Equinox, sans-serif;
 }
 
 .overlay{
@@ -55,7 +59,7 @@ body {
     color: #ffffff;
 }
 .description p {
-    color:#666;
+    color: #ffffff;
     font-size: 20px;
     width: 50%;
     line-height: 1.5;
