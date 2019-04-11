@@ -186,3 +186,12 @@ footer {
 .accordion .card {
     background: rgba(255, 255, 255, 0.4);
 }
+
+.level-changer p {
+    display: inline-block;
+    color: white !important;
+}
+
+.mySlider{
+    background-color: black;
+}
