@@ -27,7 +27,7 @@ body {
 
 .header {
     position: relative;
-    background-image: url('../images/space.jpg');
+    background-image: url('../images/space_mirror.jpg');
 
     background-size: cover;
     background-position: center;
@@ -54,9 +54,9 @@ body {
 
 .description {
     position: absolute;
-    top: 30%;
     margin: auto;
-    padding: 2em;
+    padding: 1em;
+
 }
 .description h1 {
     color: #fff;
@@ -92,8 +92,9 @@ body {
 }
 
 .btn {
-    background: #4DDABD;
+    background: #4ddabd;
     border: 0px ;
+    margin-top: 10px;
 }
 
 .btn:hover {
