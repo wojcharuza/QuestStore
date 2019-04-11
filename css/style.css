@@ -6,6 +6,7 @@ body {
     height: 100%;
     font: 300 16px/22px "Comfortaa", "Helvetica Neue", Helvetica, Arial, sans-serif;
     background-image: url('../images/space_mirror.jpg');
+    background-size: cover;
 }
 .card-style {
     border-radius: 10%;
