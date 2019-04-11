@@ -115,7 +115,7 @@ footer {
 }
 
 
-.card-body {
+.card-body-edit {
     background: #fff;
 }
 
@@ -143,5 +143,10 @@ footer {
 }
 
 
+.form-group-edit{
+    width: 70%;
+}
 
-
+.control-label-edit{
+    width: 100%;
+}
