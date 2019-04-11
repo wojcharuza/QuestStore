@@ -131,6 +131,12 @@ footer {
 }
 
 
+
+.card-body-edit {
+    background: #fff;
+}
+
+
 .accordion {
     width: 100%;
 }
@@ -172,5 +178,10 @@ footer {
 
 
 
+.form-group-edit{
+    width: 70%;
+}
 
-
+.control-label-edit{
+    width: 100%;
+}
