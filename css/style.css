@@ -17,6 +17,10 @@ body {
     font-size: 10px;
 }
 
+.card-small {
+    width: 100px;
+}
+
 
 .gold-card-style{
     border-radius: 10%;
@@ -150,7 +154,7 @@ footer {
 
 .accordion .btn-link {
     background: rgba(255, 255, 255, 0);
-    color: #fff;
+    color: #ffffff;
     font-size: 20px;
     text-decoration: none;
 }
@@ -179,9 +183,14 @@ footer {
 
 
 .form-group-edit{
-    width: 70%;
+    width: 100%;
 }
 
 .control-label-edit{
     width: 100%;
+}
+
+
+.accordion .card {
+    background: rgba(255, 255, 255, 0.4);
 }
