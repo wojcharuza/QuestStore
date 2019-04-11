@@ -152,6 +152,23 @@ footer {
     color: #4DDABD;
 }
 
+.navbar-brand {
+    font-size: 25px;
+}
+
+.card-title-centered {
+    text-align: center;
+}
+
+.row {
+    justify-content: center;
+}
+
+.title {
+    text-align: center;
+    color: #fff;
+}
+
 
 
 
