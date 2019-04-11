@@ -7,6 +7,27 @@ body {
     font: 300 16px/22px "Comfortaa", "Helvetica Neue", Helvetica, Arial, sans-serif;
     background-image: url('../images/space_mirror.jpg');
 }
+.card-style {
+    border-radius: 10%;
+    margin: 10px;
+    width: 20rem;
+    color: white;
+    background-color: #1f2833;
+    font-size: 10px;
+}
+
+
+.gold-card-style{
+    border-radius: 10%;
+    margin: 10px;
+    width: 20rem;
+    color: white;
+    background-color: #1f2833;
+    border-style: groove;
+    border-color: goldenrod;
+    font-size: 10px;
+}
+
 
 
 .footer {
@@ -109,10 +130,6 @@ footer {
 }
 
 
-.card-body {
-    background: #fff;
-}
-
 .accordion {
     width: 100%;
 }
@@ -122,9 +139,7 @@ footer {
     padding-bottom: 10%;
 }
 
-.card {
-    background: rgba(255, 255, 255, 0.5);
-}
+
 
 .accordion .btn-link {
     background: rgba(255, 255, 255, 0);
