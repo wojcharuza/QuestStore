@@ -14,6 +14,16 @@ body {
     background-color: #1f2833;
 
 }
+.gold-card-style{
+    border-radius: 10%;
+    margin: 10px;
+    width: 20rem;
+    color: white;
+    background-color: #1f2833;
+    border-style: groove;
+    border-color: goldenrod;
+
+}
 
 .footer {
     position: fixed;
