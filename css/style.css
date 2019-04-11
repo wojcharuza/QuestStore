@@ -63,14 +63,7 @@ body {
     font-family: Equinox, sans-serif;
 }
 
-.overlay{
-    position: absolute;
-    min-height: 100%;
-    min-width: 100%;
-    left: 0;
-    top: 0;
-    background: rgba(244, 244, 244, 0.1);
-}
+
 
 .description {
     position: absolute;
@@ -189,7 +182,6 @@ footer {
 .control-label-edit{
     width: 100%;
 }
-
 
 .accordion .card {
     background: rgba(255, 255, 255, 0.4);
