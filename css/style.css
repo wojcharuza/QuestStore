@@ -130,18 +130,17 @@ footer {
     background: rgba(255, 255, 255, 0.5);
 }
 
-.accordion .btn {
+.accordion .btn-link {
     background: rgba(255, 255, 255, 0);
     color: #fff;
     font-size: 20px;
     text-decoration: none;
 }
 
-.accordion .btn:hover {
+.accordion .btn-link:hover {
     color: #4DDABD;
 }
 
-.card-body div .btn-primary{
-    background-color: #4DDABD;
-    color: white;
-}
+
+
+
