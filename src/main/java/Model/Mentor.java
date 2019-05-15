@@ -7,7 +7,7 @@ public class Mentor {
     private String lastName;
     private String password;
     private  int id;
-    private int classID;
+
 
 
     public Mentor (Builder builder){
