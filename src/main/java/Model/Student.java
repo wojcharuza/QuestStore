@@ -1,18 +1,22 @@
 package main.java.Model;
 
 public class Student {
+    private String firstName;
+    private String lastName;
+    private String password;
     private int id;
     private String email;
     private int classID;
     private String imaGePath;
 
     public Student (Builder builder){
+        this.firstName = builder.firstName;
+        this.lastName = builder.lastName;
+        this.password = builder.password;
         this.id = builder.id;
         this.email = builder.email;
         this.classID = builder.classID;
         this.imaGePath = builder.imaGePath;
-
-
     }
 
 
@@ -32,12 +36,41 @@ public class Student {
         return imaGePath;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+
     public static class Builder {
 
+        private String firstName;
+        private String lastName;
+        private String password;
         private int id;
         private String email;
         private int classID;
         private String imaGePath;
+
+        public Builder withFirstName(String firstName){
+            this.firstName = firstName;
+            return this;
+        }
+        public Builder withLastName (String lastName){
+            this.lastName = lastName;
+            return this;
+        }
+        public Builder withPassword (String password ){
+            this.password = password;
+            return this;
+        }
 
         public Builder wirhId (int id){
             this.id = id;
