@@ -1,4 +1,20 @@
 package main.java.Dao;
 
-public class EmployeeDaoImpl {
+import main.java.Model.Mentor;
+
+import java.util.List;
+
+public class EmployeeDaoImpl implements EmployeeDao {
+
+    public void addMentor() {
+
+    }
+
+    public void editMentor() {
+
+    }
+
+    public List<Mentor> getMentors() {
+        return null;
+    }
 }

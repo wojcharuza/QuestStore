@@ -14,11 +14,11 @@ public class C3P0DataSource {
         try {
             comboPooledDataSource = new ComboPooledDataSource();
             comboPooledDataSource
-                    .setDriverClass("com.mysql.jdbc.Driver");
+                    .setDriverClass("org.postgresql.Driver");
             comboPooledDataSource
-                    .setJdbcUrl("jdbc:mysql://localhost:3306/testdb");
-            comboPooledDataSource.setUser("root");
-            comboPooledDataSource.setPassword("secret");
+                    .setJdbcUrl("jdbc:postgresql://dumbo.db.elephantsql.com:5432/ijkqajbr");
+            comboPooledDataSource.setUser("ijkqajbr");
+            comboPooledDataSource.setPassword("9utjfradeOktE8cgHrrvxiDUvjP0wFRd");
         }
         catch (PropertyVetoException ex1) {
                 ex1.printStackTrace();
