@@ -1,14 +1,15 @@
 package main.java;
 
 import main.java.Dao.MentorDaoImpl;
+import main.java.Dao.StudentDaoImpl;
 
 public class Main {
 
 
 
     public static void main(String[] args) {
-        MentorDaoImpl mentorDao = new MentorDaoImpl();
-        mentorDao.editMentor(1, "Halo", "Halo?", "halo@halo", "halo");
+        StudentDaoImpl studentDao = new StudentDaoImpl();
+        System.out.println(studentDao.getCoolcoinBalance(4));
     }
 
 }

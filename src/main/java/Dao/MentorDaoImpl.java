@@ -11,7 +11,7 @@ public class MentorDaoImpl implements MentorDao {
     public void addMentor(String firstName, String lastName, String email, String password) {
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
             PreparedStatement stmt = null;
-            stmt = con.prepareStatement("INSERT INTO \"User\"(first_name, last_name, email, password, permission) VALUES (?, ?, ?, ?, 'mentor')");
+            stmt = con.prepareStatement("INSERT INTO Users(first_name, last_name, email, password, permission) VALUES (?, ?, ?, ?, 'mentor')");
             stmt.setString(1, firstName);
             stmt.setString(2, lastName);
             stmt.setString(3, email);
@@ -26,7 +26,7 @@ public class MentorDaoImpl implements MentorDao {
     public void editMentor(int id, String firstName, String lastName, String email, String password) {
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
             PreparedStatement stmt = null;
-            stmt = con.prepareStatement("UPDATE \"User\" SET first_name = ?, last_name = ?, email = ?, password = ? WHERE id = ?");
+            stmt = con.prepareStatement("UPDATE Users SET first_name = ?, last_name = ?, email = ?, password = ? WHERE id = ?");
             stmt.setString(1, firstName);
             stmt.setString(2, lastName);
             stmt.setString(3, email);
@@ -44,7 +44,7 @@ public class MentorDaoImpl implements MentorDao {
         List<Mentor> mentors = new ArrayList<>();
         try (Connection con = C3P0DataSource.getInstance().getConnection(); Statement stmt = con.createStatement()) {
 
-            ResultSet rs = stmt.executeQuery("SELECT * FROM \"User\" WHERE permission = 'mentor'");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM Users WHERE permission = 'mentor'");
             while (rs.next()) {
                 String email = rs.getString("email");
                 String firstName = rs.getString("first_name");
