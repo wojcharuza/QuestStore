@@ -5,9 +5,9 @@ import Model.Student;
 import java.util.List;
 
 public interface StudentDao {
-    void addNewStudent();
+    void addNewStudent(String firstName, String lastName, String email, String password);
     List<Student> getAllStudents();
-    void editStudent();
-    void deleteStudent();
-    Student getStudent();
+    void editStudent(int id, String firstName, String lastName, String email, String password);
+    void deleteStudent(int id);
+    Student getStudent(int id);
 }

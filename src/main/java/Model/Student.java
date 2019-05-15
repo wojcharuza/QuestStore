@@ -1,5 +1,7 @@
 package Model;
 
+import java.util.List;
+
 public class Student {
     private String firstName;
     private String lastName;
@@ -8,6 +10,8 @@ public class Student {
     private String email;
     private int classID;
     private String imaGePath;
+    private int coolcoins;
+    private List<Card> usedArtifacts;
 
     public Student (Builder builder){
         this.firstName = builder.firstName;
@@ -17,6 +21,8 @@ public class Student {
         this.email = builder.email;
         this.classID = builder.classID;
         this.imaGePath = builder.imaGePath;
+        this.coolcoins = builder.coolcoins;
+        this.usedArtifacts = builder.usedArtifacts;
     }
 
 
@@ -58,6 +64,8 @@ public class Student {
         private String email;
         private int classID;
         private String imaGePath;
+        private int coolcoins;
+        private List<Card> usedArtifacts;
 
         public Builder withFirstName(String firstName){
             this.firstName = firstName;
@@ -89,6 +97,16 @@ public class Student {
 
         public Builder withImagePath (String imagePath){
             this.imaGePath = imagePath;
+            return this;
+        }
+
+        public Builder withCoolcoins (int coolcoins){
+            this.coolcoins = coolcoins;
+            return this;
+        }
+
+        public Builder withUsedArtifacts (List<Card> artifacts) {
+            this.usedArtifacts = artifacts;
             return this;
         }
         public Student build(){
