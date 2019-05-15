@@ -1,6 +1,6 @@
-package main.java;
 
-import main.java.Dao.MentorDaoImpl;
+
+import Dao.MentorDaoImpl;
 
 public class Main {
 

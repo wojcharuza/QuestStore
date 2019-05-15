@@ -1,4 +1,4 @@
-package main.java.Model;
+package Model;
 
 public class Admin {
     private String email;

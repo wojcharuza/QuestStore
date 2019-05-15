@@ -1,8 +1,8 @@
-package main.java.Dao;
+package Dao;
 
 import main.java.Model.User;
 
-public class LoginDaoImpl implements LoginDao {
+public class LoginDaoImpl implements main.java.Dao.LoginDao {
     public User getUser() {
         return null;
     }

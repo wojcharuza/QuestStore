@@ -1,4 +1,4 @@
-package main.java.Service;
+package Service;
 
 public class AdminService {
 }
