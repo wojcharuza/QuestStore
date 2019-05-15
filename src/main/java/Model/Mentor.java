@@ -16,7 +16,6 @@ public class Mentor {
         this.lastName = builder.lastName;
         this.password = builder.password;
         this.id = builder.id;
-        this.classID = builder.classID;
     }
 
     public String getEmail() {
@@ -50,7 +49,6 @@ public class Mentor {
         private String lastName;
         private String password;
         private  int id;
-        private int classID;
 
         public Builder withEmail(String email){
             this.email = email;
@@ -71,10 +69,6 @@ public class Mentor {
 
         public Builder withID (int id){
             this.id = id;
-            return this;
-        }
-        public Builder withClassID (int classID){
-            this.classID = classID;
             return this;
         }
 

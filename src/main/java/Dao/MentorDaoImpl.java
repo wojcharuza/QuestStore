@@ -2,16 +2,24 @@ package main.java.Dao;
 
 import main.java.Model.Mentor;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MentorDaoImpl implements MentorDao {
 
-    public void addMentor() {
+    public void addMentor(String firstName, String lastName, String email, String password) {
+        try (Connection con = C3P0DataSource.getInstance().getConnection();) {
+            PreparedStatement stmt = null;
+            stmt = con.prepareStatement("INSERT INTO \"User\"(first_name, last_name, email, password, permission) VALUES (?, ?, ?, ?, 'mentor')");
+            stmt.setString(1, firstName);
+            stmt.setString(2, lastName);
+            stmt.setString(3, email);
+            stmt.setString(4, password);
+            stmt.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -19,9 +27,10 @@ public class MentorDaoImpl implements MentorDao {
 
     }
 
-    public void getMentors() {
+    public List<Mentor> getMentors() {
+        List<Mentor> mentors = new ArrayList<>();
         try (Connection con = C3P0DataSource.getInstance().getConnection(); Statement stmt = con.createStatement()) {
-            List<Mentor> mentors = new ArrayList<>();
+
             ResultSet rs = stmt.executeQuery("SELECT * FROM \"User\" WHERE permission = 'mentor'");
             while (rs.next()) {
                 String email = rs.getString("email");
@@ -29,14 +38,13 @@ public class MentorDaoImpl implements MentorDao {
                 String lastName = rs.getString("last_name");
                 String password = rs.getString("password");
                 int id = rs.getInt("id");
-                System.out.println(id);
-                System.out.println(email);
+                Mentor mentor = new Mentor.Builder().withID(id).withFirstName(firstName).withLastName(lastName).withEmail(email).withPassword(password).build();
+                mentors.add(mentor);
             }
-
-
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return mentors;
     }
 }

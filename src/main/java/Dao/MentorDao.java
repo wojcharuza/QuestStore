@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface MentorDao {
 
-    void addMentor();
+    void addMentor(String firstName, String lastName, String email, String password);
     void editMentor();
-    void getMentors();
+    List<Mentor> getMentors();
 }
