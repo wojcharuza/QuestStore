@@ -14,9 +14,9 @@ public class C3P0DataSource {
         try {
             comboPooledDataSource = new ComboPooledDataSource();
             comboPooledDataSource
-                    .setDriverClass("com.mysql.jdbc.Driver");
+                    .setDriverClass("org.postgresql.Driver");
             comboPooledDataSource
-                    .setJdbcUrl("jdbc:mysql://localhost:3306/testdb");
+                    .setJdbcUrl("jdbc:postgresql://dumbo.db.elephantsql.com:5432/ijkqajbr");
             comboPooledDataSource.setUser("root");
             comboPooledDataSource.setPassword("secret");
         }
