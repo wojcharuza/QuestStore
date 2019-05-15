@@ -1,7 +1,7 @@
 package Dao;
 
 
-import main.java.Model.Mentor;
+import Model.Mentor;
 
 import java.util.List;
 

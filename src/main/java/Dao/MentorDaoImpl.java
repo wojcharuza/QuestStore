@@ -1,6 +1,6 @@
 package Dao;
 
-import main.java.Model.Mentor;
+import Model.Mentor;
 
 import java.sql.*;
 import java.util.ArrayList;

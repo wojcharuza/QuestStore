@@ -1,7 +1,7 @@
 package Dao;
 
-import main.java.Model.Card;
-import main.java.Model.Student;
+import Model.Card;
+import Model.Student;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ public class StudentDaoImpl implements StudentDao {
     public void addNewStudent(String firstName, String lastName, String email, String password) {
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
             PreparedStatement stmt = null;
-            stmt = con.prepareStatement("INSERT INTO Users(first_name, last_name, email, password, permission) VALUES" +
+            stmt = con.prepareStatement("INSERT INTO users(first_name, last_name, email, password, permission) VALUES" +
                     " (?, ?, ?, ?, 'student')");
             stmt.setString(1, firstName);
             stmt.setString(2, lastName);
@@ -25,13 +25,25 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     public List<Student> getAllStudents() {
-        return null;
+        List<Student> students = new ArrayList<>();
+        try (Connection con = C3P0DataSource.getInstance().getConnection(); Statement stmt = con.createStatement()) {
+
+            ResultSet rs = stmt.executeQuery("SELECT * FROM users WHERE permission = 'student'");
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                Student student = getStudent(id);
+                students.add(student);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return students;
     }
 
     public void editStudent(int id, String firstName, String lastName, String email, String password) {
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
             PreparedStatement stmt = null;
-            stmt = con.prepareStatement("UPDATE Users SET first_name = ?, last_name = ?, email = ?, password = ? " +
+            stmt = con.prepareStatement("UPDATE users SET first_name = ?, last_name = ?, email = ?, password = ? " +
                     "WHERE id = ?");
             stmt.setString(1, firstName);
             stmt.setString(2, lastName);
@@ -45,8 +57,15 @@ public class StudentDaoImpl implements StudentDao {
         }
     }
 
-    public void deleteStudent() {
-
+    public void deleteStudent(int idToDelete) {
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+            PreparedStatement stmt = null;
+            stmt = con.prepareStatement("DELETE FROM users WHERE id = ? AND permission = 'student'");
+            stmt.setInt(1, idToDelete);
+            stmt.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public Student getStudent(int id) {
@@ -54,7 +73,7 @@ public class StudentDaoImpl implements StudentDao {
         Student student = new Student.Builder().build();
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
             PreparedStatement stmt = null;
-            stmt = con.prepareStatement("SELECT * FROM \"Users\" WHERE id = ? AND permission = 'student'");
+            stmt = con.prepareStatement("SELECT * FROM users WHERE id = ? AND permission = 'student'");
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             String firstName = rs.getString("first_name");
