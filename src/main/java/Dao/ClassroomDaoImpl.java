@@ -33,21 +33,17 @@ public class ClassroomDaoImpl implements ClassroomDao {
 
 
     public void deleteClassRoom(int id) {
-        try (Connection con = C3P0DataSource.getInstance().getConnection();
-            PreparedStatement ps = createPrepStmntForDeletion(con, id);
-            ps.executeUpdate()){
+        try (Connection con = C3P0DataSource.getInstance().getConnection()){
+            PreparedStatement statement = null;
+            statement = con.prepareStatement("DELETE FROM \"Classes\" WHERE id = ?");
+            statement.setInt(1,id);
+            statement.executeUpdate();
         }
         catch (SQLException e){
             e.printStackTrace();
         }
     }
 
-    private PreparedStatement createPrepStmntForDeletion(Connection con, int id) throws SQLException {
-        String sql = "DELETE FROM \"Classes\" WHERE id = ?";
-        PreparedStatement ps = con.prepareStatement(sql);
-        ps.setInt(1, id);
-        return ps;
-    }
 }
 
 
