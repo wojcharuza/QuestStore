@@ -8,15 +8,14 @@ public class Card {
     private String description;
     private String imagePath;
     private String cardType;
-    private int coolcoin_value;
+    private int coolcoinValue;
 
     public Card(Builder builder){
         this.title = builder.title;
         this.description = builder.description;
         this.imagePath = builder.imagePath;
         this.cardType = builder.cardType;
-        this.coolcoin_value = builder.coolcoinValue;
-
+        this.coolcoinValue = builder.coolcoinValue;
     }
 
 
@@ -25,7 +24,7 @@ public class Card {
     }
 
     public int getCoolcoin_value() {
-        return coolcoin_value;
+        return coolcoinValue;
     }
 
     public String getCardType() {
@@ -39,6 +38,8 @@ public class Card {
     public String getTitle() {
         return title;
     }
+
+
 
     public static class Builder{
         private String title;

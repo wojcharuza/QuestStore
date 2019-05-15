@@ -7,7 +7,7 @@ public class Mentor {
     private String lastName;
     private String password;
     private  int id;
-    private int classID;
+
 
 
     public Mentor (Builder builder){
@@ -39,9 +39,6 @@ public class Mentor {
         return id;
     }
 
-    public int getClassID() {
-        return classID;
-    }
 
     public static class Builder{
         private String email;
