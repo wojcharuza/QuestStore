@@ -1,6 +1,5 @@
 package Dao;
 
-import Model.Card;
 import Model.Student;
 
 import java.sql.*;

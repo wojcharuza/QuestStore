@@ -1,6 +1,6 @@
 package Dao;
 
-import main.java.Model.Card;
+import Model.Card;
 
 import java.util.List;
 
