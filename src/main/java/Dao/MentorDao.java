@@ -5,9 +5,9 @@ import main.java.Model.Mentor;
 
 import java.util.List;
 
-public interface EmployeeDao {
+public interface MentorDao {
 
     void addMentor();
     void editMentor();
-    List<Mentor> getMentors();
+    void getMentors();
 }
