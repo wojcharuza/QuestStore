@@ -1,4 +1,4 @@
-package main.java.Dao;
+package Dao;
 
 import main.java.Model.Student;
 

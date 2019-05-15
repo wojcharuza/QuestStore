@@ -1,4 +1,4 @@
-package main.java.Dao;
+package Dao;
 
 import java.beans.PropertyVetoException;
 import java.sql.Connection;
