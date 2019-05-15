@@ -17,8 +17,10 @@ public class C3P0DataSource {
                     .setDriverClass("org.postgresql.Driver");
             comboPooledDataSource
                     .setJdbcUrl("jdbc:postgresql://dumbo.db.elephantsql.com:5432/ijkqajbr");
-            comboPooledDataSource.setUser("root");
-            comboPooledDataSource.setPassword("secret");
+            comboPooledDataSource.setUser("ijkqajbr");
+            comboPooledDataSource.setPassword("9utjfradeOktE8cgHrrvxiDUvjP0wFRd");
+
+
         }
         catch (PropertyVetoException ex1) {
                 ex1.printStackTrace();
