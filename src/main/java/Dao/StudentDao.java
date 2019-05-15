@@ -1,6 +1,6 @@
 package Dao;
 
-import main.java.Model.Student;
+import Model.Student;
 
 import java.util.List;
 

@@ -1,5 +1,6 @@
 
 
+import Dao.ClassroomDaoImpl;
 import Dao.MentorDaoImpl;
 
 public class Main {
@@ -7,8 +8,11 @@ public class Main {
 
 
     public static void main(String[] args) {
-        MentorDaoImpl mentorDao = new MentorDaoImpl();
-        mentorDao.editMentor(1, "Halo", "Halo?", "halo@halo", "halo");
+//        MentorDaoImpl mentorDao = new MentorDaoImpl();
+//        mentorDao.editMentor(1, "Halo", "Halo?", "halo@halo", "halo");
+        ClassroomDaoImpl classroomDao = new ClassroomDaoImpl();
+        classroomDao.deleteClassRoom(5);
+
     }
 
 }

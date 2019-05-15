@@ -1,6 +1,6 @@
 package Dao;
 
-import main.java.Model.User;
+import Model.User;
 
 public interface LoginDao {
     User getUser();

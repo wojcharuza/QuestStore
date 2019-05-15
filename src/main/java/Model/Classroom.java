@@ -1,16 +1,17 @@
 package Model;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 public class Classroom {
     private int id;
-    private Date startDate;
-    private int classID;
+    private LocalDate startDate;
+    private int mentorId;
 
     public Classroom (Builder builder){
         this.id = builder.id;
         this.startDate = builder.startDate;
-        this.classID = builder.classID;
+        this.mentorId = builder.mentorId;
 
 
     }
@@ -19,11 +20,11 @@ public class Classroom {
         return id;
     }
 
-    public int getClassID() {
-        return classID;
+    public int getMentorId() {
+        return mentorId;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
@@ -32,23 +33,23 @@ public class Classroom {
 
     public static class Builder {
         private int id;
-        private Date startDate;
-        private int classID;
+        private LocalDate startDate;
+        private int mentorId;
 
 
-        public Builder wirhId(int id) {
+        public Builder withId(int id) {
             this.id = id;
             return this;
         }
 
-        public Builder withEmail(Date startDate) {
+        public Builder withStartDate(LocalDate startDate) {
             this.startDate = startDate;
             return this;
 
         }
 
-        public Builder withClassId(int classID) {
-            this.classID = classID;
+        public Builder withMentorId(int mentorId) {
+            this.mentorId = mentorId;
             return this;
         }
 
