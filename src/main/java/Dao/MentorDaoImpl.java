@@ -9,7 +9,7 @@ import java.util.List;
 public class MentorDaoImpl implements MentorDao {
 
     public void addMentor(String firstName, String lastName, String email, String password) {
-        try (Connection con = C3P0DataSource.getInstance().getConnection();) {
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
             PreparedStatement stmt = null;
             stmt = con.prepareStatement("INSERT INTO \"User\"(first_name, last_name, email, password, permission) VALUES (?, ?, ?, ?, 'mentor')");
             stmt.setString(1, firstName);
@@ -23,7 +23,20 @@ public class MentorDaoImpl implements MentorDao {
 
     }
 
-    public void editMentor() {
+    public void editMentor(int id, String firstName, String lastName, String email, String password) {
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+            PreparedStatement stmt = null;
+            stmt = con.prepareStatement("UPDATE \"User\" SET first_name = ?, last_name = ?, email = ?, password = ? WHERE id = ?");
+            stmt.setString(1, firstName);
+            stmt.setString(2, lastName);
+            stmt.setString(3, email);
+            stmt.setString(4, password);
+            stmt.setInt(5, id);
+            stmt.executeQuery();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 

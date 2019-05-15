@@ -8,6 +8,6 @@ import java.util.List;
 public interface MentorDao {
 
     void addMentor(String firstName, String lastName, String email, String password);
-    void editMentor();
+    void editMentor(int id, String firstName, String lastName, String email, String password);
     List<Mentor> getMentors();
 }

@@ -8,7 +8,7 @@ public class Main {
 
     public static void main(String[] args) {
         MentorDaoImpl mentorDao = new MentorDaoImpl();
-        mentorDao.addMentor("Zibon", "Nob", "zibon@nob.gg", "jestemnobem");
+        mentorDao.editMentor(1, "Halo", "Halo?", "halo@halo", "halo");
     }
 
 }
