@@ -13,6 +13,8 @@ public class Student {
     private int coolcoins;
     private List<Card> usedArtifacts;
 
+
+
     public Student (Builder builder){
         this.firstName = builder.firstName;
         this.lastName = builder.lastName;
@@ -25,6 +27,9 @@ public class Student {
         this.usedArtifacts = builder.usedArtifacts;
     }
 
+    public int getCoolcoins() {
+        return coolcoins;
+    }
 
     public String getEmail() {
         return email;
