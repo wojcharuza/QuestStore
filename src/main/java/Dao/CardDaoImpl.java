@@ -6,12 +6,9 @@ import Model.Level;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PropertyPermission;
 
 public class CardDaoImpl implements CardDao{
-
-
-
-
 
     public List<Card> getQuests() {
         List<Card> cards = new ArrayList<>();
@@ -52,6 +49,7 @@ public class CardDaoImpl implements CardDao{
             String imagePath = rs.getString("image_path");
             String cardType = rs.getString("card_type");
             int coolcoinValue = rs.getInt("coolcoin_value");
+            System.exit(0);
 
             Card card = new Card.Builder().withTitle(title).withDescription(description).
                     withImagePath(imagePath).withCardType(cardType).withCoolcoinValue(coolcoinValue).build();
@@ -67,8 +65,8 @@ public class CardDaoImpl implements CardDao{
         try(Connection con = C3P0DataSource.getInstance().getConnection()){
             PreparedStatement stmt = null;
             stmt = con.prepareStatement("INSERT INTO " +
-                    "Cards(title, description, imagePath, cardType, coolcoinVale) " +
-                    "VALUES (?, ?, ?, ?, ?)");
+                    "\"Cards\"(title, description, image_Path, card_type, coolcoin_value) " +
+                    "VALUES (?, ?, ?, CAST(? AS card_type), ?)");
 
             stmt.setString(1, title);
             stmt.setString(2, description);
@@ -84,14 +82,27 @@ public class CardDaoImpl implements CardDao{
 
 
 
+    public void editCard(String oldTitle, String newTitle,
+                          String description, String imagePath,
+                          String cardType, int coolcoinValue) {
 
-
-
-    public void editQuest() {
-
+        try(Connection con = C3P0DataSource.getInstance().getConnection()){
+            PreparedStatement stmt;
+            stmt = con.prepareStatement("UPDATE \"Cards\" SET title = ?, " +
+                    "description = ?, image_path = ?, card_type = CAST(? AS card_type), coolcoin_value = ? WHERE title = ?");
+            stmt.setString(1, newTitle);
+            stmt.setString(2, description);
+            stmt.setString(3, imagePath);
+            stmt.setString(4, cardType);
+            stmt.setInt(5, coolcoinValue);
+            stmt.setString(6, oldTitle);
+            stmt.executeUpdate();
+            stmt.close();
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 
-    public void editArtifact() {
 
-    }
 }

@@ -9,6 +9,8 @@ public interface CardDao {
     List<Card> getQuests();
     List<Card> getArtifacts();
     void addCard(String title, String description, String image_path, String cardType, int coolcoinValue);
-    void editQuest();
-    void editArtifact();
+    void editCard(String oldTitle, String newTitle,
+                  String description, String imagePath,
+                  String cardType, int coolcoinValue);
+
 }
