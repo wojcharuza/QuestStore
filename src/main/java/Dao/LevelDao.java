@@ -1,9 +1,11 @@
 package Dao;
 
+import Model.Level;
+
 import java.util.List;
 
 public interface LevelDao {
 
-    List<Integer> getLevels();
-    void editLevels();
+    List<Level> getLevels();
+    void editLevels(List<Level> levels);
 }
