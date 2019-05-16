@@ -1,6 +1,8 @@
 package Dao;
 
 import Model.Card;
+import Model.Student;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -100,6 +102,7 @@ public class CardDaoImpl implements CardDao{
             throw new DaoException();
         }
     }
+
 
 
 }
