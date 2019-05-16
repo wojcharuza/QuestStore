@@ -19,8 +19,7 @@ public class ClassroomDaoImpl implements ClassroomDao {
              ResultSet rs = stmt.executeQuery("SELECT * FROM \"Classes\"");) {
             while (rs.next()) {
                 int id = rs.getInt("id");
-                Date date = rs.getDate("start_date");
-                LocalDate startDate = ((java.sql.Date) date).toLocalDate();
+                LocalDate startDate = (rs.getDate("start_date")).toLocalDate();
                 int mentorId = rs.getInt("mentor_id");
                 Classroom classroom = new Classroom.Builder().withId(id).withMentorId(mentorId).withStartDate(startDate).build();
                 classrooms.add(classroom);
