@@ -1,16 +1,14 @@
 package Dao;
 
 import Model.Card;
-import Model.Level;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.PropertyPermission;
+
 
 public class CardDaoImpl implements CardDao{
 
-    public List<Card> getQuests() {
+    public List<Card> getQuests() throws DaoException {
         List<Card> cards = new ArrayList<>();
         try(Connection con = C3P0DataSource.getInstance().getConnection();
             Statement stmt = con.createStatement();
@@ -18,15 +16,16 @@ public class CardDaoImpl implements CardDao{
             prepareCard(cards, rs);
             stmt.close();
             rs.close();
+            return cards;
+
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoException();
         }
-        return cards;
     }
 
 
 
-    public List<Card> getArtifacts() {
+    public List<Card> getArtifacts() throws DaoException {
         List<Card> cards = new ArrayList<>();
         try(Connection con = C3P0DataSource.getInstance().getConnection();
             Statement stmt = con.createStatement();
@@ -34,12 +33,12 @@ public class CardDaoImpl implements CardDao{
             prepareCard(cards, rs);
             stmt.close();
             rs.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return cards;
-    }
+            return cards;
 
+        } catch (SQLException e) {
+            throw new DaoException();
+        }
+    }
 
 
     private void prepareCard(List<Card> cards, ResultSet rs) throws SQLException {
@@ -53,15 +52,13 @@ public class CardDaoImpl implements CardDao{
 
             Card card = new Card.Builder().withTitle(title).withDescription(description).
                     withImagePath(imagePath).withCardType(cardType).withCoolcoinValue(coolcoinValue).build();
-
             cards.add(card);
-
         }
     }
 
 
 
-    public void addCard(String title, String description, String imagePath, String cardType, int coolcoinValue) {
+    public void addCard(String title, String description, String imagePath, String cardType, int coolcoinValue) throws DaoException {
         try(Connection con = C3P0DataSource.getInstance().getConnection()){
             PreparedStatement stmt = null;
             stmt = con.prepareStatement("INSERT INTO " +
@@ -76,7 +73,7 @@ public class CardDaoImpl implements CardDao{
             stmt.executeUpdate();
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw new DaoException();
         }
     }
 
@@ -84,7 +81,7 @@ public class CardDaoImpl implements CardDao{
 
     public void editCard(String oldTitle, String newTitle,
                           String description, String imagePath,
-                          String cardType, int coolcoinValue) {
+                          String cardType, int coolcoinValue) throws DaoException {
 
         try(Connection con = C3P0DataSource.getInstance().getConnection()){
             PreparedStatement stmt;
@@ -100,7 +97,7 @@ public class CardDaoImpl implements CardDao{
             stmt.close();
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw new DaoException();
         }
     }
 

@@ -1,18 +1,14 @@
 package Dao;
 
 import Model.Classroom;
-import com.mchange.v2.sql.SqlUtils;
-
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class ClassroomDaoImpl implements ClassroomDao {
 
-    public List<Classroom> getClassrooms() {
+    public List<Classroom> getClassrooms() throws DaoException {
         List<Classroom> classrooms = new ArrayList<>();
         try (Connection con = C3P0DataSource.getInstance().getConnection();
              Statement stmt = con.createStatement();
@@ -24,14 +20,14 @@ public class ClassroomDaoImpl implements ClassroomDao {
                 Classroom classroom = new Classroom.Builder().withId(id).withMentorId(mentorId).withStartDate(startDate).build();
                 classrooms.add(classroom);
             }
+            return classrooms;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoException();
         }
-        return classrooms;
     }
 
 
-    public void deleteClassRoom(int id) {
+    public void deleteClassRoom(int id) throws DaoException {
         try (Connection con = C3P0DataSource.getInstance().getConnection()){
             PreparedStatement statement = null;
             statement = con.prepareStatement("DELETE FROM \"Classes\" WHERE id = ?");
@@ -39,10 +35,9 @@ public class ClassroomDaoImpl implements ClassroomDao {
             statement.executeUpdate();
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw new DaoException();
         }
     }
-
 }
 
 

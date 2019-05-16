@@ -9,7 +9,7 @@ import java.util.List;
 
 public class StudentDaoImpl implements StudentDao {
 
-    public void addNewStudent(String firstName, String lastName, String email, String password) {
+    public void addNewStudent(String firstName, String lastName, String email, String password) throws DaoException {
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
             PreparedStatement stmt = null;
             stmt = con.prepareStatement("INSERT INTO users(first_name, last_name, email, password, permission) VALUES" +
@@ -20,11 +20,11 @@ public class StudentDaoImpl implements StudentDao {
             stmt.setString(4, password);
             stmt.executeQuery();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoException();
         }
     }
 
-    public List<Student> getAllStudents() {
+    public List<Student> getAllStudents() throws DaoException {
         List<Student> students = new ArrayList<>();
         try (Connection con = C3P0DataSource.getInstance().getConnection(); Statement stmt = con.createStatement()) {
 
@@ -34,13 +34,13 @@ public class StudentDaoImpl implements StudentDao {
                 Student student = getStudent(id);
                 students.add(student);
             }
+            return students;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoException();
         }
-        return students;
     }
 
-    public void editStudent(int id, String firstName, String lastName, String email, String password) {
+    public void editStudent(int id, String firstName, String lastName, String email, String password) throws DaoException {
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
             PreparedStatement stmt = null;
             stmt = con.prepareStatement("UPDATE users SET first_name = ?, last_name = ?, email = ?, password = ? " +
@@ -53,22 +53,22 @@ public class StudentDaoImpl implements StudentDao {
             stmt.executeQuery();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoException();
         }
     }
 
-    public void deleteStudent(int idToDelete) {
+    public void deleteStudent(int idToDelete) throws DaoException {
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
             PreparedStatement stmt = null;
             stmt = con.prepareStatement("DELETE FROM users WHERE id = ? AND permission = 'student'");
             stmt.setInt(1, idToDelete);
             stmt.executeQuery();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoException();
         }
     }
 
-    public Student getStudent(int id) {
+    public Student getStudent(int id) throws DaoException {
 
         Student student = new Student.Builder().build();
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
@@ -92,14 +92,13 @@ public class StudentDaoImpl implements StudentDao {
                     .withCoolcoins(coolcoins)
                     .withUsedArtifacts(usedArtifacts).build();
 
-
+            return student;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoException();
         }
-        return student;
     }
 
-    public int getCoolcoinBalance(int id) {
+    public int getCoolcoinBalance(int id) throws DaoException {
 
         int balance = 0;
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
@@ -112,14 +111,14 @@ public class StudentDaoImpl implements StudentDao {
                 int value = rs.getInt("coolcoin_value");
                 balance += value;
             }
+            return balance;
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoException();
         }
-        return balance;
     }
 
-    public List<Card> getUsedArtifacts(int id) {
+    public List<Card> getUsedArtifacts(int id) throws DaoException {
 
         List<Card> usedArtifacts = new ArrayList<>();
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
@@ -142,9 +141,9 @@ public class StudentDaoImpl implements StudentDao {
                                             .withImagePath(imagePath).build();
                 usedArtifacts.add(card);
             }
+            return usedArtifacts;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoException();
         }
-        return usedArtifacts;
     }
 }
