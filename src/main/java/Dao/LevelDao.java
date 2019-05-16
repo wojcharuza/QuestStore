@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface LevelDao {
 
-    List<Level> getLevels();
-    void editLevels(List<Level> levels);
+    List<Level> getLevels() throws DaoException;
+    void editLevels(List<Level> levels) throws DaoException;
 }

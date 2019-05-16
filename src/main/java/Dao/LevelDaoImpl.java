@@ -12,7 +12,7 @@ public class LevelDaoImpl implements LevelDao {
 
 
 
-    public List<Level> getLevels() {
+    public List<Level> getLevels() throws DaoException {
         List<Level> levels = new ArrayList<>();
         try(Connection con = C3P0DataSource.getInstance().getConnection();
             Statement stmt = con.createStatement();
@@ -24,15 +24,15 @@ public class LevelDaoImpl implements LevelDao {
                 Level level = new Level.Builder().withLevelNumber(levelNumber).withExperienceNeeded(experienceNeeded).build();
                 levels.add(level);
             }
+            return levels;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoException();
         }
-        return levels;
         }
 
 
 
-    public void editLevels(List<Level> levels) {
+    public void editLevels(List<Level> levels) throws DaoException {
         try(Connection con = C3P0DataSource.getInstance().getConnection()){
             for(Level level: levels){
                 int levelNumber = level.getLevelNumber();
@@ -46,7 +46,7 @@ public class LevelDaoImpl implements LevelDao {
             }
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw new DaoException();
         }
     }
 

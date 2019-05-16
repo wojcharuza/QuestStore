@@ -8,7 +8,7 @@ import java.util.List;
 
 public class MentorDaoImpl implements MentorDao {
 
-    public void addMentor(String firstName, String lastName, String email, String password) {
+    public void addMentor(String firstName, String lastName, String email, String password) throws DaoException {
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
             PreparedStatement stmt = null;
             stmt = con.prepareStatement("INSERT INTO Users(first_name, last_name, email, password, permission) VALUES (?, ?, ?, ?, 'mentor')");
@@ -18,12 +18,12 @@ public class MentorDaoImpl implements MentorDao {
             stmt.setString(4, password);
             stmt.executeQuery();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoException();
         }
 
     }
 
-    public void editMentor(int id, String firstName, String lastName, String email, String password) {
+    public void editMentor(int id, String firstName, String lastName, String email, String password) throws DaoException {
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
             PreparedStatement stmt = null;
             stmt = con.prepareStatement("UPDATE Users SET first_name = ?, last_name = ?, email = ?, password = ? WHERE id = ?");
@@ -35,12 +35,12 @@ public class MentorDaoImpl implements MentorDao {
             stmt.executeQuery();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoException();
         }
 
     }
 
-    public List<Mentor> getMentors() {
+    public List<Mentor> getMentors() throws DaoException {
         List<Mentor> mentors = new ArrayList<>();
         try (Connection con = C3P0DataSource.getInstance().getConnection(); Statement stmt = con.createStatement()) {
 
@@ -54,11 +54,11 @@ public class MentorDaoImpl implements MentorDao {
                 Mentor mentor = new Mentor.Builder().withID(id).withFirstName(firstName).withLastName(lastName).withEmail(email).withPassword(password).build();
                 mentors.add(mentor);
             }
+            return mentors;
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoException();
         }
-        return mentors;
     }
 
 }

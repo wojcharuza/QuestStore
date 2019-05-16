@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface MentorDao {
 
-    void addMentor(String firstName, String lastName, String email, String password);
-    void editMentor(int id, String firstName, String lastName, String email, String password);
-    List<Mentor> getMentors();
+    void addMentor(String firstName, String lastName, String email, String password) throws DaoException;
+    void editMentor(int id, String firstName, String lastName, String email, String password) throws DaoException;
+    List<Mentor> getMentors() throws DaoException;
 }

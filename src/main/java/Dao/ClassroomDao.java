@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface ClassroomDao {
 
-    List<Classroom> getClassrooms();
-    void deleteClassRoom(int id);
+    List<Classroom> getClassrooms() throws DaoException;
+    void deleteClassRoom(int id) throws DaoException;
 }

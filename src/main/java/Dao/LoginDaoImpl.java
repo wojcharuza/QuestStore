@@ -10,7 +10,7 @@ public class LoginDaoImpl implements LoginDao {
 
 
 
-    public String checkPermission(String email, String password) {
+    public String checkPermission(String email, String password) throws DaoException {
         String permissionType = new String();
         try (Connection con = C3P0DataSource.getInstance().getConnection(); Statement stmt = con.createStatement()) {
 
@@ -19,15 +19,15 @@ public class LoginDaoImpl implements LoginDao {
                 permissionType = rs.getString("permission");
 
             }
+            return permissionType;
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoException();
         }
 
-        return permissionType;
     }
 
-    public Mentor getMentor(String email, String password){
+    public Mentor getMentor(String email, String password) throws DaoException {
         Mentor tempMentor = new Mentor.Builder().build();
         try (Connection con = C3P0DataSource.getInstance().getConnection(); Statement stmt = con.createStatement()) {
 
@@ -41,14 +41,14 @@ public class LoginDaoImpl implements LoginDao {
                 Mentor mentor = new Mentor.Builder().withID(id).withFirstName(firstName).withLastName(lastName).withEmail(email).withPassword(password).build();
                 tempMentor = mentor;
             }
+            return tempMentor;
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoException();
         }
-        return tempMentor;
     }
 
-    public Student getStudent (String email, String password){
+    public Student getStudent (String email, String password) throws DaoException {
         StudentDaoImpl studentDao = new StudentDaoImpl();
         Student student = new Student.Builder().build();
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
@@ -76,14 +76,14 @@ public class LoginDaoImpl implements LoginDao {
                         .build();
 
             }
+            return student;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoException();
         }
-        return student;
 
 
     }
-    public Admin getAdmin(String email, String password){
+    public Admin getAdmin(String email, String password) throws DaoException {
 
         Admin tempAdmin = new Admin.Builder().build();
         try (Connection con = C3P0DataSource.getInstance().getConnection(); Statement stmt = con.createStatement()) {
@@ -97,11 +97,11 @@ public class LoginDaoImpl implements LoginDao {
                 Admin admin = new Admin.Builder().withFirstName(firstName).withLastName(lastName).withEmail(email).withPassword(password).build();
                 tempAdmin = admin;
             }
+            return tempAdmin;
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DaoException();
         }
-        return tempAdmin;
 
     }
 
