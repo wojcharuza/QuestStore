@@ -33,6 +33,7 @@ public class ClassroomDaoImpl implements ClassroomDao {
             statement = con.prepareStatement("DELETE FROM \"Classes\" WHERE id = ?");
             statement.setInt(1,id);
             statement.executeUpdate();
+            statement.close();
         }
         catch (SQLException e){
             throw new DaoException();

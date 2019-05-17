@@ -1,8 +1,6 @@
 package Dao;
 
-
 import Model.Mentor;
-
 import java.util.List;
 
 public interface MentorDao {

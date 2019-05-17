@@ -1,7 +1,6 @@
 package Dao;
 
 import Model.Level;
-
 import java.util.List;
 
 public interface LevelDao {

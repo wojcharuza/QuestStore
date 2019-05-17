@@ -1,7 +1,6 @@
 package Dao;
 
 import Model.Card;
-
 import java.util.List;
 
 public interface CardDao {
