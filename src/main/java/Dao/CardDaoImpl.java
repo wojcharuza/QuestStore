@@ -3,6 +3,7 @@ package Dao;
 import Model.Card;
 import Model.Student;
 
+import javax.jws.soap.SOAPBinding;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,7 @@ public class CardDaoImpl implements CardDao{
         try(Connection con = C3P0DataSource.getInstance().getConnection();
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM \"Cards\" WHERE card_type::text LIKE 'quest%'")){
-            prepareCard(cards, rs);
+            prepareCard(rs);
             stmt.close();
             rs.close();
             return cards;
@@ -28,11 +29,11 @@ public class CardDaoImpl implements CardDao{
 
 
     public List<Card> getArtifacts() throws DaoException {
-        List<Card> cards = new ArrayList<>();
+        List<Card> cards;
         try(Connection con = C3P0DataSource.getInstance().getConnection();
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM \"Cards\" WHERE card_type::text LIKE 'artifact%'")){
-            prepareCard(cards, rs);
+            cards = prepareCard(rs);
             stmt.close();
             rs.close();
             return cards;
@@ -43,19 +44,20 @@ public class CardDaoImpl implements CardDao{
     }
 
 
-    private void prepareCard(List<Card> cards, ResultSet rs) throws SQLException {
+    private List<Card> prepareCard(ResultSet rs) throws SQLException {
+        List<Card> cards = new ArrayList<>();
         while (rs.next()) {
             String title = rs.getString("title");
             String description = rs.getString("description");
             String imagePath = rs.getString("image_path");
             String cardType = rs.getString("card_type");
             int coolcoinValue = rs.getInt("coolcoin_value");
-            System.exit(0);
 
             Card card = new Card.Builder().withTitle(title).withDescription(description).
                     withImagePath(imagePath).withCardType(cardType).withCoolcoinValue(coolcoinValue).build();
             cards.add(card);
         }
+            return cards;
     }
 
 
