@@ -37,18 +37,18 @@ public class LoginController implements HttpHandler {
                 switch (permission){
                     case "admin":
                         httpExchange.getResponseHeaders().set("Location", "admin/mentors");
-                        httpExchange.sendResponseHeaders(302,0);
+                        httpExchange.sendResponseHeaders(302,-1);
                         break;
 
                     case "mentor":
                         httpExchange.getResponseHeaders().set("Location", "mentor/students");
-                        httpExchange.sendResponseHeaders(302,0);
+                        httpExchange.sendResponseHeaders(302,-1);
                         break;
 
 
                     case "student":
                         httpExchange.getResponseHeaders().set("Location", "student/profile");
-                        httpExchange.sendResponseHeaders(302,0);
+                        httpExchange.sendResponseHeaders(302,-1);
                         break;
 
                     default:
