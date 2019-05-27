@@ -2,6 +2,8 @@ package Dao;
 
 
 public interface LoginDao {
-    //User getUser(String email, String password);
+    String checkPermission(String email, String password) throws DaoException;
 
 }
+
+

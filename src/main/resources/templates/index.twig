@@ -6,7 +6,7 @@
   <link rel="stylesheet" type="text/css" href="../static/css/style.css">
   <link rel="stylesheet"
         href="http://fonts.googleapis.com/css?family=Comfortaa:100,300,400">
-  <link rel="stylesheet" href="fonts/Equinox.woff"/>
+  {#<link rel="stylesheet" href="../static/fonts/Equinox.woff"/>#}
   <title>Title</title>
 </head>
 <body>
@@ -27,27 +27,19 @@
       <h1>
         Hello ,Welcome To Quest Store!
       </h1>
-      <form action="admindashboard.html">
+      <form METHOD="POST">
+        <fieldset>
         <div class="form-group">
           <label for="email">Email address:</label>
-          <input type="email" class="form-control" id="email">
+          <input name="email" class="form-control" id="email">
         </div>
         <div class="form-group">
           <label for="pwd">Password:</label>
-          <input type="password" class="form-control" id="pwd">
+          <input name="password" type="password" class="form-control" id="pwd">
         </div>
-        <button type="submit" class="btn btn-primary">Login as Admin</button>
+        <button type="submit" class="btn btn-primary">Login</button>
+        </fieldset>
       </form>
-      <!-- for presentation -->
-      <a href="mentordashboard.html">
-      <button type="submit" class="btn btn-primary">Login as Mentor</button>
-      </a>
-      <div>
-      <a href="Codecooler.html">
-        <button type="submit" class="btn btn-primary">Login as Codecooler</button>
-      </a>
-      </div>
-      <!-- until here -->
     </div>
   </div>
 </header>

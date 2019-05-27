@@ -1,35 +1,22 @@
-
-
-
-import Dao.*;
-import Model.Admin;
-import Model.Card;
-import Service.MentorService;
-
-import java.util.List;
+import Controller.LoginController;
+import Dao.LoginDao;
+import Dao.LoginDaoImpl;
+import com.sun.net.httpserver.HttpServer;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import Controller.Static;
 
 public class Main {
 
+    public static void main(String[] args) throws IOException {
+        LoginDao loginDao = new LoginDaoImpl();
+        HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
+        server.createContext("/login", new LoginController(loginDao));
+        server.createContext("/static", new Static());
+        server.setExecutor(null);
+        server.start();
 
 
-    public static void main(String[] args) {
-        CardDao cardDao = new CardDaoImpl();
-        MentorService mentorService = new MentorService();
-
-
-
-
-        try{
-        List<Card> cards = cardDao.getArtifacts();
-        Card firstCard = cards.get(2);
-            System.out.println("Card title: " + firstCard.getTitle() + "\nCard description: " + firstCard.getDescription());
-
-
-        }
-        catch (DaoException e){
-            e.printStackTrace();
-        }
-        mentorService.addNewCard("artifact_basic");
 
 
     }

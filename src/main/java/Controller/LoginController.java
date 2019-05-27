@@ -1,39 +1,87 @@
 package Controller;
-//
-//import Dao.LoginDaoImpl;
-//import Model.Admin;
-//import Model.Mentor;
-//import Model.Student;
-//
-//import javax.swing.plaf.synth.SynthTextAreaUI;
-//import java.util.Scanner;
-//
-//public class LoginController {
-//
-//    public void runLoginProcedure () {
-//        Scanner scanner = new Scanner(System.in);
-//        LoginDaoImpl loginDao = new LoginDaoImpl();
-//
-//
-//        System.out.println("ener email");
-//        String email = scanner.nextLine();
-//        System.out.println("Enter password");
-//        String password = scanner.nextLine();
-//
-//        String userType = loginDao.checkPermission(email,password);
-//        if (userType.contains("mentor")){
-//            Mentor mentor = loginDao.getMentor(email,password);
-//
-//        }
-//        if (userType.contains("student")){
-//            Student student = loginDao.getStudent(email,password);
-//
-//
-//        }
-//        if (userType.contains("admin")){
-//            Admin admin = loginDao.getAdmin(email,password);
-//
-//        }
-//    }
-//
-//}
+
+
+import Dao.DaoException;
+import Dao.LoginDao;
+import Dao.LoginDaoImpl;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import helpers.MimeTypeResolver;
+import org.jtwig.JtwigModel;
+import org.jtwig.JtwigTemplate;
+
+import java.io.*;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.Map;
+
+public class LoginController implements HttpHandler {
+    LoginDao loginDao;
+
+    public LoginController(LoginDao loginDao){
+        this.loginDao = loginDao;
+    }
+
+    @Override
+    public void handle(HttpExchange httpExchange) throws  IOException {
+        String method = httpExchange.getRequestMethod();
+
+        if (method.equals("GET")){
+           getLoginPage(httpExchange);
+        }
+
+        if (method.equals("POST")){
+            InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
+            BufferedReader br = new BufferedReader(isr);
+            String formData = br.readLine();
+            Map<String, String> data = parseFormData(formData);
+            try {
+                String permission = loginDao.checkPermission(data.get("email"), data.get("password"));
+                System.out.println(permission);
+            } catch (DaoException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+    private void getLoginPage(HttpExchange httpExchange) throws IOException{
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/index.twig");
+        JtwigModel model = JtwigModel.newModel();
+        String response = template.render(model);
+        sendResponse(httpExchange, response);
+    }
+
+
+    private void sendResponse(HttpExchange httpExchange, String response) throws IOException {
+        httpExchange.sendResponseHeaders(200, response.length());
+        OutputStream os = httpExchange.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
+    }
+
+
+    private static Map<String, String> parseFormData(String formData) throws UnsupportedEncodingException {
+        Map<String, String> map = new HashMap<>();
+        String[] pairs = formData.split("&");
+        for(String pair : pairs){
+            String[] keyValue = pair.split("=");
+            // We have to decode the value because it's urlencoded. see: https://en.wikipedia.org/wiki/POST_(HTTP)#Use_for_submitting_web_forms
+            String value = new URLDecoder().decode(keyValue[1], "UTF-8");
+            map.put(keyValue[0], value);
+        }
+        return map;
+    }
+
+
+
+
+
+}
