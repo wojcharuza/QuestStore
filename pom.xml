@@ -20,6 +20,13 @@
         </plugins>
     </build>
 
+    <repositories>
+        <repository>
+            <id>jcenter</id>
+            <url>https://jcenter.bintray.com/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <!-- https://mvnrepository.com/artifact/c3p0/c3p0 -->
         <dependency>
@@ -31,6 +38,11 @@
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>9.1-901-1.jdbc4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jtwig</groupId>
+            <artifactId>jtwig-core</artifactId>
+            <version>5.87.0.RELEASE</version>
         </dependency>
     </dependencies>
 
