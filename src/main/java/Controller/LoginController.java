@@ -3,15 +3,11 @@ package Controller;
 
 import Dao.DaoException;
 import Dao.LoginDao;
-import Dao.LoginDaoImpl;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import helpers.MimeTypeResolver;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
-
 import java.io.*;
-import java.net.URL;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,12 +34,34 @@ public class LoginController implements HttpHandler {
             Map<String, String> data = parseFormData(formData);
             try {
                 String permission = loginDao.checkPermission(data.get("email"), data.get("password"));
-                System.out.println(permission);
+                switch (permission){
+                    case "admin":
+                        httpExchange.getResponseHeaders().set("Location", "admin/mentors");
+                        httpExchange.sendResponseHeaders(302,0);
+                        break;
+
+                    case "mentor":
+                        httpExchange.getResponseHeaders().set("Location", "mentor/students");
+                        httpExchange.sendResponseHeaders(302,0);
+                        break;
+
+
+                    case "student":
+                        httpExchange.getResponseHeaders().set("Location", "student/profile");
+                        httpExchange.sendResponseHeaders(302,0);
+                        break;
+
+                    default:
+                        getLoginPage(httpExchange);
+                }
+
             } catch (DaoException e) {
                 e.printStackTrace();
             }
         }
     }
+
+
 
 
 
@@ -58,6 +76,8 @@ public class LoginController implements HttpHandler {
         String response = template.render(model);
         sendResponse(httpExchange, response);
     }
+
+
 
 
     private void sendResponse(HttpExchange httpExchange, String response) throws IOException {
