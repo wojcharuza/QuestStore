@@ -67,6 +67,26 @@
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
+{#              <form method="POST">#}
+{#                <div class="modal-body mx-3">#}
+{#                <fieldset>#}
+{#                  <label data-error="wrong" data-success="right" >Date Started: </label>#}
+{#                  <input id="datepicker" width="276" name="date"/>#}
+{#                                    <script>#}
+{#                                      $('#datepicker').datepicker({#}
+{#                                        uiLibrary: 'bootstrap4'#}
+{#                                      });#}
+{#                                    </script>#}
+{#                  <label for="exampleSelect1">Select mentor</label>#}
+{#                                  <select class="form-control" id="exampleSelect1" name="mentor">#}
+{#                                    {% for mentor in mentors %}#}
+{#                                    <option>{{ mentor.getFirstName }} {{ mentor.getLastName }}</option>#}
+{#                                    {% endfor %}#}
+{#                                  </select>#}
+{#                  <input id="submit-button" class="btn btn-default" type="submit" name="submit" value="Add" data-dismiss="modal">#}
+{#                </fieldset>#}
+{#                </div>#}
+{#              </form>#}
               <form method="POST">
               <div class="modal-body mx-3">
 
@@ -84,13 +104,13 @@
                 <label for="exampleSelect1">Select mentor</label>
                 <select class="form-control" id="exampleSelect1" name="mentor">
                   {% for mentor in mentors %}
-                  <option>{{ mentor.getFirstName }} {{ mentor.getLastName }}</option>
+                  <option value={{ mentor.getId }}>{{ mentor.getFirstName }} {{ mentor.getLastName }}</option>
                   {% endfor %}
                 </select>
 
               </div>
               <div class="modal-footer d-flex justify-content-center">
-                <input class="btn btn-default" data-dismiss="modal" aria-label="Close" type="submit" value="Add" method="POST">
+                <button class="btn btn-default" aria-label="Close" type="submit" method="POST">Add</button>
               </div>
               </form>
             </div>

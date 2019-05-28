@@ -40,9 +40,13 @@ public class AdminHandleClasses implements HttpHandler {
         if (method.equals("POST")) {
             Map<String, String> inputs = getFormData(httpExchange);
             String date = inputs.get("date");
-            String mentor = inputs.get("mentor");
-            System.out.println(date);
-            System.out.println(mentor);
+            date = date.replaceAll("/", "-");
+            String mentorId = inputs.get("mentor");
+            try {
+                classroomDao.addClassroom(date, Integer.valueOf(mentorId));
+            } catch (DaoException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -70,7 +74,6 @@ public class AdminHandleClasses implements HttpHandler {
         BufferedReader br = new BufferedReader(isr);
         String formData = br.readLine();
         System.out.println(formData);
-        Map inputs = LoginController.parseFormData(formData);
-        return inputs;
+        return LoginController.parseFormData(formData);
     }
 }

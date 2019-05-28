@@ -22,6 +22,7 @@ public class ClassroomDaoImpl implements ClassroomDao {
                 Classroom classroom = new Classroom.Builder().withId(id).withMentorId(mentorId).withStartDate(startDate).withName(mentorDao.getMentorNameById(mentorId)).build();
                 classrooms.add(classroom);
             }
+            stmt.close();
             return classrooms;
         } catch (SQLException e) {
             throw new DaoException();
@@ -40,6 +41,21 @@ public class ClassroomDaoImpl implements ClassroomDao {
         catch (SQLException e){
             throw new DaoException();
         }
+    }
+
+    @Override
+    public void addClassroom(String date, int mentorId) throws DaoException {
+            try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+                PreparedStatement stmt = null;
+                stmt = con.prepareStatement("INSERT INTO \"Classes\"(start_date, mentor_id) VALUES (?, ?)");
+                stmt.setString(1, date);
+                stmt.setInt(2, mentorId);
+                stmt.executeQuery();
+            } catch (SQLException e) {
+                throw new DaoException();
+            }
+
+
     }
 }
 
