@@ -8,7 +8,7 @@ import org.jtwig.JtwigTemplate;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class AdminHandleClasses implements HttpHandler {
+public class StudentHandleProfile implements HttpHandler {
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
@@ -20,7 +20,7 @@ public class AdminHandleClasses implements HttpHandler {
     }
 
     private void getLoginPage(HttpExchange httpExchange) throws IOException{
-        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/classes.twig");
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/profile.twig");
         JtwigModel model = JtwigModel.newModel();
         String response = template.render(model);
         sendResponse(httpExchange, response);

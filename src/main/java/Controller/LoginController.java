@@ -66,10 +66,6 @@ public class LoginController implements HttpHandler {
 
 
 
-
-
-
-
     private void getLoginPage(HttpExchange httpExchange) throws IOException{
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/index.twig");
         JtwigModel model = JtwigModel.newModel();

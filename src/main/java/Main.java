@@ -14,6 +14,7 @@ public class Main {
         server.createContext("/static", new Static());
         server.createContext("/mentor/students", new AdminHandleMentors());
         server.createContext("/admin/classes", new AdminHandleClasses());
+        server.createContext("/student/profile", new StudentHandleProfile());
 
 
 
