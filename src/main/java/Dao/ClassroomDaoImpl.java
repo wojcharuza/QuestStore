@@ -8,6 +8,8 @@ import java.util.List;
 
 public class ClassroomDaoImpl implements ClassroomDao {
 
+    private MentorDao mentorDao = new MentorDaoImpl();
+
     public List<Classroom> getClassrooms() throws DaoException {
         List<Classroom> classrooms = new ArrayList<>();
         try (Connection con = C3P0DataSource.getInstance().getConnection();
@@ -17,7 +19,7 @@ public class ClassroomDaoImpl implements ClassroomDao {
                 int id = rs.getInt("id");
                 LocalDate startDate = (rs.getDate("start_date")).toLocalDate();
                 int mentorId = rs.getInt("mentor_id");
-                Classroom classroom = new Classroom.Builder().withId(id).withMentorId(mentorId).withStartDate(startDate).build();
+                Classroom classroom = new Classroom.Builder().withId(id).withMentorId(mentorId).withStartDate(startDate).withName(mentorDao.getMentorNameById(mentorId)).build();
                 classrooms.add(classroom);
             }
             return classrooms;

@@ -60,4 +60,19 @@ public class MentorDaoImpl implements MentorDao {
         }
     }
 
+    public String getMentorNameById(int mentorId) {
+        String name = null;
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+            PreparedStatement stmt = null;
+            stmt = con.prepareStatement("SELECT first_name || ' ' || last_name AS full_name FROM USERS WHERE id = ?");
+            stmt.setInt(1, mentorId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                name = rs.getString("full_name");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return name;
+    }
 }
