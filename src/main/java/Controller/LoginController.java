@@ -36,8 +36,10 @@ public class LoginController implements HttpHandler {
                 String permission = loginDao.checkPermission(data.get("email"), data.get("password"));
                 switch (permission){
                     case "admin":
-                        httpExchange.getResponseHeaders().set("Location", "admin/mentors");
-                        httpExchange.sendResponseHeaders(302,-1);
+
+                        httpExchange.getResponseHeaders().set("Location", "admin/classes");
+                        httpExchange.sendResponseHeaders(302,0);
+
                         break;
 
                     case "mentor":
@@ -88,7 +90,7 @@ public class LoginController implements HttpHandler {
     }
 
 
-    private static Map<String, String> parseFormData(String formData) throws UnsupportedEncodingException {
+    public static Map<String, String> parseFormData(String formData) throws UnsupportedEncodingException {
         Map<String, String> map = new HashMap<>();
         String[] pairs = formData.split("&");
         for(String pair : pairs){
