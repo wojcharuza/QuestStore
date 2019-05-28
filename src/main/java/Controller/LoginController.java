@@ -36,7 +36,7 @@ public class LoginController implements HttpHandler {
                 String permission = loginDao.checkPermission(data.get("email"), data.get("password"));
                 switch (permission){
                     case "admin":
-                        httpExchange.getResponseHeaders().set("Location", "admin/mentors");
+                        httpExchange.getResponseHeaders().set("Location", "admin/classes");
                         httpExchange.sendResponseHeaders(302,0);
                         break;
 

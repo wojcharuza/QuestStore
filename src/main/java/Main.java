@@ -1,12 +1,9 @@
-import Controller.AdminHandleMentors;
-import Controller.LoginController;
-import Controller.MentorHandleStudents;
+import Controller.*;
 import Dao.LoginDao;
 import Dao.LoginDaoImpl;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import Controller.Static;
 
 public class Main {
 
@@ -16,6 +13,7 @@ public class Main {
         server.createContext("/login", new LoginController(loginDao));
         server.createContext("/static", new Static());
         server.createContext("/mentor/students", new AdminHandleMentors());
+        server.createContext("/admin/classes", new AdminHandleClasses());
 
 
 
