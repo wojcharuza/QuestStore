@@ -17,15 +17,8 @@ public class Main {
         HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
         server.createContext("/login", new LoginController(loginDao));
         server.createContext("/static", new Static());
-
         server.createContext("/admin/mentors", new AdminHandleMentors(mentorDao, classroomDao, studentDao));
         server.createContext("/admin/classes", new AdminHandleClasses(classroomDao, mentorDao));
-
-
-
-
-
-
         server.createContext("/mentor/students", new MentorHandleStudents());
         server.setExecutor(null);
         server.start();
