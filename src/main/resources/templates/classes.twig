@@ -43,11 +43,9 @@
       <div class="card z-depth-0 bordered">
         <div class="card-header" id="headingOne">
           <h5 class="mb-0">
-            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne"
-                    aria-expanded="true" aria-controls="collapseOne">
-              Started: {{ classroom.getStartDate() }}<br>
-              Mentor: {{ classroom.getMentorName() }}
-            </button>
+         <p class="class-cell" text-align="left">Started: {{classroom.getStartDate()}}<br>
+           Mentor: {{ classroom.getMentorName() }}</p>
+
           </h5>
         </div>
       </div>
@@ -67,27 +65,6 @@
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-{#              <form method="POST">#}
-{#                <div class="modal-body mx-3">#}
-{#                <fieldset>#}
-{#                  <label data-error="wrong" data-success="right" >Date Started: </label>#}
-{#                  <input id="datepicker" width="276" name="date"/>#}
-{#                                    <script>#}
-{#                                      $('#datepicker').datepicker({#}
-{#                                        uiLibrary: 'bootstrap4'#}
-{#                                      });#}
-{#                                    </script>#}
-{#                  <label for="exampleSelect1">Select mentor</label>#}
-{#                                  <select class="form-control" id="exampleSelect1" name="mentor">#}
-{#                                    {% for mentor in mentors %}#}
-{#                                    <option>{{ mentor.getFirstName }} {{ mentor.getLastName }}</option>#}
-{#                                    {% endfor %}#}
-{#                                  </select>#}
-{#                  <input id="submit-button" class="btn btn-default" type="submit" name="submit" value="Add" data-dismiss="modal">#}
-{#                </fieldset>#}
-{#                </div>#}
-{#              </form>#}
-              <form method="POST">
               <div class="modal-body mx-3">
 
                 <div class="md-form mb-4">

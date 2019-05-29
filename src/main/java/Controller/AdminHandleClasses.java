@@ -73,7 +73,8 @@ public class AdminHandleClasses implements HttpHandler {
         InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
         BufferedReader br = new BufferedReader(isr);
         String formData = br.readLine();
-        System.out.println(formData);
-        return LoginController.parseFormData(formData);
+        Map<String, String> inputs = LoginController.parseFormData(formData);
+        System.out.println(inputs.get("date"));
+        return  inputs;
     }
 }
