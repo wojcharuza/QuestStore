@@ -90,20 +90,19 @@
                                 </div>
                                 <!-- right column -->
                                 <div class="col-md-5">
-                                    <h2>Classes: </h2>
+                                    <h2 id ="classroomTitle">Classes: </h2>
                                     <ul>
                                     {% for classroom in classrooms  %}
                                     {% if classroom.getMentorId == mentor.getId %}
-                                        <li>Started: {{ classroom.getStartDate }}<br> 
+                                        <li>Started: {{ classroom.getStartDate }}
                                             <ul>
                                                 {% for student in students %}
                                                 {% if student.getClassID == classroom.getId %}
                                                 <li>{{ student.getFirstName }} {{ student.getLastName }}</li>
-                                                <br>
                                                 {% endif %}
                                             {% endfor %}
                                             </ul>
-                                        </li>
+                                        </li><br>
 
                                     {% endif %}
                                     {% endfor %}
