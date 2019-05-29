@@ -13,14 +13,15 @@ public class Main {
         LoginDao loginDao = new LoginDaoImpl();
         ClassroomDao classroomDao = new ClassroomDaoImpl();
         MentorDao mentorDao = new MentorDaoImpl();
+        StudentDao studentDao = new StudentDaoImpl();
         HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
         server.createContext("/login", new LoginController(loginDao));
         server.createContext("/static", new Static());
 
-        server.createContext("/admin/mentors", new AdminHandleMentors());
-
-        server.createContext("/mentor/students", new AdminHandleMentors());
+        server.createContext("/admin/mentors", new AdminHandleMentors(mentorDao, classroomDao, studentDao));
         server.createContext("/admin/classes", new AdminHandleClasses(classroomDao, mentorDao));
+
+
 
 
 

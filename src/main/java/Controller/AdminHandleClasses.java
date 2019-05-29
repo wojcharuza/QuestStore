@@ -1,7 +1,6 @@
 package Controller;
 
 import Dao.ClassroomDao;
-import Dao.ClassroomDaoImpl;
 import Dao.DaoException;
 import Dao.MentorDao;
 import Model.Classroom;
@@ -12,9 +11,6 @@ import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
 
 import java.io.*;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +49,7 @@ public class AdminHandleClasses implements HttpHandler {
     private void getPage(HttpExchange httpExchange) throws IOException, DaoException {
         List<Classroom> classrooms = classroomDao.getClassrooms();
         List<Mentor> mentors = mentorDao.getMentors();
-        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/classes.twig");
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/admin_classes.twig");
         JtwigModel model = JtwigModel.newModel();
         model.with("classrooms", classrooms);
         model.with("mentors", mentors);
