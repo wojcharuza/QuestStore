@@ -59,13 +59,13 @@
                                         <div class="form-group-edit form-group">
                                             <label class="col-lg-8 control-label control-label-edit">First name:</label>
                                             <div class="col-lg-8">
-                                                <input class="form-control" type="text" value="{{ mentor.getFirstName }}">
+                                                <input class="form-control" type="text" value="{{ mentor.getFirstName }}" disabled>
                                             </div>
                                         </div>
                                         <div class="form-group-edit form-group">
                                             <label class="col-lg-8 control-label control-label-edit">Last name:</label>
                                             <div class="col-lg-8">
-                                                <input class="form-control" type="text" value="{{ mentor.getLastName }}">
+                                                <input class="form-control" type="text" value="{{ mentor.getLastName }}" disabled>
                                             </div>
                                         </div>
 
@@ -73,7 +73,7 @@
                                         <div class="form-group-edit form-group">
                                             <label class="col-lg-8 control-label control-label-edit">Email:</label>
                                             <div class="col-lg-8">
-                                                <input class="form-control" type="text" value="{{ mentor.getEmail }}">
+                                                <input class="form-control" type="text" value="{{ mentor.getEmail }}" disabled>
                                             </div>
                                         </div>
 
@@ -81,9 +81,9 @@
                                         <div class="form-group-edit form-group">
                                             <label class="col-md-3 control-label control-label-edit"></label>
                                             <div class="col-md-8">
-                                                <input type="button" class="btn btn-primary" value="Save Changes">
+                                                <input type="button" class="btn btn-primary" value="Save Changes" disabled>
                                                 <span></span>
-                                                <button  type="submit" class="btn btn-primary " onclick="toggleFormElements(true)">Edit</button>
+                                                <button  type="button" class="btn btn-primary " onclick="toggleFormElements()">Edit</button>
                                             </div>
                                         </div>
                                     </form>
