@@ -23,14 +23,14 @@
   </button>
   <div class="collapse navbar-collapse " id="navbarSupportedContent">     <ul class="navbar-nav mr-4">
       <li class="nav-item">
-        <a class="nav-link" data-value="about" href="admin_mentors.twig">Mentors</a></li>
+        <a class="nav-link" data-value="about" href="/admin/mentors">Mentors</a></li>
       <li class="nav-item">
-        <a class="nav-link " data-value="portfolio"href="classess.html">Classes</a>
+        <a class="nav-link " data-value="portfolio"href="/admin/classes">Classes</a>
       </li>
       <li class="nav-item">
         <a class="nav-link " data-value="blog" href="levels.html">Levels</a></li>
       <li class="nav-item">
-        <a class="nav-link " data-value="blog" href="index.twig">Log out</a></li>
+        <a class="nav-link " data-value="blog" href="/login">Log out</a></li>
     </ul>
   </div>
 </nav>
@@ -51,7 +51,7 @@
         </div>
       {% endfor %}
       <div class="description">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalLoginForm">
+        <button type="button" class="addButton btn btn-primary" data-toggle="modal" data-target="#modalLoginForm">
           Add new class
         </button>
         <!-- Modal -->
