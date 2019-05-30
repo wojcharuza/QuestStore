@@ -8,6 +8,7 @@ import com.sun.net.httpserver.HttpHandler;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
 import java.io.*;
+import java.net.HttpCookie;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +23,7 @@ public class LoginController implements HttpHandler {
     @Override
     public void handle(HttpExchange httpExchange) throws  IOException {
         String method = httpExchange.getRequestMethod();
+        HttpCookie cookie;
 
         if (method.equals("GET")){
            getLoginPage(httpExchange);
@@ -32,6 +34,9 @@ public class LoginController implements HttpHandler {
             BufferedReader br = new BufferedReader(isr);
             String formData = br.readLine();
             Map<String, String> data = parseFormData(formData);
+            cookie = new HttpCookie("email",data.get("email"));
+            httpExchange.getResponseHeaders().add("Set-Cookie", cookie.toString());
+
             try {
                 String permission = loginDao.checkPermission(data.get("email"), data.get("password"));
                 switch (permission){

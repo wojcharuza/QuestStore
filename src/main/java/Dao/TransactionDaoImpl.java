@@ -18,6 +18,7 @@ public class TransactionDaoImpl implements TransactionDao {
                                             "card_type::text LIKE 'artifact%' ;");
             stmt.setInt(1, studentId);
             ResultSet rs = stmt.executeQuery();
+
             while(rs.next()){
                 String title = rs.getString("title");
                 String description = rs.getString("description");

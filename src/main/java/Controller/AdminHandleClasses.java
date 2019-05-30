@@ -27,11 +27,13 @@ public class AdminHandleClasses implements HttpHandler {
         this.classroomDao = classroomDao;
         this.mentorDao = mentorDao;
     }
+
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
         String method = httpExchange.getRequestMethod();
 
         if (method.equals("GET")){
+
             try {
                 getPage(httpExchange);
             } catch (DaoException e) {
