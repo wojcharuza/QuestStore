@@ -55,7 +55,13 @@
                             <div class="row">
                                 <!-- edit form column -->
                                 <div class="col-md-5 personal-info">
-                                    <form class="form-horizontal" role="form">
+                                    <form class="form-horizontal" role="form" method="POST">
+                                        <div class="form-group-edit form-group">
+                                            <label class="col-lg-8 control-label control-label-edit">ID:</label>
+                                            <div class="col-lg-8">
+                                                <input class="form-control" name="mentorId" type="text" value="{{ mentor.getId }}" disabled>
+                                            </div>
+                                        </div>
                                         <div class="form-group-edit form-group">
                                             <label class="col-lg-8 control-label control-label-edit">First name:</label>
                                             <div class="col-lg-8">
@@ -81,9 +87,9 @@
                                         <div class="form-group-edit form-group">
                                             <label class="col-md-3 control-label control-label-edit"></label>
                                             <div class="col-md-8">
-                                                <input type="button" class="btn btn-primary" value="Save Changes" disabled>
+                                                <button type="submit" method="POST" class="btn btn-primary" value="Save Changes">Save changes</button>
                                                 <span></span>
-                                                <button  type="button" class="btn btn-primary " onclick="toggleFormElements()">Edit</button>
+                                                <input  type="button" class="btn btn-primary " onclick="enableFormElements()" value="Edit" >
                                             </div>
                                         </div>
                                     </form>

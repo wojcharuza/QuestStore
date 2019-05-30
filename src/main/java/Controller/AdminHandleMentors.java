@@ -45,6 +45,14 @@ public class AdminHandleMentors implements HttpHandler {
             String firstName = inputs.get("firstName");
             String lastName = inputs.get("lastName");
             String email = inputs.get("email");
+            int id = Integer.valueOf(inputs.get("mentorId"));
+            System.out.println(firstName);
+            System.out.println(id);
+            try {
+                mentorDao.editMentor(id, firstName, lastName, email);
+            } catch (DaoException e) {
+                e.printStackTrace();
+            }
         }
     }
 
