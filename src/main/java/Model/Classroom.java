@@ -4,13 +4,15 @@ import java.time.LocalDate;
 
 public class Classroom {
     private int id;
-    private LocalDate startDate;
+    private String startDate;
     private int mentorId;
+    private String mentorName;
 
     public Classroom (Builder builder){
         this.id = builder.id;
         this.startDate = builder.startDate;
         this.mentorId = builder.mentorId;
+        this.mentorName = builder.mentorName;
 
 
     }
@@ -23,17 +25,20 @@ public class Classroom {
         return mentorId;
     }
 
-    public LocalDate getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
+
+    public String getMentorName() { return mentorName; }
 
 
 
 
     public static class Builder {
         private int id;
-        private LocalDate startDate;
+        private String startDate;
         private int mentorId;
+        private String mentorName;
 
 
         public Builder withId(int id) {
@@ -41,7 +46,7 @@ public class Classroom {
             return this;
         }
 
-        public Builder withStartDate(LocalDate startDate) {
+        public Builder withStartDate(String startDate) {
             this.startDate = startDate;
             return this;
 
@@ -49,6 +54,11 @@ public class Classroom {
 
         public Builder withMentorId(int mentorId) {
             this.mentorId = mentorId;
+            return this;
+        }
+
+        public Builder withName(String name) {
+            this.mentorName = name;
             return this;
         }
 

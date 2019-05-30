@@ -125,6 +125,7 @@ footer .navbar {
 
 footer {
     text-align: right;
+    margin-top: 20px;
 }
 
 
@@ -194,4 +195,20 @@ footer {
 
 .mySlider{
     background-color: black;
+}
+
+
+.class-cell{
+    color: white;
+    text-align: left;
+    height: 30px;
+    line-height: 30px;
+}
+
+#classroomTitle{
+    color: #4DDABD;
+}
+
+.addButton{
+    margin-bottom: 100px;
 }

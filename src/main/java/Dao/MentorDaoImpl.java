@@ -22,16 +22,16 @@ public class MentorDaoImpl implements MentorDao {
 
     }
 
-    public void editMentor(int id, String firstName, String lastName, String email, String password) throws DaoException {
+    public void editMentor(int id, String firstName, String lastName, String email) throws DaoException {
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
             PreparedStatement stmt = null;
-            stmt = con.prepareStatement("UPDATE Users SET first_name = ?, last_name = ?, email = ?, password = ? WHERE id = ?");
+            stmt = con.prepareStatement("UPDATE Users SET first_name = ?, last_name = ?, email = ? WHERE id = ?");
             stmt.setString(1, firstName);
             stmt.setString(2, lastName);
             stmt.setString(3, email);
-            stmt.setString(4, password);
-            stmt.setInt(5, id);
-            stmt.executeQuery();
+            //stmt.setString(4, password);
+            stmt.setInt(4, id);
+            stmt.executeUpdate();
 
         } catch (SQLException e) {
             throw new DaoException();
@@ -59,5 +59,23 @@ public class MentorDaoImpl implements MentorDao {
             throw new DaoException();
         }
     }
+
+    public String getMentorNameById(int mentorId) {
+        String name = null;
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+            PreparedStatement stmt = null;
+            stmt = con.prepareStatement("SELECT first_name || ' ' || last_name AS full_name FROM USERS WHERE id = ?");
+            stmt.setInt(1, mentorId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                name = rs.getString("full_name");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return name;
+    }
+
+
 
 }
