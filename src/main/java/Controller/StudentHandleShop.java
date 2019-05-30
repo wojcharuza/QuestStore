@@ -47,22 +47,23 @@ public class StudentHandleShop implements HttpHandler{
         }
 
         if (method.equals("POST")){
-
-
-
+            Student student = getLoggedStudentByMail(email);
             Map<String, String> inputs = getFormData(httpExchange);
-            System.out.println(inputs +"asdasdasd" +inputs.size());
 
-            if(inputs.get("formType").equals("coolcoinValue")){
+            if(inputs.get("formType").equals("title")) {
+                String title = inputs.get("title");
                 System.out.println(inputs);
-                getLoginPage(httpExchange);
+                System.out.println(title);
+                if (verifyAbilityOfPurchase(title, student.getCoolcoins())) {
+                    addTransactionToDatabase(title, student);
+                    getSuccessPage(httpExchange);
+
+                } else {
+                    getFailedPage(httpExchange);
+
                 }
 
-
-
-
-
-
+            }
 
         }
     }
@@ -70,12 +71,31 @@ public class StudentHandleShop implements HttpHandler{
     private void getLoginPage(HttpExchange httpExchange) throws IOException{
         List<Card> artifacts = getArtifacts();
         System.out.println(artifacts.size());
-
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/shop.twig");
         JtwigModel model = JtwigModel.newModel();
         model.with("artifacts", artifacts);
         String response = template.render(model);
         sendResponse(httpExchange, response);
+    }
+    public void getSuccessPage(HttpExchange httpExchange)throws IOException{
+        List<Card> artifacts = getArtifacts();
+        System.out.println(artifacts.size());
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/purchase_success.twig");
+        JtwigModel model = JtwigModel.newModel();
+        model.with("artifacts", artifacts);
+        String response = template.render(model);
+        sendResponse(httpExchange, response);
+
+    }
+    public void getFailedPage (HttpExchange httpExchange)throws IOException{
+        List<Card> artifacts = getArtifacts();
+        System.out.println(artifacts.size());
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/purchase_failed.twig");
+        JtwigModel model = JtwigModel.newModel();
+        model.with("artifacts", artifacts);
+        String response = template.render(model);
+        sendResponse(httpExchange, response);
+
     }
 
     private void sendResponse(HttpExchange httpExchange, String response) throws IOException {
@@ -123,4 +143,30 @@ public class StudentHandleShop implements HttpHandler{
         Map<String, String> inputs = LoginController.parseFormData(formData);
         return inputs;
     }
+    public void addTransactionToDatabase(String cardTitle, Student student){
+        int studentId = student.getId();
+
+        try{
+            transactionDao.addTransaction(studentId,cardTitle);
+
+        }catch (DaoException e){
+            e.printStackTrace();
+        }
+
+    }
+    public boolean verifyAbilityOfPurchase(String cardTitle, int coolcoinBalance){
+        List<Card> artifacts = getArtifacts();
+        int coolcoinValueOfBuyingCard;
+        for (Card c: artifacts){
+            if(c.getTitle().equals(cardTitle)){
+                 coolcoinValueOfBuyingCard = c.getCoolcoinValue();
+                 if(coolcoinValueOfBuyingCard*(-1) < coolcoinBalance){
+                     return true;
+                 }
+            }
+        }
+        return false;
+
+    }
+
 }
