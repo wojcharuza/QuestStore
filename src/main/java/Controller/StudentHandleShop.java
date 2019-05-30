@@ -32,6 +32,9 @@ public class StudentHandleShop implements HttpHandler{
         if (method.equals("GET")){
             getLoginPage(httpExchange);
         }
+        if (method.equals("POST")){
+
+        }
     }
 
     private void getLoginPage(HttpExchange httpExchange) throws IOException{
@@ -56,7 +59,6 @@ public class StudentHandleShop implements HttpHandler{
         List<Card> artifacts = new ArrayList<>();
         try{
             artifacts = cardDao.getArtifacts();
-
             return artifacts;
         }catch (DaoException e){
             e.printStackTrace();
