@@ -46,7 +46,6 @@ public class StudentHandleProfile  implements HttpHandler  {
 
 
 
-
         if (method.equals("GET")){
             getLoginPage(httpExchange, email);
         }
@@ -58,9 +57,6 @@ public class StudentHandleProfile  implements HttpHandler  {
         System.out.println(studentCards.size());
 
         int studentEXP = getLoggedStudentEXP(studentCards);
-
-
-
 
 
 
