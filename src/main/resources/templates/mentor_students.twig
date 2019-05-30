@@ -111,17 +111,20 @@
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
+                                            <form method="POST">
                                             <div class="modal-body mx-3">
+                                                <input value="editMentor" hidden disabled type="text" name="editMentor">
                                                 <label for="exampleSelect1">Select quest</label>
-                                                <select class="form-control" id="exampleSelect1">
+                                                <select class="form-control" id="exampleSelect1" name="title">
                                                     {% for quest in quests %}
                                                     <option>{{ quest.getTitle }}</option>
                                                     {% endfor %}
                                                 </select>
                                             </div>
                                             <div class="modal-footer d-flex justify-content-center">
-                                                <button class="btn btn-default" data-dismiss="modal" aria-label="Close">Submit</button>
+                                                <button class="btn btn-default" data-dismiss="modal" aria-label="Close" method="POST">Submit</button>
                                             </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
