@@ -29,6 +29,7 @@ public class TransactionDaoImpl implements TransactionDao {
                         .withImagePath(imagePath).withCardType(card_type).withCoolcoinValue(coolcoinValue).build();
                 usedCards.add(card);
             }
+
             return usedCards;
 
         } catch (SQLException e) {

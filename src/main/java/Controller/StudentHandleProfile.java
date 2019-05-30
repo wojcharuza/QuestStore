@@ -26,10 +26,10 @@ public class StudentHandleProfile  implements HttpHandler  {
     private CardDao cardDao;
 
 
-    public StudentHandleProfile(StudentDao studentDao, TransactionDao transactionDao, CardDao cardDao){
+    public StudentHandleProfile(StudentDao studentDao, TransactionDao transactionDao){
         this.studentDao = studentDao;
         this.transactionDao = transactionDao;
-        this.cardDao = cardDao;
+        //this.cardDao = cardDao;
     }
 
 
@@ -55,6 +55,8 @@ public class StudentHandleProfile  implements HttpHandler  {
     private void getLoginPage(HttpExchange httpExchange, String email) throws IOException{
         Student student = getLoggedStudentByMail(email);
         List<Card> studentCards = getLoggedStudentCards(student.getId());
+        System.out.println(studentCards.size());
+
         int studentEXP = getLoggedStudentEXP(studentCards);
 
 
@@ -68,6 +70,7 @@ public class StudentHandleProfile  implements HttpHandler  {
         model.with("Name", fullname);
         model.with("experience", studentEXP);
         model.with("coolcoins", student.getCoolcoins());
+        model.with("studentCards", studentCards);
 
 
         String response = template.render(model);
@@ -116,7 +119,7 @@ public class StudentHandleProfile  implements HttpHandler  {
     public int getLoggedStudentEXP (List<Card> studentCards){
         int studentEXP = 0;
         for (Card c: studentCards){
-            studentEXP = studentEXP + c.getCoolcoin_value();
+            studentEXP = studentEXP + c.getCoolcoinValue();
         }
         return studentEXP;
     }
