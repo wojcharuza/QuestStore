@@ -19,7 +19,7 @@ public class Main {
         server.createContext("/static", new Static());
         server.createContext("/admin/mentors", new AdminHandleMentors(mentorDao, classroomDao, studentDao));
         server.createContext("/admin/classes", new AdminHandleClasses(classroomDao, mentorDao));
-        server.createContext("/mentor/students", new MentorHandleStudents());
+        server.createContext("/admin/students", new MentorHandleStudents(studentDao));
         server.setExecutor(null);
         server.start();
 
