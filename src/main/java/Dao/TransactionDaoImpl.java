@@ -40,7 +40,15 @@ public class TransactionDaoImpl implements TransactionDao {
 
 
 
-    public void markQuestCompletedByStudent() throws DaoException {
-
+    public void markQuestCompletedByStudent(String questTitle, int studentId) throws DaoException {
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+            PreparedStatement stmt = null;
+            stmt = con.prepareStatement("INSERT INTO \"Transactions\" (student_id, card_title) VALUES (?, ?)");
+            stmt.setInt(1, studentId);
+            stmt.setString(2, questTitle);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

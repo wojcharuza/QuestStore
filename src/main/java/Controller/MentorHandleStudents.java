@@ -3,6 +3,7 @@ package Controller;
 import Dao.CardDao;
 import Dao.DaoException;
 import Dao.StudentDao;
+import Dao.TransactionDao;
 import Model.Card;
 import Model.Student;
 import com.sun.net.httpserver.HttpExchange;
@@ -21,10 +22,12 @@ import java.util.Map;
 public class MentorHandleStudents implements HttpHandler {
     private StudentDao studentDao;
     private CardDao cardDao;
+    private TransactionDao transactionDao;
 
-    public MentorHandleStudents(StudentDao studentDao, CardDao cardDao) {
+    public MentorHandleStudents(StudentDao studentDao, CardDao cardDao, TransactionDao transactionDao) {
         this.studentDao = studentDao;
         this.cardDao = cardDao;
+        this.transactionDao = transactionDao;
     }
 
     @Override
@@ -40,14 +43,36 @@ public class MentorHandleStudents implements HttpHandler {
 
         if (method.equals("POST")) {
             Map<String, String> inputs = getFormData(httpExchange);
-            String firstName = inputs.get("firstName");
-            String lastName = inputs.get("lastName");
-            String email = inputs.get("email");
-            int id = Integer.valueOf(inputs.get("studentId"));
-            try {
-                studentDao.editStudent(id, firstName, lastName, email);
-            } catch (DaoException e) {
-                e.printStackTrace();
+            if (inputs.get("formType").equals("editStudent")) {
+                String firstName = inputs.get("firstName");
+                String lastName = inputs.get("lastName");
+                String email = inputs.get("email");
+                int id = Integer.valueOf(inputs.get("studentId"));
+                try {
+                    studentDao.editStudent(id, firstName, lastName, email);
+                } catch (DaoException e) {
+                    e.printStackTrace();
+                }
+            } else if (inputs.get("formType").equals("addQuest")) {
+                int id = Integer.valueOf(inputs.get("student"));
+                String quest = inputs.get("title");
+                try {
+                    transactionDao.markQuestCompletedByStudent(quest, id);
+                    getPage(httpExchange);
+                } catch (DaoException e) {
+                    e.printStackTrace();
+                }
+            } else if (inputs.get("formType").equals("addStudent")) {
+                String name = inputs.get("firstName");
+                String surname = inputs.get("surname");
+                String email = inputs.get("email");
+                String password = inputs.get("password");
+                try {
+                    studentDao.addNewStudent(name, surname, email, password);
+                    getPage(httpExchange);
+                } catch (DaoException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
