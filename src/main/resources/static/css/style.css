@@ -204,3 +204,11 @@ footer {
     height: 30px;
     line-height: 30px;
 }
+
+#classroomTitle{
+    color: #4DDABD;
+}
+
+.addButton{
+    margin-bottom: 100px;
+}
