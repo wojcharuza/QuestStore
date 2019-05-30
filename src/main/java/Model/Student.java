@@ -59,6 +59,8 @@ public class Student {
         return password;
     }
 
+    public List<Card> getUsedArtifacts() { return usedArtifacts; };
+
 
     public static class Builder {
 

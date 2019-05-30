@@ -77,7 +77,7 @@
                                     <div class="form-group-edit form-group">
                                         <label class="col-lg-8 control-label control-label-edit">Coins:</label>
                                         <div class="col-lg-8">
-                                            <input class="form-control" type="text" name="email" value="{{ student.getCoolcoins }}" disabled>
+                                            <input class="form-control" type="text" name="coins" value="{{ student.getCoolcoins }}" readonly="true">
                                         </div>
                                     </div>
                                     <div class="form-group-edit form-group">
@@ -94,8 +94,9 @@
                             <div class="col-md-5">
                                 <h2>Bought Artifacts: </h2>
                                         <ul>
-                                            <li>Teleport</li>
-                                            <li>Combat training</li>
+                                            {% for card in student.getUsedArtifacts %}
+                                            <li>{{ card.getTitle }}</li>
+                                            {% endfor %}
                                         </ul>
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalQuest">
                                     New quest completed
@@ -113,11 +114,9 @@
                                             <div class="modal-body mx-3">
                                                 <label for="exampleSelect1">Select quest</label>
                                                 <select class="form-control" id="exampleSelect1">
-                                                    <option>Slaying a dragon</option>
-                                                    <option>Exploring a dungeon</option>
-                                                    <option>Solving the magic puzzle</option>
-                                                    <option>Spot a trap</option>
-                                                    <option>Forging weapons</option>
+                                                    {% for quest in quests %}
+                                                    <option>{{ quest.getTitle }}</option>
+                                                    {% endfor %}
                                                 </select>
                                             </div>
                                             <div class="modal-footer d-flex justify-content-center">
@@ -131,6 +130,7 @@
                     </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
         <div class="description">
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalLoginForm">
