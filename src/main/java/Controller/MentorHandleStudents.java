@@ -44,36 +44,48 @@ public class MentorHandleStudents implements HttpHandler {
         if (method.equals("POST")) {
             Map<String, String> inputs = getFormData(httpExchange);
             if (inputs.get("formType").equals("editStudent")) {
-                String firstName = inputs.get("firstName");
-                String lastName = inputs.get("lastName");
-                String email = inputs.get("email");
-                int id = Integer.valueOf(inputs.get("studentId"));
-                try {
-                    studentDao.editStudent(id, firstName, lastName, email);
-                } catch (DaoException e) {
-                    e.printStackTrace();
-                }
+                editStudent(inputs);
             } else if (inputs.get("formType").equals("addQuest")) {
-                int id = Integer.valueOf(inputs.get("student"));
-                String quest = inputs.get("title");
-                try {
-                    transactionDao.markQuestCompletedByStudent(quest, id);
-                    getPage(httpExchange);
-                } catch (DaoException e) {
-                    e.printStackTrace();
-                }
+                addQuestCompleted(httpExchange, inputs);
             } else if (inputs.get("formType").equals("addStudent")) {
-                String name = inputs.get("firstName");
-                String surname = inputs.get("surname");
-                String email = inputs.get("email");
-                String password = inputs.get("password");
-                try {
-                    studentDao.addNewStudent(name, surname, email, password);
-                    getPage(httpExchange);
-                } catch (DaoException e) {
-                    e.printStackTrace();
-                }
+                addStudent(httpExchange, inputs);
             }
+        }
+    }
+
+    private void editStudent(Map<String, String> inputs) {
+        String firstName = inputs.get("firstName");
+        String lastName = inputs.get("lastName");
+        String email = inputs.get("email");
+        int id = Integer.valueOf(inputs.get("studentId"));
+        try {
+            studentDao.editStudent(id, firstName, lastName, email);
+        } catch (DaoException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addStudent(HttpExchange httpExchange, Map<String, String> inputs) throws IOException {
+        String name = inputs.get("firstName");
+        String surname = inputs.get("surname");
+        String email = inputs.get("email");
+        String password = inputs.get("password");
+        try {
+            studentDao.addNewStudent(name, surname, email, password);
+            getPage(httpExchange);
+        } catch (DaoException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addQuestCompleted(HttpExchange httpExchange, Map<String, String> inputs) throws IOException {
+        int id = Integer.valueOf(inputs.get("student"));
+        String quest = inputs.get("title");
+        try {
+            transactionDao.markQuestCompletedByStudent(quest, id);
+            getPage(httpExchange);
+        } catch (DaoException e) {
+            e.printStackTrace();
         }
     }
 
