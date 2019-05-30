@@ -52,10 +52,20 @@ public class StudentHandleShop implements HttpHandler{
 
             if(inputs.get("formType").equals("title")){
                 String title = inputs.get("title");
+                System.out.println(inputs);
                 System.out.println(title);
-                addTransactionToDatabase(title,student);
+                if (verifyAbilityOfPurchase(title,student.getCoolcoins())){
+                    addTransactionToDatabase(title,student);
+                    getSuccessPage(httpExchange);
 
-                getLoginPage(httpExchange);
+                } else{
+                    getFailedPage(httpExchange);
+
+                }
+
+
+
+
                 }
 
 
@@ -75,6 +85,26 @@ public class StudentHandleShop implements HttpHandler{
         model.with("artifacts", artifacts);
         String response = template.render(model);
         sendResponse(httpExchange, response);
+    }
+    public void getSuccessPage(HttpExchange httpExchange)throws IOException{
+        List<Card> artifacts = getArtifacts();
+        System.out.println(artifacts.size());
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/purchase_success.twig");
+        JtwigModel model = JtwigModel.newModel();
+        model.with("artifacts", artifacts);
+        String response = template.render(model);
+        sendResponse(httpExchange, response);
+
+    }
+    public void getFailedPage (HttpExchange httpExchange)throws IOException{
+        List<Card> artifacts = getArtifacts();
+        System.out.println(artifacts.size());
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/purchase_failed.twig");
+        JtwigModel model = JtwigModel.newModel();
+        model.with("artifacts", artifacts);
+        String response = template.render(model);
+        sendResponse(httpExchange, response);
+
     }
 
     private void sendResponse(HttpExchange httpExchange, String response) throws IOException {
@@ -132,7 +162,19 @@ public class StudentHandleShop implements HttpHandler{
             e.printStackTrace();
         }
 
-
+    }
+    public boolean verifyAbilityOfPurchase(String cardTitle, int coolcoinBalance){
+        List<Card> artifacts = getArtifacts();
+        int coolcoinValueOfBuyingCard;
+        for (Card c: artifacts){
+            if(c.getTitle().equals(cardTitle)){
+                 coolcoinValueOfBuyingCard = c.getCoolcoinValue();
+                 if(coolcoinValueOfBuyingCard*(-1) < coolcoinBalance){
+                     return true;
+                 }
+            }
+        }
+        return false;
 
     }
 }
