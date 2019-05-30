@@ -55,6 +55,36 @@ public class TransactionDaoImpl implements TransactionDao {
 
 
     }
+    public List<Card> questsComplitedByStudent(int studentID) throws DaoException{
+        List<Card> usedCards = new ArrayList<>();
+        try(Connection con = C3P0DataSource.getInstance().getConnection()){
+            PreparedStatement stmt = null;
+            stmt = con.prepareStatement("SELECT title, description, image_path, card_type, " +
+                    "coolcoin_value FROM \"Transactions\" LEFT JOIN \"Cards\" ON " +
+                    "\"Transactions\".card_title = \"Cards\".title WHERE student_id = ? AND " +
+                    "card_type::text LIKE '%quest%' ;");
+            stmt.setInt(1, studentID);
+            ResultSet rs = stmt.executeQuery();
+
+            while(rs.next()){
+                String title = rs.getString("title");
+                String description = rs.getString("description");
+                String imagePath = rs.getString("image_path");
+                String card_type = rs.getString("card_type");
+                int coolcoinValue = rs.getInt("coolcoin_value");
+                Card card = new Card.Builder().withTitle(title).withDescription(description)
+                        .withImagePath(imagePath).withCardType(card_type).withCoolcoinValue(coolcoinValue).build();
+                usedCards.add(card);
+            }
+
+            return usedCards;
+
+        } catch (SQLException e) {
+            throw new DaoException();
+        }
+
+
+    }
 
 
 

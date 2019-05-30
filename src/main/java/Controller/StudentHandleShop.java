@@ -50,29 +50,20 @@ public class StudentHandleShop implements HttpHandler{
             Student student = getLoggedStudentByMail(email);
             Map<String, String> inputs = getFormData(httpExchange);
 
-            if(inputs.get("formType").equals("title")){
+            if(inputs.get("formType").equals("title")) {
                 String title = inputs.get("title");
                 System.out.println(inputs);
                 System.out.println(title);
-                if (verifyAbilityOfPurchase(title,student.getCoolcoins())){
-                    addTransactionToDatabase(title,student);
+                if (verifyAbilityOfPurchase(title, student.getCoolcoins())) {
+                    addTransactionToDatabase(title, student);
                     getSuccessPage(httpExchange);
 
-                } else{
+                } else {
                     getFailedPage(httpExchange);
 
                 }
 
-
-
-
-                }
-
-
-
-
-
-
+            }
 
         }
     }
@@ -177,4 +168,5 @@ public class StudentHandleShop implements HttpHandler{
         return false;
 
     }
+
 }
