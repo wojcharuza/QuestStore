@@ -2,6 +2,8 @@ package Controller;
 
 import Dao.CardDao;
 import Dao.DaoException;
+import Dao.StudentDao;
+import Dao.TransactionDao;
 import Model.Card;
 import Model.Student;
 import com.sun.net.httpserver.HttpExchange;
@@ -9,30 +11,58 @@ import com.sun.net.httpserver.HttpHandler;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpCookie;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class StudentHandleShop implements HttpHandler{
 
     private CardDao cardDao;
+    private StudentDao studentDao;
+    private TransactionDao transactionDao;
 
-    public StudentHandleShop(CardDao cardDao){
+    public StudentHandleShop(CardDao cardDao,StudentDao studentDao, TransactionDao transactionDao){
         this.cardDao = cardDao;
+        this.studentDao = studentDao;
+        this.transactionDao = transactionDao;
     }
 
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-
-
+        HttpCookie cookie;
         String method = httpExchange.getRequestMethod();
+        String sessionCookie = httpExchange.getRequestHeaders().getFirst("Cookie");
+        String email = getEmailFromCookie(sessionCookie);
+
+
+
         if (method.equals("GET")){
             getLoginPage(httpExchange);
         }
+
         if (method.equals("POST")){
+
+
+
+            Map<String, String> inputs = getFormData(httpExchange);
+            System.out.println(inputs +"asdasdasd" +inputs.size());
+
+            if(inputs.get("formType").equals("coolcoinValue")){
+                System.out.println(inputs);
+                getLoginPage(httpExchange);
+                }
+
+
+
+
+
+
 
         }
     }
@@ -64,5 +94,33 @@ public class StudentHandleShop implements HttpHandler{
             e.printStackTrace();
         }
         return artifacts;
+    }
+
+    public Student getLoggedStudentByMail(String email) throws IOException {
+        Student student = new Student.Builder().build();
+        try{
+            student = studentDao.getStudentByEmail(email);
+            System.out.println(student.getLastName() + "this is name");
+
+
+        }catch (DaoException e){
+            e.printStackTrace();
+        }
+        return student;
+    }
+
+    public String getEmailFromCookie(String cookie){
+        String[] splitedCoookie = cookie.split(";");
+        String email = splitedCoookie[2];
+        String updatedEmail = email.replace("email=", "");
+        String trueMail = updatedEmail.substring(2,updatedEmail.length()-1);
+        return trueMail;
+    }
+    private Map<String, String> getFormData(HttpExchange httpExchange) throws IOException {
+        InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
+        BufferedReader br = new BufferedReader(isr);
+        String formData = br.readLine();
+        Map<String, String> inputs = LoginController.parseFormData(formData);
+        return inputs;
     }
 }

@@ -18,7 +18,7 @@ public class C3P0DataSource {
                     .setJdbcUrl("jdbc:postgresql://dumbo.db.elephantsql.com:5432/ijkqajbr");
             comboPooledDataSource.setUser("ijkqajbr");
             comboPooledDataSource.setPassword("9utjfradeOktE8cgHrrvxiDUvjP0wFRd");
-            comboPooledDataSource.setMaxPoolSize(6);
+            comboPooledDataSource.setMaxPoolSize(8);
         }
         catch (PropertyVetoException ex1) {
             ex1.printStackTrace();

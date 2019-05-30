@@ -38,7 +38,6 @@ public class StudentHandleProfile  implements HttpHandler  {
     public void handle(HttpExchange httpExchange) throws IOException {
         HttpCookie cookie;
         String method = httpExchange.getRequestMethod();
-
         String sessionCookie = httpExchange.getRequestHeaders().getFirst("Cookie");
         System.out.println(sessionCookie+ "final coooooookie");
         String email = getEmailFromCookie(sessionCookie);
