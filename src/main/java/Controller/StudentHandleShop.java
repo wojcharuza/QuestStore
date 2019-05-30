@@ -47,14 +47,14 @@ public class StudentHandleShop implements HttpHandler{
         }
 
         if (method.equals("POST")){
-
-
-
+            Student student = getLoggedStudentByMail(email);
             Map<String, String> inputs = getFormData(httpExchange);
-            System.out.println(inputs +"asdasdasd" +inputs.size());
 
-            if(inputs.get("formType").equals("coolcoinValue")){
-                System.out.println(inputs);
+            if(inputs.get("formType").equals("title")){
+                String title = inputs.get("title");
+                System.out.println(title);
+                addTransactionToDatabase(title,student);
+
                 getLoginPage(httpExchange);
                 }
 
@@ -70,7 +70,6 @@ public class StudentHandleShop implements HttpHandler{
     private void getLoginPage(HttpExchange httpExchange) throws IOException{
         List<Card> artifacts = getArtifacts();
         System.out.println(artifacts.size());
-
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/shop.twig");
         JtwigModel model = JtwigModel.newModel();
         model.with("artifacts", artifacts);
@@ -122,5 +121,18 @@ public class StudentHandleShop implements HttpHandler{
         String formData = br.readLine();
         Map<String, String> inputs = LoginController.parseFormData(formData);
         return inputs;
+    }
+    public void addTransactionToDatabase(String cardTitle, Student student){
+        int studentId = student.getId();
+
+        try{
+            transactionDao.addTransaction(studentId,cardTitle);
+
+        }catch (DaoException e){
+            e.printStackTrace();
+        }
+
+
+
     }
 }

@@ -37,6 +37,25 @@ public class TransactionDaoImpl implements TransactionDao {
         }
     }
 
+    public void addTransaction(int studentID, String cardTitle) throws DaoException{
+
+        try(Connection con = C3P0DataSource.getInstance().getConnection()){
+            PreparedStatement stmt = null;
+            stmt = con.prepareStatement("INSERT  INTO  \"Transactions\"(student_id, card_title)VALUES "+
+                    "(?, ?)");
+            stmt.setInt(1,studentID);
+            stmt.setString(2,cardTitle);
+            stmt.executeQuery();
+
+
+            } catch (SQLException e){
+                e.printStackTrace();
+                throw new DaoException();
+        }
+
+
+    }
+
 
 
 

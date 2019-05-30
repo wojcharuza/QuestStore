@@ -47,10 +47,10 @@
             <div class="card-body">
                 <h5 class="card-title card-title-centered">{{ card.getTitle }}</h5>
                 <p class="card-text">{{ card.getDescription }}</p>
-                
+
                 <form method="POST">
-                    <input name="formType" value="coolcoinValue" hidden>
-                    <input name="CoolcoinValue" value="{{ card.getCoolcoinValue }}" HIDDEN >
+                    <input name="formType" value="title" hidden>
+                    <input name="title" value="{{ card.getTitle }}" HIDDEN >
                     <input type="submit" method="POST" class="deleteButton btn btn-primary" value="$ {{ card.getCoolcoinValue }} BUY"/>
                 </form>
 
