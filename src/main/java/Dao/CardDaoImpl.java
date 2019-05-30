@@ -13,7 +13,7 @@ public class CardDaoImpl implements CardDao{
         try(Connection con = C3P0DataSource.getInstance().getConnection();
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM \"Cards\" WHERE card_type::text LIKE 'quest%'")){
-            prepareCard(rs);
+            cards = prepareCard(rs);
             stmt.close();
             rs.close();
             return cards;
@@ -102,7 +102,6 @@ public class CardDaoImpl implements CardDao{
             throw new DaoException();
         }
     }
-
 
 
 }
