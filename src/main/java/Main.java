@@ -14,6 +14,7 @@ public class Main {
         ClassroomDao classroomDao = new ClassroomDaoImpl();
         MentorDao mentorDao = new MentorDaoImpl();
         StudentDao studentDao = new StudentDaoImpl();
+
         TransactionDao transactionDao = new TransactionDaoImpl();
         CardDao cardDao = new CardDaoImpl();
         HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
@@ -21,7 +22,8 @@ public class Main {
         server.createContext("/static", new Static());
         server.createContext("/student/profile", new StudentHandleProfile(studentDao,transactionDao));
         server.createContext("/student/shop", new StudentHandleShop(cardDao));
-        server.createContext("/admin/mentors", new AdminHandleMentors());
+
+        server.createContext("/admin/mentors", new AdminHandleMentors(mentorDao, classroomDao, studentDao));
         server.createContext("/admin/classes", new AdminHandleClasses(classroomDao, mentorDao));
         server.createContext("/mentor/students", new MentorHandleStudents());
         server.setExecutor(null);

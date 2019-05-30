@@ -42,7 +42,7 @@ public class LoginController implements HttpHandler {
                 switch (permission){
                     case "admin":
 
-                        httpExchange.getResponseHeaders().set("Location", "admin/classes");
+                        httpExchange.getResponseHeaders().set("Location", "admin/mentors");
                         httpExchange.sendResponseHeaders(302,0);
 
                         break;

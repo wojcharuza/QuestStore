@@ -76,26 +76,28 @@ public class StudentDaoImpl implements StudentDao {
             stmt = con.prepareStatement("SELECT * FROM users WHERE id = ? AND permission = 'student'");
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
-            String firstName = rs.getString("first_name");
-            String lastName = rs.getString("last_name");
-            String email = rs.getString("email");
-            String password = rs.getString("password");
-            int classroom = rs.getInt("class_id");
-            int coolcoins = getCoolcoinBalance(id);
-            List<Card> usedArtifacts = getUsedArtifacts(id);
-            student = new Student.Builder().wirhId(id)
-                    .withFirstName(firstName)
-                    .withLastName(lastName)
-                    .withEmail(email)
-                    .withPassword(password)
-                    .withClassId(classroom)
-                    .withCoolcoins(coolcoins)
-                    .withUsedArtifacts(usedArtifacts).build();
+            if(rs.next()) {
+                String firstName = rs.getString("first_name");
+                String lastName = rs.getString("last_name");
+                String email = rs.getString("email");
+                String password = rs.getString("password");
+                int classroom = rs.getInt("class_id");
+                int coolcoins = getCoolcoinBalance(id);
+                List<Card> usedArtifacts = getUsedArtifacts(id);
+                student = new Student.Builder().wirhId(id)
+                        .withFirstName(firstName)
+                        .withLastName(lastName)
+                        .withEmail(email)
+                        .withPassword(password)
+                        .withClassId(classroom)
+                        .withCoolcoins(coolcoins)
+                        .withUsedArtifacts(usedArtifacts).build();
+            }
 
-            return student;
         } catch (SQLException e) {
-            throw new DaoException();
+            e.printStackTrace();
         }
+            return student;
     }
     public Student getStudentByEmail(String email) throws DaoException{
         Student student = new Student.Builder().build();
@@ -172,9 +174,9 @@ public class StudentDaoImpl implements StudentDao {
                                             .withImagePath(imagePath).build();
                 usedArtifacts.add(card);
             }
-            return usedArtifacts;
         } catch (SQLException e) {
-            throw new DaoException();
+            e.printStackTrace();
         }
+            return usedArtifacts;
     }
 }

@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class Classroom {
     private int id;
-    private LocalDate startDate;
+    private String startDate;
     private int mentorId;
     private String mentorName;
 
@@ -25,7 +25,7 @@ public class Classroom {
         return mentorId;
     }
 
-    public LocalDate getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
@@ -36,7 +36,7 @@ public class Classroom {
 
     public static class Builder {
         private int id;
-        private LocalDate startDate;
+        private String startDate;
         private int mentorId;
         private String mentorName;
 
@@ -46,7 +46,7 @@ public class Classroom {
             return this;
         }
 
-        public Builder withStartDate(LocalDate startDate) {
+        public Builder withStartDate(String startDate) {
             this.startDate = startDate;
             return this;
 
