@@ -22,7 +22,7 @@ public class Card {
         return description;
     }
 
-    public int getCoolcoin_value() {
+    public int getCoolcoinValue() {
         return coolcoinValue;
     }
 

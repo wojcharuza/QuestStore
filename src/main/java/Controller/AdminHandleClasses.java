@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 public class AdminHandleClasses implements HttpHandler {
+
     private ClassroomDao classroomDao;
     private MentorDao mentorDao;
 
@@ -22,11 +23,13 @@ public class AdminHandleClasses implements HttpHandler {
         this.classroomDao = classroomDao;
         this.mentorDao = mentorDao;
     }
+
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
         String method = httpExchange.getRequestMethod();
 
         if (method.equals("GET")){
+
             try {
                 getPage(httpExchange);
             } catch (DaoException e) {
@@ -35,16 +38,49 @@ public class AdminHandleClasses implements HttpHandler {
         }
         if (method.equals("POST")) {
             Map<String, String> inputs = getFormData(httpExchange);
-            String date = inputs.get("date");
-            date = date.replaceAll("/", "-");
-            String mentorId = inputs.get("mentor");
-            try {
-                classroomDao.addClassroom(date, Integer.valueOf(mentorId));
-            } catch (DaoException e) {
-                e.printStackTrace();
+
+            if(inputs.get("formType").equals("addClass")){
+                addClassroom(inputs);
+                try {
+                    getPage(httpExchange);
+                } catch (DaoException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            else if(inputs.get("formType").equals("deleteClass")){
+                try {
+                    deleteClassroom(inputs);
+                    getPage(httpExchange);
+                } catch (DaoException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
+
+
+
+
+    private void deleteClassroom(Map<String, String> inputs) throws DaoException {
+        classroomDao.deleteClassRoom(Integer.valueOf(inputs.get("deleteClassId")));
+    }
+
+
+
+    private void addClassroom(Map<String, String> inputs){
+        String date = inputs.get("date");
+        date = date.replaceAll("/", "-");
+        String mentorId = inputs.get("mentor");
+        try {
+            classroomDao.addClassroom(date, Integer.valueOf(mentorId));
+        } catch (DaoException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
 
     private void getPage(HttpExchange httpExchange) throws IOException, DaoException {
         List<Classroom> classrooms = classroomDao.getClassrooms();

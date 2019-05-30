@@ -42,21 +42,54 @@ public class AdminHandleMentors implements HttpHandler {
         }
         if (method.equals("POST")) {
             Map<String, String> inputs = getFormData(httpExchange);
-            String firstName = inputs.get("firstName");
-            String lastName = inputs.get("lastName");
-            String email = inputs.get("email");
-            int id = Integer.valueOf(inputs.get("mentorId"));
-            System.out.println(firstName);
-            System.out.println(id);
-            try {
-                mentorDao.editMentor(id, firstName, lastName, email);
-            } catch (DaoException e) {
-                e.printStackTrace();
+
+            if(inputs.get("formType").equals("editMentor")){
+                editMentor(inputs);
+            }
+
+            else if(inputs.get("formType").equals("addMentor")){
+                addMentor(inputs);
+                try {
+                    getPage(httpExchange);
+                } catch (DaoException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
 
+
+
+
+    private void addMentor(Map<String, String> inputs){
+        String firstName = inputs.get("firstName");
+        String lastName = inputs.get("lastName");
+        String email = inputs.get("email");
+        String password = inputs.get("password");
+        try{
+            mentorDao.addMentor(firstName, lastName, email, password);
+        }
+        catch (DaoException e){
+            e.printStackTrace();
+        }
+    }
+
+
+
+    private void editMentor(Map<String, String> inputs){
+        String firstName = inputs.get("firstName");
+        String lastName = inputs.get("lastName");
+        String email = inputs.get("email");
+        int id = Integer.valueOf(inputs.get("mentorId"));
+        System.out.println(firstName);
+        System.out.println(id);
+        try {
+            mentorDao.editMentor(id, firstName, lastName, email);
+        } catch (DaoException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 
@@ -77,7 +110,7 @@ public class AdminHandleMentors implements HttpHandler {
 
 
     private void sendResponse(HttpExchange httpExchange, String response) throws IOException {
-        httpExchange.sendResponseHeaders(200, response.length());
+        httpExchange.sendResponseHeaders(200, response.getBytes().length);
         OutputStream os = httpExchange.getResponseBody();
         os.write(response.getBytes());
         os.close();

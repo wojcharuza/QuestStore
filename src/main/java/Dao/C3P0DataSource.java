@@ -18,27 +18,25 @@ public class C3P0DataSource {
                     .setJdbcUrl("jdbc:postgresql://dumbo.db.elephantsql.com:5432/ijkqajbr");
             comboPooledDataSource.setUser("ijkqajbr");
             comboPooledDataSource.setPassword("9utjfradeOktE8cgHrrvxiDUvjP0wFRd");
-
         }
         catch (PropertyVetoException ex1) {
-                ex1.printStackTrace();
-            }
-        }
-
-        public static C3P0DataSource getInstance() {
-            if (dataSource == null)
-                dataSource = new C3P0DataSource();
-            return dataSource;
-        }
-
-        public Connection getConnection() {
-            Connection con = null;
-            try {
-                con = comboPooledDataSource.getConnection();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return con;
+            ex1.printStackTrace();
         }
     }
 
+    public static C3P0DataSource getInstance() {
+        if (dataSource == null)
+            dataSource = new C3P0DataSource();
+        return dataSource;
+    }
+
+    public Connection getConnection() {
+        Connection con = null;
+        try {
+            con = comboPooledDataSource.getConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return con;
+    }
+}

@@ -98,6 +98,37 @@ public class StudentDaoImpl implements StudentDao {
         }
             return student;
     }
+    public Student getStudentByEmail(String email) throws DaoException{
+        Student student = new Student.Builder().build();
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+            PreparedStatement stmt = null;
+            stmt = con.prepareStatement("SELECT * FROM users WHERE email LIKE ? ");
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()) {
+                int id = rs.getInt("id");
+                String firstName = rs.getString("first_name");
+                String lastName = rs.getString("last_name");
+                String password = rs.getString("password");
+                int classroom = rs.getInt("class_id");
+                int coolcoins = getCoolcoinBalance(id);
+                List<Card> usedArtifacts = getUsedArtifacts(id);
+                student = new Student.Builder().wirhId(id)
+                        .withFirstName(firstName)
+                        .withLastName(lastName)
+                        .withEmail(email)
+                        .withPassword(password)
+                        .withClassId(classroom)
+                        .withCoolcoins(coolcoins)
+                        .withUsedArtifacts(usedArtifacts).build();
+            }
+            return student;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DaoException();
+        }
+
+    }
 
     public int getCoolcoinBalance(int id) throws DaoException {
 

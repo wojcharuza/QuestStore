@@ -17,10 +17,13 @@ public class Main {
         MentorDao mentorDao = new MentorDaoImpl();
         StudentDao studentDao = new StudentDaoImpl();
         CardDao cardDao = new CardDaoImpl();
-        List<Card> cards = cardDao.getQuests();
+        TransactionDao transactionDao = new TransactionDaoImpl();
         HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
         server.createContext("/login", new LoginController(loginDao));
         server.createContext("/static", new Static());
+        server.createContext("/student/profile", new StudentHandleProfile(studentDao,transactionDao));
+        server.createContext("/student/shop", new StudentHandleShop(cardDao, studentDao, transactionDao));
+
         server.createContext("/admin/mentors", new AdminHandleMentors(mentorDao, classroomDao, studentDao));
         server.createContext("/admin/classes", new AdminHandleClasses(classroomDao, mentorDao));
         server.createContext("/mentor/students", new MentorHandleStudents(studentDao, cardDao));
