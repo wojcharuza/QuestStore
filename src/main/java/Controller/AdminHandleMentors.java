@@ -12,9 +12,12 @@ import com.sun.net.httpserver.HttpHandler;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Map;
 
 public class AdminHandleMentors implements HttpHandler {
     private MentorDao mentorDao;
@@ -36,6 +39,12 @@ public class AdminHandleMentors implements HttpHandler {
             } catch (DaoException e) {
                 e.printStackTrace();
             }
+        }
+        if (method.equals("POST")) {
+            Map<String, String> inputs = getFormData(httpExchange);
+            String firstName = inputs.get("firstName");
+            String lastName = inputs.get("lastName");
+            String email = inputs.get("email");
         }
     }
 
@@ -64,5 +73,13 @@ public class AdminHandleMentors implements HttpHandler {
         OutputStream os = httpExchange.getResponseBody();
         os.write(response.getBytes());
         os.close();
+    }
+
+    private Map<String, String> getFormData(HttpExchange httpExchange) throws IOException {
+        InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
+        BufferedReader br = new BufferedReader(isr);
+        String formData = br.readLine();
+        Map<String, String> inputs = LoginController.parseFormData(formData);
+        return inputs;
     }
 }

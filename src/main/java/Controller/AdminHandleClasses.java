@@ -70,7 +70,6 @@ public class AdminHandleClasses implements HttpHandler {
         BufferedReader br = new BufferedReader(isr);
         String formData = br.readLine();
         Map<String, String> inputs = LoginController.parseFormData(formData);
-        System.out.println(inputs.get("date"));
         return  inputs;
     }
 }
