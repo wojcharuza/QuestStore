@@ -17,13 +17,13 @@
     </button>
     <div class="collapse navbar-collapse " id="navbarSupportedContent">     <ul class="navbar-nav mr-4">
         <li class="nav-item">
-            <a class="nav-link " data-value="Shop" href="mentor_students.twig">Students</a></li>
+            <a class="nav-link " data-value="Shop" href="/mentor/students">Students</a></li>
         <li class="nav-item">
-            <a class="nav-link " data-value="Shop" href="mentor_shop.html">Shop</a></li>
+            <a class="nav-link " data-value="Shop" href="/mentor/artifacts">Shop</a></li>
         <li class="nav-item">
             <a class="nav-link " data-value="Whipe-round" href="mentor_quests.html">Quests</a></li>
         <li class="nav-item">
-            <a class="nav-link " data-value="Sign-out" href="index.twig">Sign-out</a></li>
+            <a class="nav-link " data-value="Sign-out" href="/login">Sign-out</a></li>
     </ul>
     </div>
 </nav>
@@ -98,10 +98,10 @@
                                             <li>{{ card.getTitle }}</li>
                                             {% endfor %}
                                         </ul>
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalQuest">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal{{ student.getId }}">
                                     New quest completed
                                 </button>
-                                <div class="modal fade" id="modalQuest" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                <div class="modal fade" id="modal{{ student.getId }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                                      aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
