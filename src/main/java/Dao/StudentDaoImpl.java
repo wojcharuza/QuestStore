@@ -18,7 +18,7 @@ public class StudentDaoImpl implements StudentDao {
             stmt.setString(2, lastName);
             stmt.setString(3, email);
             stmt.setString(4, password);
-            stmt.executeQuery();
+            stmt.executeUpdate();
         } catch (SQLException e) {
             throw new DaoException();
         }
@@ -40,17 +40,16 @@ public class StudentDaoImpl implements StudentDao {
         }
     }
 
-    public void editStudent(int id, String firstName, String lastName, String email, String password) throws DaoException {
+    public void editStudent(int id, String firstName, String lastName, String email) throws DaoException {
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
             PreparedStatement stmt = null;
-            stmt = con.prepareStatement("UPDATE users SET first_name = ?, last_name = ?, email = ?, password = ? " +
+            stmt = con.prepareStatement("UPDATE users SET first_name = ?, last_name = ?, email = ? " +
                     "WHERE id = ?");
             stmt.setString(1, firstName);
             stmt.setString(2, lastName);
             stmt.setString(3, email);
-            stmt.setString(4, password);
-            stmt.setInt(5, id);
-            stmt.executeQuery();
+            stmt.setInt(4, id);
+            stmt.executeUpdate();
 
         } catch (SQLException e) {
             throw new DaoException();

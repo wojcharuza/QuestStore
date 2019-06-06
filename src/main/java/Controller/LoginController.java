@@ -46,9 +46,7 @@ public class LoginController implements HttpHandler {
             //cookie = new HttpCookie("email",data.get("email"));
             String email = data.get("email");
             cookie = new HttpCookie(SESSION_COOKIE_NAME, email);
-
             httpExchange.getResponseHeaders().add("Set-Cookie", cookie.toString());
-
             System.out.println(cookie + " in Login controller");
 
             try {

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <link rel="stylesheet"
+          href="http://fonts.googleapis.com/css?family=Comfortaa:100,300,400">
+    <link rel="stylesheet" href="fonts/Equinox.woff"/>
+    <title>Dashboard</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-sm fixed-top ">
+    <a class="navbar-brand" href="#">QUEST STORE</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse " id="navbarSupportedContent">     <ul class="navbar-nav mr-4">
+        <li class="nav-item">
+            <a class="nav-link " data-value="Shop" href="mentor_students.twig">Students</a></li>
+        <li class="nav-item">
+            <a class="nav-link " data-value="Shop" href="mentor_shop.html">Shop</a></li>
+        <li class="nav-item">
+            <a class="nav-link " data-value="Whipe-round" href="mentor_quests.html">Quests</a></li>
+        <li class="nav-item">
+            <a class="nav-link " data-value="Sign-out" href="index.twig">Sign-out</a></li>
+    </ul>
+    </div>
+</nav>
+
+<header class="header ">
+    <div class="container">
+        <div class="accordion" id="accordionExample">
+            {% for student in students %}
+            <div class="card z-depth-0 bordered">
+                <div class="card-header" id="headingOne">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse{{ student.getId }}"
+                                aria-expanded="false" aria-controls="collapse{{ student.getId }}">
+                            {{ student.getFirstName }} {{ student.getLastName }}
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapse{{ student.getId }}" class="collapse" aria-labelledby="headingOne"
+                     data-parent="#accordionExample">
+                    <div class="card-body card-body-edit">
+
+                        <div class="row">
+                            <!-- edit form column -->
+                            <div class="col-md-5 personal-info">
+                                <form class="form-horizontal" role="form" method="POST" name="editStudent">
+                                    <div class="form-group-edit form-group">
+                                        <label class="col-lg-8 control-label control-label-edit">ID:</label>
+                                        <div class="col-lg-8">
+                                            <input value="editStudent" hidden disabled type="text" name="formType">
+                                            <input class="form-control" name="studentId" type="text" value="{{ student.getId }}" readonly="true">
+                                        </div>
+                                    </div>
+                                    <div class="form-group-edit form-group">
+                                        <label class="col-lg-8 control-label control-label-edit">First name:</label>
+                                        <div class="col-lg-8">
+                                            <input class="form-control" name="firstName" type="text" value="{{ student.getFirstName }}" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-group-edit form-group">
+                                        <label class="col-lg-8 control-label control-label-edit">Last name:</label>
+                                        <div class="col-lg-8">
+                                            <input class="form-control" type="text" name="lastName" value="{{ student.getLastName }}" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-group-edit form-group">
+                                        <label class="col-lg-8 control-label control-label-edit">Email:</label>
+                                        <div class="col-lg-8">
+                                            <input class="form-control" type="text" name="email" value="{{ student.getEmail }}" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-group-edit form-group">
+                                        <label class="col-lg-8 control-label control-label-edit">Coins:</label>
+                                        <div class="col-lg-8">
+                                            <input class="form-control" type="text" name="coins" value="{{ student.getCoolcoins }}" readonly="true">
+                                        </div>
+                                    </div>
+                                    <div class="form-group-edit form-group">
+                                        <label class="col-md-3 control-label control-label-edit"></label>
+                                        <div class="col-md-8">
+                                            <input type="submit" method="POST" class="btn btn-primary" value="Save Changes" disabled onclick="enableFormElements()">
+                                            <span></span>
+                                            <input  type="button" class="btn btn-primary " onclick="enableFormElements()" value="Edit" >
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- right column -->
+                            <div class="col-md-5">
+                                <h2>Bought Artifacts: </h2>
+                                        <ul>
+                                            {% for card in student.getUsedArtifacts %}
+                                            <li>{{ card.getTitle }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalQuest">
+                                    New quest completed
+                                </button>
+                                <div class="modal fade" id="modalQuest" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header text-center">
+                                                <h4 class="modal-title w-100 font-weight-bold">Quest completed</h4>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <form method="POST">
+                                            <div class="modal-body mx-3">
+                                                <input value="addQuest" hidden type="text" name="formType">
+                                                <input value="{{ student.getId }}" hidden type="text" name="student">
+                                                <label for="exampleSelect1">Select quest</label>
+                                                <select class="form-control" id="exampleSelect1" name="title">
+                                                    {% for quest in quests %}
+                                                    <option>{{ quest.getTitle }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="modal-footer d-flex justify-content-center">
+                                                <button class="btn btn-default" aria-label="Close" method="POST">Submit</button>
+                                            </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="description">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalLoginForm">
+                Add new student
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header text-center">
+                            <h4 class="modal-title w-100 font-weight-bold">Add new student</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form method="POST" role="form" name="addStudent">
+                            <input value="addStudent" hidden type="text" name="formType">
+                        <div class="modal-body mx-3">
+                            <div class="md-form mb-4">
+                                <i class="fas fa-envelope prefix grey-text"></i>
+                                <label data-error="wrong" data-success="right" >Name</label>
+                                <input type="text"  class="form-control validate" name="firstName">
+                            </div>
+
+                            <div class="md-form mb-4">
+                                <i class="fas fa-lock prefix grey-text"></i>
+                                <label data-error="wrong" data-success="right" >Surname</label>
+                                <input type="text"  class="form-control validate" name="surname">
+                            </div>
+
+                            <div class="md-form mb-4">
+                                <i class="fas fa-lock prefix grey-text"></i>
+                                <label data-error="wrong" data-success="right" >Email</label>
+                                <input type="email"  class="form-control validate" name="email">
+                            </div>
+
+
+                            <div class="md-form mb-4">
+                                <i class="fas fa-lock prefix grey-text"></i>
+                                <label data-error="wrong" data-success="right" >Password</label>
+                                <input type="password"  class="form-control validate" name="password">
+                            </div>
+
+                        </div>
+                        <div class="modal-footer d-flex justify-content-center">
+                            <button class="btn btn-default" aria-label="Close" type="submit" method="POST">Add</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</header>
+
+<footer class="footer">
+    <nav class="navbar navbar-expand-sm">
+        <p> number: 123456789 <br> email: example@example.com</p>
+    </nav>
+</footer>
+
+
+<script type="text/javascript" src="../static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
+<script type="text/javascript" src='../static/js/Main.js'></script>
+<script type="text/javascript" src="../static/js/toggleFormButton.js"></script>
+</body>
+</html>

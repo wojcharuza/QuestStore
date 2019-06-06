@@ -1,16 +1,16 @@
 import Controller.*;
 import Dao.*;
-import Model.Level;
+
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
+
 public class Main {
 
-    //TODO DATA JEST WYSYLANA W POSTACI URL WIEC TRZEBA JA ZDEKODOWAC
 
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, DaoException {
         LoginDao loginDao = new LoginDaoImpl();
         ClassroomDao classroomDao = new ClassroomDaoImpl();
         MentorDao mentorDao = new MentorDaoImpl();
@@ -26,7 +26,7 @@ public class Main {
 
         server.createContext("/admin/mentors", new AdminHandleMentors(mentorDao, classroomDao, studentDao));
         server.createContext("/admin/classes", new AdminHandleClasses(classroomDao, mentorDao));
-        server.createContext("/mentor/students", new MentorHandleStudents());
+        server.createContext("/mentor/students", new MentorHandleStudents(studentDao, cardDao, transactionDao));
         server.setExecutor(null);
         server.start();
 

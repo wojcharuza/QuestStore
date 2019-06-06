@@ -49,6 +49,11 @@ public class AdminHandleMentors implements HttpHandler {
 
             else if(inputs.get("formType").equals("addMentor")){
                 addMentor(inputs);
+                try {
+                    getPage(httpExchange);
+                } catch (DaoException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

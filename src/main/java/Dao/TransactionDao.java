@@ -5,7 +5,8 @@ import java.util.List;
 
 public interface TransactionDao {
     List<Card> getCardsUsedByStudent(int studentId) throws DaoException;
-    void markQuestCompletedByStudent() throws DaoException;
+    void markQuestCompletedByStudent(String questTitle, int studentId) throws DaoException;
     void addTransaction(int studentID, String title) throws DaoException;
-    public List<Card> questsComplitedByStudent(int studentID) throws DaoException;
+    List<Card> questsComplitedByStudent(int studentID) throws DaoException;
+
 }

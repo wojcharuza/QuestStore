@@ -134,12 +134,6 @@ public class MentorService {
         view.showMessage("Enter new password");
         String password = view.getStringInput();
 
-        try{
-            studentDao.editStudent(idToEdit,firstName,lastName,email,password);
-        }catch (DaoException e){
-            e.printStackTrace();
-        }
-
     }
     public List <Card> getAllArtifacts(){
         List<Card> artfiacts = new ArrayList<>();
