@@ -19,12 +19,14 @@ import java.net.HttpCookie;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class StudentHandleShop implements HttpHandler{
 
     private CardDao cardDao;
     private StudentDao studentDao;
     private TransactionDao transactionDao;
+    CookieHelper cookieHelper = new CookieHelper();
 
     public StudentHandleShop(CardDao cardDao,StudentDao studentDao, TransactionDao transactionDao){
         this.cardDao = cardDao;
@@ -35,10 +37,15 @@ public class StudentHandleShop implements HttpHandler{
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        HttpCookie cookie;
+        Optional<HttpCookie> cookie = getSessionCookie(httpExchange);
         String method = httpExchange.getRequestMethod();
-        String sessionCookie = httpExchange.getRequestHeaders().getFirst("Cookie");
-        String email = getEmailFromCookie(sessionCookie);
+
+        //String sessionCookie = httpExchange.getRequestHeaders().getFirst("Cookie");
+        //cookie = HttpCookie.parse()
+
+        System.out.println(cookie.get().getValue() + "   get 1 from session cookie");
+        String email = getEmailFromCookie(cookie.get().getValue());
+        System.out.println(email + " get name");
 
 
 
@@ -129,11 +136,10 @@ public class StudentHandleShop implements HttpHandler{
         return student;
     }
 
-    public String getEmailFromCookie(String cookie){
-        String[] splitedCoookie = cookie.split(";");
-        String email = splitedCoookie[2];
-        String updatedEmail = email.replace("email=", "");
-        String trueMail = updatedEmail.substring(2,updatedEmail.length()-1);
+    public String getEmailFromCookie(String emailFromCookie){
+        System.out.println(emailFromCookie + "   cookie in method");
+        String trueMail = emailFromCookie.substring(1,emailFromCookie.length()-1);
+        System.out.println(trueMail + "mail in method");
         return trueMail;
     }
     private Map<String, String> getFormData(HttpExchange httpExchange) throws IOException {
@@ -167,6 +173,12 @@ public class StudentHandleShop implements HttpHandler{
         }
         return false;
 
+    }
+    private Optional<HttpCookie> getSessionCookie(HttpExchange httpExchange){
+        String cookieStr = httpExchange.getRequestHeaders().getFirst("Cookie");
+        List<HttpCookie> cookies = cookieHelper.parseCookies(cookieStr);
+        System.out.println(cookies + "lista w get session Cookie");
+        return cookieHelper.findCookieByName("email", cookies);
     }
 
 }
