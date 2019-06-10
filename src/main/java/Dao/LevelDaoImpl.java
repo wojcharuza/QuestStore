@@ -21,11 +21,12 @@ public class LevelDaoImpl implements LevelDao {
                 Level level = new Level.Builder().withLevelNumber(levelNumber).withExperienceNeeded(experienceNeeded).build();
                 levels.add(level);
             }
+            System.out.println(levels.get(1).getLevelNumber() + "level number in dao");
             return levels;
         } catch (SQLException e) {
             throw new DaoException();
         }
-        }
+    }
 
 
 

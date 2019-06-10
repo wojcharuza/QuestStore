@@ -11,31 +11,43 @@ import java.io.*;
 import java.net.HttpCookie;
 import java.net.URLDecoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class LoginController implements HttpHandler {
     LoginDao loginDao;
+    private static final String SESSION_COOKIE_NAME = "email";
+    CookieHelper cookieHelper = new CookieHelper();
 
     public LoginController(LoginDao loginDao){
         this.loginDao = loginDao;
     }
+
 
     @Override
     public void handle(HttpExchange httpExchange) throws  IOException {
         String method = httpExchange.getRequestMethod();
         HttpCookie cookie;
 
+
+
         if (method.equals("GET")){
            getLoginPage(httpExchange);
         }
 
         if (method.equals("POST")){
+
             InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
             BufferedReader br = new BufferedReader(isr);
             String formData = br.readLine();
+
             Map<String, String> data = parseFormData(formData);
-            cookie = new HttpCookie("email",data.get("email"));
+            //cookie = new HttpCookie("email",data.get("email"));
+            String email = data.get("email");
+            cookie = new HttpCookie(SESSION_COOKIE_NAME, email);
             httpExchange.getResponseHeaders().add("Set-Cookie", cookie.toString());
+            System.out.println(cookie + " in Login controller");
 
             try {
                 String permission = loginDao.checkPermission(data.get("email"), data.get("password"));
