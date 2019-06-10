@@ -66,6 +66,18 @@ public class ClassroomDaoImpl implements ClassroomDao {
             e.printStackTrace();
         }
     }
+
+    public void assignNewMentor(int classId, int mentorId) throws DaoException {
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+            PreparedStatement stmt = null;
+            stmt = con.prepareStatement("UPDATE \"Classes\" SET mentor_id = ? WHERE id = ?");
+            stmt.setInt(1, mentorId);
+            stmt.setInt(2, classId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 

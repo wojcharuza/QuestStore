@@ -44,15 +44,23 @@
           <div class="card-header" id="headingOne">
             <h5 class="mb-0">
               <p class="class-cell">Started: {{ classroom.getStartDate() }}<br>
-                Mentor: {{ classroom.getMentorName() }}
-              </p>
+                <form method="post">
+                <input name="formType" value="assignMentor" hidden>
+                <input name="AssignedClassId" value="{{ classroom.getId() }}" hidden>
+                Mentor:<select onchange="this.form.submit()" class="form-control" id="exampleSelect1" name="mentor" >
+                  {% if (classroom.getMentorId == null) %}
+                  <option selected disabled hidden>Unassigned</option>
+                  {% endif %}
+                  {% for mentor in mentors %}
+                    <option value={{ mentor.getId }} {% if (classroom.getMentorId == mentor.getId) %} selected {% endif %} >{{ mentor.getFirstName }} {{ mentor.getLastName }}</option>
+                  {% endfor %}
+                </select>
+              </form>
               <form  method="post">
                 <input name="formType" value="deleteClass" hidden>
                 <input name="deleteClassId" value="{{ classroom.getId() }}" HIDDEN >
                 <input type="submit" method="POST" class="deleteButton btn btn-primary" value="Delete"/>
               </form>
-
-
             </h5>
           </div>
         </div>
