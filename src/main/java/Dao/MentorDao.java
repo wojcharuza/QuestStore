@@ -9,4 +9,5 @@ public interface MentorDao {
     void editMentor(int id, String firstName, String lastName, String email) throws DaoException;
     List<Mentor> getMentors() throws DaoException;
     String getMentorNameById(int mentorId) throws DaoException;
+    void deleteMentor(int id) throws DaoException;
 }

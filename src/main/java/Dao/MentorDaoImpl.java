@@ -76,6 +76,19 @@ public class MentorDaoImpl implements MentorDao {
         return name;
     }
 
+    public void deleteMentor(int id) throws DaoException {
+        try (Connection con = C3P0DataSource.getInstance().getConnection()){
+            PreparedStatement statement = null;
+            statement = con.prepareStatement("DELETE FROM users WHERE id = ?");
+            statement.setInt(1,id);
+            statement.executeUpdate();
+            statement.close();
+        }
+        catch (SQLException e){
+            throw new DaoException();
+        }
+    }
+
 
 
 }

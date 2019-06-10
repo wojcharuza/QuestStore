@@ -54,8 +54,17 @@ public class ClassroomDaoImpl implements ClassroomDao {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+    }
 
-
+    public void setMentorIdAsNull(int id) throws DaoException {
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+            PreparedStatement stmt = null;
+            stmt = con.prepareStatement("UPDATE \"Classes\" SET mentor_id = null WHERE mentor_id = ?");
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
 

@@ -113,6 +113,11 @@
                                     {% endfor %}
                                         </ul>
                             </div>
+                                <form  method="post">
+                                    <input name="formType" value="deleteMentor" hidden>
+                                    <input name="deleteMentorId" value="{{ mentor.getId() }}" HIDDEN >
+                                    <input type="submit" method="POST" class="deleteButton btn btn-primary" value="Delete mentor"/>
+                                </form>
                             </div>
                     </div>
                 </div>
