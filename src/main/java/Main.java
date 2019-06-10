@@ -25,6 +25,7 @@ public class Main {
         server.createContext("/student/shop", new StudentHandleShop(cardDao, studentDao, transactionDao));
         server.createContext("/admin/mentors", new AdminHandleMentors(mentorDao, classroomDao, studentDao));
         server.createContext("/admin/classes", new AdminHandleClasses(classroomDao, mentorDao));
+        server.createContext("/admin/levels", new AdminHandleLevels(levelDao));
         server.createContext("/mentor/students", new MentorHandleStudents(studentDao, cardDao, transactionDao, classroomDao));
         server.createContext("/mentor/artifacts", new MentorHandleArtifacts(cardDao));
 
