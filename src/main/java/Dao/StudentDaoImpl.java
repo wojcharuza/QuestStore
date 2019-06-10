@@ -157,7 +157,7 @@ public class StudentDaoImpl implements StudentDao {
             PreparedStatement stmt = null;
             stmt = con.prepareStatement("SELECT card_title, description, card_type, coolcoin_value, image_path FROM " +
                     "\"Transactions\" JOIN \"Cards\" ON \"Transactions\".card_title = \"Cards\".title\n" +
-                    "WHERE student_id = ? AND card_type like 'artifact%'");
+                    "WHERE student_id = ? AND card_type::text like 'artifact%'");
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
