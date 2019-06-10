@@ -1,10 +1,8 @@
 package Controller;
 
-import Dao.CardDao;
-import Dao.DaoException;
-import Dao.StudentDao;
-import Dao.TransactionDao;
+import Dao.*;
 import Model.Card;
+import Model.Classroom;
 import Model.Student;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -23,11 +21,13 @@ public class MentorHandleStudents implements HttpHandler {
     private StudentDao studentDao;
     private CardDao cardDao;
     private TransactionDao transactionDao;
+    private ClassroomDao classroomDao;
 
-    public MentorHandleStudents(StudentDao studentDao, CardDao cardDao, TransactionDao transactionDao) {
+    public MentorHandleStudents(StudentDao studentDao, CardDao cardDao, TransactionDao transactionDao, ClassroomDao classroomDao) {
         this.studentDao = studentDao;
         this.cardDao = cardDao;
         this.transactionDao = transactionDao;
+        this.classroomDao = classroomDao;
     }
 
     @Override
@@ -70,8 +70,9 @@ public class MentorHandleStudents implements HttpHandler {
         String surname = inputs.get("surname");
         String email = inputs.get("email");
         String password = inputs.get("password");
+        int classRoomId = Integer.parseInt(inputs.get("classroom"));
         try {
-            studentDao.addNewStudent(name, surname, email, password);
+            studentDao.addNewStudent(name, surname, email, password, classRoomId);
             getPage(httpExchange);
         } catch (DaoException e) {
             e.printStackTrace();
@@ -92,10 +93,12 @@ public class MentorHandleStudents implements HttpHandler {
     private void getPage(HttpExchange httpExchange) throws IOException, DaoException {
         List<Student> students = studentDao.getAllStudents();
         List<Card> quests = cardDao.getQuests();
+        List<Classroom> classrooms = classroomDao.getClassrooms();
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/mentor_students.twig");
         JtwigModel model = JtwigModel.newModel();
         model.with("students", students);
         model.with("quests", quests);
+        model.with("classrooms", classrooms);
         String response = template.render(model);
         sendResponse(httpExchange, response);
     }
