@@ -54,16 +54,16 @@
             </div>
             <div class="col-md-6" style="padding-top: 15px; color: white">
                 <h2 style="font-size: 20px">{{ Name }}</h2>
+                <p style="font-size: 15px">Current LVL {{ level }}</p>
                 <p style="font-size: 15px">Colected experience: {{ experience }}</p>
                 <div class="progress">
                     <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:{{ percentEXP }}%">
-                        30%
                     </div>
 
                 </div>
                 <div class="container">
                     <h2>Your super-space Coins</h2>
-                    <button type="button" class="btn btn-primary" href="/student/shop"><i style="font-size:24px" class="fa" href="/student/shop">$ {{ coolcoins }}</i><span class="badge"></span></button>
+                     <a class="nav-link " data-value="Shop" href="/student/shop"><button type="button" class="btn btn-primary" href="/student/shop"><i style="font-size:24px" class="fa" href="/student/shop">$ {{ coolcoins }}</i><span class="badge"></span></button></a>
 
 
                 </div>

@@ -160,6 +160,7 @@ public class StudentHandleShop implements HttpHandler{
         }
 
     }
+
     public boolean verifyAbilityOfPurchase(String cardTitle, int coolcoinBalance){
         List<Card> artifacts = getArtifacts();
         int coolcoinValueOfBuyingCard;
@@ -174,6 +175,7 @@ public class StudentHandleShop implements HttpHandler{
         return false;
 
     }
+
     private Optional<HttpCookie> getSessionCookie(HttpExchange httpExchange){
         String cookieStr = httpExchange.getRequestHeaders().getFirst("Cookie");
         List<HttpCookie> cookies = cookieHelper.parseCookies(cookieStr);
