@@ -179,6 +179,16 @@
                                 <input type="password"  class="form-control validate" name="password">
                             </div>
 
+                            <div class="md-form mb-4">
+                            <label>Select class</label>
+                            <select class="form-control" id="exampleSelect1" name="classroom">
+                                {% for class in classrooms %}
+                                    <option value="{{ class.getId }}">{{ class.getStartDate }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            </div>
+
                         </div>
                         <div class="modal-footer d-flex justify-content-center">
                             <button class="btn btn-default" aria-label="Close" type="submit" method="POST">Add</button>

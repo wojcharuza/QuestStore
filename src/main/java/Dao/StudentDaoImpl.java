@@ -24,6 +24,28 @@ public class StudentDaoImpl implements StudentDao {
         }
     }
 
+
+
+    public void addNewStudent(String firstName, String lastName, String email, String password, int classRoomId) throws DaoException {
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+            PreparedStatement stmt = null;
+            stmt = con.prepareStatement("INSERT INTO users(first_name, last_name, email, password, permission, class_id) VALUES" +
+                    " (?, ?, ?, ?, 'student', ?)");
+            stmt.setString(1, firstName);
+            stmt.setString(2, lastName);
+            stmt.setString(3, email);
+            stmt.setString(4, password);
+            stmt.setInt(5, classRoomId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new DaoException();
+        }
+    }
+
+
+
+
+
     public List<Student> getAllStudents() throws DaoException {
         List<Student> students = new ArrayList<>();
         try (Connection con = C3P0DataSource.getInstance().getConnection(); Statement stmt = con.createStatement()) {
