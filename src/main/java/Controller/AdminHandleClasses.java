@@ -104,7 +104,6 @@ public class AdminHandleClasses implements HttpHandler {
         model.with("classrooms", classrooms);
         model.with("mentors", mentors);
         String response = template.render(model);
-
         sendResponse(httpExchange, response);
     }
 
