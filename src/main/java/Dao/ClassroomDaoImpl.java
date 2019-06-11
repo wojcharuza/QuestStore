@@ -6,6 +6,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Comparator.comparing;
+
 public class ClassroomDaoImpl implements ClassroomDao {
 
     private MentorDao mentorDao = new MentorDaoImpl();
@@ -23,6 +25,7 @@ public class ClassroomDaoImpl implements ClassroomDao {
                 classrooms.add(classroom);
             }
             stmt.close();
+            classrooms.sort(comparing(Classroom::getId));
             return classrooms;
         } catch (SQLException e) {
             throw new DaoException();
