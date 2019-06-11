@@ -32,8 +32,17 @@ public class AdminHandleLevels implements HttpHandler {
         String method = httpExchange.getRequestMethod();
 
         if (method.equals("GET")){
-
             try {
+                getPage(httpExchange);
+            } catch (DaoException e) {
+                e.printStackTrace();
+            }
+        }
+        if (method.equals("POST")) {
+            Map<String, String> inputs = getFormData(httpExchange);
+            List<Level> levels = prepareLevels(inputs);
+            try {
+                levelDao.editLevels(levels);
                 getPage(httpExchange);
             } catch (DaoException e) {
                 e.printStackTrace();
@@ -45,11 +54,7 @@ public class AdminHandleLevels implements HttpHandler {
         List<Level> levels = levelDao.getLevels();
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/admin_levels.twig");
         JtwigModel model = JtwigModel.newModel();
-
-        String jsonLevels = new Gson().toJson(levels);
-        System.out.println(jsonLevels);
         model.with("levels", levels);
-        model.with("jsonLevels", jsonLevels);
         String response = template.render(model);
         sendResponse(httpExchange, response);
     }
@@ -69,6 +74,17 @@ public class AdminHandleLevels implements HttpHandler {
         Map<String, String> inputs = LoginController.parseFormData(formData);
         return  inputs;
     }
+
+    private List<Level> prepareLevels(Map<String, String> stringLevels){
+        List<Level> levels = new ArrayList<>();
+        for(Map.Entry<String, String> entry : stringLevels.entrySet()){
+            Level level = new Level.Builder().withLevelNumber
+                    (Integer.parseInt(entry.getKey())).withExperienceNeeded(Integer.parseInt(entry.getValue())).build();
+            levels.add(level);
+        }
+        return levels;
+    }
+
 
 
 
