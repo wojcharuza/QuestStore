@@ -64,7 +64,7 @@ public class MentorHandleArtifacts implements HttpHandler {
         String description = inputs.get("description");
         String coolcooinValue = inputs.get("price");
         String cardType = inputs.get("cardType");
-        cardDao.editCard(oldTitle, newTitle, description, "", cardType, Integer.valueOf(coolcooinValue));
+        cardDao.editCard(oldTitle, newTitle, description, "", cardType, Integer.valueOf(coolcooinValue) *-1);
     }
 
 
@@ -86,26 +86,6 @@ public class MentorHandleArtifacts implements HttpHandler {
         String response = template.render(model);
         sendResponse(httpExchange, response);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     private void sendResponse(HttpExchange httpExchange, String response) throws IOException {
