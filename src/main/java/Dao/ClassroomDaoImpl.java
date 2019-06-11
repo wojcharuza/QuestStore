@@ -6,6 +6,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Comparator.comparing;
+
 public class ClassroomDaoImpl implements ClassroomDao {
 
     private MentorDao mentorDao = new MentorDaoImpl();
@@ -23,6 +25,7 @@ public class ClassroomDaoImpl implements ClassroomDao {
                 classrooms.add(classroom);
             }
             stmt.close();
+            classrooms.sort(comparing(Classroom::getId));
             return classrooms;
         } catch (SQLException e) {
             throw new DaoException();
@@ -54,8 +57,29 @@ public class ClassroomDaoImpl implements ClassroomDao {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+    }
 
+    public void setMentorIdAsNull(int id) throws DaoException {
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+            PreparedStatement stmt = null;
+            stmt = con.prepareStatement("UPDATE \"Classes\" SET mentor_id = null WHERE mentor_id = ?");
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void assignNewMentor(int classId, int mentorId) throws DaoException {
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+            PreparedStatement stmt = null;
+            stmt = con.prepareStatement("UPDATE \"Classes\" SET mentor_id = ? WHERE id = ?");
+            stmt.setInt(1, mentorId);
+            stmt.setInt(2, classId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
 

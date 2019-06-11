@@ -27,7 +27,7 @@
         <li class="nav-item">
             <a class="nav-link " data-value="Shop" href="/mentor/artifacts">Shop</a></li>
         <li class="nav-item">
-            <a class="nav-link " data-value="Whipe-round" href="mentor_quests.html">Quests</a></li>
+            <a class="nav-link " data-value="Whipe-round" href="/mentor/quests">Quests</a></li>
         <li class="nav-item">
             <a class="nav-link " data-value="Sign-out" href="/login">Sign-out</a></li>
     </ul>
@@ -74,7 +74,7 @@
                 <div class="card-body">
                     <h5 class="card-title card-title-centered"><input type="text" class="form-control" name="title" value="{{ artifact.getTitle }}"></h5>
                     <p class="card-text"><textarea name="description" rows="1" cols="32" >{{ artifact.getDescription }}</textarea></p>
-                    <p class="card-text"><input type="text" class="form-control" name="price" value="{{ artifact.getCoolcoinValue }}"></p>
+                    <p class="card-text"><input type="text" class="form-control" name="price" value="{{ artifact.getCoolcoinValue * -1 }}"></p>
                     <input class="btn btn-primary" type="submit" value="Edit">
                 </div>
                 </form>
@@ -107,7 +107,7 @@
                 <div class="card-body">
                     <h5 class="card-title card-title-centered"><input type="text" class="form-control" name="title" value="{{ artifact.getTitle }}"></h5>
                     <p class="card-text"><textarea name="description" rows="1" cols="32" >{{ artifact.getDescription }}</textarea></p>
-                    <p class="card-text"><input type="text" class="form-control" name="price" value="{{ artifact.getCoolcoinValue }}"></p>
+                    <p class="card-text"><input type="text" class="form-control" name="price" value="{{ artifact.getCoolcoinValue * -1 }}"></p>
                     <input class="btn btn-primary" type="submit" value="Edit">
                 </div>
             </form>

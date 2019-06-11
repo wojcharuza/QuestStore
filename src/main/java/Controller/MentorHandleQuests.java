@@ -16,10 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class MentorHandleArtifacts implements HttpHandler {
+public class MentorHandleQuests implements HttpHandler {
     private CardDao cardDao;
 
-    public MentorHandleArtifacts(CardDao cardDao) {
+    public MentorHandleQuests(CardDao cardDao) {
         this.cardDao = cardDao;
     }
 
@@ -37,7 +37,7 @@ public class MentorHandleArtifacts implements HttpHandler {
         else if(method.equals("POST")){
             Map<String, String> inputs = getFormData(httpExchange);
 
-            if(inputs.get("formType").equals("addCard")){
+            if(inputs.get("formType").equals("addQuest")){
                 try {
                     addCard(inputs);
                     getPage(httpExchange);
@@ -45,7 +45,7 @@ public class MentorHandleArtifacts implements HttpHandler {
                     e.printStackTrace();
                 }
             }
-            else if(inputs.get("formType").equals("editCard")){
+            else if(inputs.get("formType").equals("editQuest")){
                 try {
                     editCard(inputs);
                     getPage(httpExchange);
@@ -64,7 +64,7 @@ public class MentorHandleArtifacts implements HttpHandler {
         String description = inputs.get("description");
         String coolcooinValue = inputs.get("price");
         String cardType = inputs.get("cardType");
-        cardDao.editCard(oldTitle, newTitle, description, "", cardType, Integer.valueOf(coolcooinValue) *-1);
+        cardDao.editCard(oldTitle, newTitle, description, "", cardType, Integer.valueOf(coolcooinValue));
     }
 
 
@@ -75,18 +75,17 @@ public class MentorHandleArtifacts implements HttpHandler {
 
 
     private void getPage(HttpExchange httpExchange) throws IOException, DaoException {
-        List<Card> artifacts = cardDao.getArtifacts();
+        List<Card> quests = cardDao.getQuests();
         List<String> cardTypes = new ArrayList<>();
-        cardTypes.add("artifact_basic");
-        cardTypes.add("artifact_rare");
-        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/mentor_artifacts.twig");
+        cardTypes.add("quest_basic");
+        cardTypes.add("quest_rare");
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/mentor_quests.twig");
         JtwigModel model = JtwigModel.newModel();
-        model.with("artifacts", artifacts);
+        model.with("quests", quests);
         model.with("cardTypes", cardTypes);
         String response = template.render(model);
         sendResponse(httpExchange, response);
     }
-
 
     private void sendResponse(HttpExchange httpExchange, String response) throws IOException {
         httpExchange.sendResponseHeaders(200, response.getBytes().length);

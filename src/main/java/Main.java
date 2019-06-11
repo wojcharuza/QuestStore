@@ -28,6 +28,7 @@ public class Main {
         server.createContext("/admin/levels", new AdminHandleLevels(levelDao));
         server.createContext("/mentor/students", new MentorHandleStudents(studentDao, cardDao, transactionDao, classroomDao));
         server.createContext("/mentor/artifacts", new MentorHandleArtifacts(cardDao));
+        server.createContext("/mentor/quests", new MentorHandleQuests(cardDao));
 
         server.setExecutor(null);
         server.start();

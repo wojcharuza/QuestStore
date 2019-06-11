@@ -4,6 +4,9 @@ function enableFormElements() {
         if (inputs[i].name !== "mentorId" && inputs[i].name !== "studentId" && inputs[i].name !== "coins") {
             inputs[i].disabled = !inputs[i].disabled;
         }
+        if (inputs[i].id === "saveButton" || inputs[i].id === "editButton") {
+            inputs[i].hidden = !inputs[i].hidden;
+        }
     }}, 50);
 }
 

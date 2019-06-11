@@ -7,6 +7,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Comparator.comparing;
+
 public class StudentDaoImpl implements StudentDao {
 
     public void addNewStudent(String firstName, String lastName, String email, String password) throws DaoException {
@@ -56,6 +58,7 @@ public class StudentDaoImpl implements StudentDao {
                 Student student = getStudent(id);
                 students.add(student);
             }
+            students.sort(comparing(Student::getId));
             return students;
         } catch (SQLException e) {
             throw new DaoException();
