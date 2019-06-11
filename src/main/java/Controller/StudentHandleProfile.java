@@ -41,9 +41,9 @@ public class StudentHandleProfile  implements HttpHandler  {
         //String sessionCookie = httpExchange.getRequestHeaders().getFirst("Cookie");
         //cookie = HttpCookie.parse()
 
-        System.out.println(cookie.get().getValue() + "   get 1 from session cookie");
+        //System.out.println(cookie.get().getValue() + "   get 1 from session cookie");
         String email = getEmailFromCookie(cookie.get().getValue());
-        System.out.println(email + " get name");
+        //System.out.println(email + " get name");
 
 
 
@@ -87,9 +87,9 @@ public class StudentHandleProfile  implements HttpHandler  {
 
 
     public String getEmailFromCookie(String emailFromCookie){
-        System.out.println(emailFromCookie + "   cookie in method");
+        //System.out.println(emailFromCookie + "   cookie in method");
         String trueMail = emailFromCookie.substring(1,emailFromCookie.length()-1);
-        System.out.println(trueMail + "mail in method");
+        //System.out.println(trueMail + "mail in method");
         return trueMail;
     }
 
@@ -97,7 +97,7 @@ public class StudentHandleProfile  implements HttpHandler  {
         Student student = new Student.Builder().build();
         try{
             student = studentDao.getStudentByEmail(email);
-            System.out.println(student.getLastName() + "this is name");
+            //System.out.println(student.getLastName() + "this is name");
 
 
         }catch (DaoException e){
@@ -134,6 +134,8 @@ public class StudentHandleProfile  implements HttpHandler  {
 
 
 
+
+
     public int getLoggedStudentEXP (List<Card> studentCards){
 
         int studentEXP = 0;
@@ -143,7 +145,7 @@ public class StudentHandleProfile  implements HttpHandler  {
                 studentEXP = studentEXP + c.getCoolcoinValue();
             }
         }
-        System.out.println(studentEXP + "");
+        //System.out.println(studentEXP + "");
         return studentEXP;
     }
 
@@ -151,14 +153,7 @@ public class StudentHandleProfile  implements HttpHandler  {
 
 
     private int percentOfEXP (int studentExp, List<Level> levels){
-
-
         int percentExp = 0;
-
-        System.out.println(percentExp);
-
-
-
 
         for (int i = 0; i <= levels.size(); i++){
 
@@ -178,9 +173,10 @@ public class StudentHandleProfile  implements HttpHandler  {
             }
         }
 
-        System.out.println(percentExp + "    percent exp");
+        //System.out.println(percentExp + "    percent exp");
         return percentExp;
     }
+
     private int getStudentLevel(List<Level> levels, int studentExp){
         int currentLevel = 0;
         for (int i = 0; i <= levels.size(); i++){
@@ -191,14 +187,11 @@ public class StudentHandleProfile  implements HttpHandler  {
             if (studentExp >= levelExp && studentExp < nextLevelExp){
                 currentLevel = levels.get(i).getLevelNumber();
                 return currentLevel;
-
             }
-
-
         }
-
         return currentLevel;
     }
+
     private List<Level> getLevelsFromDatabase(){
         List<Level> levels = new ArrayList<>();
         try {
@@ -213,8 +206,9 @@ public class StudentHandleProfile  implements HttpHandler  {
     private Optional<HttpCookie> getSessionCookie(HttpExchange httpExchange){
         String cookieStr = httpExchange.getRequestHeaders().getFirst("Cookie");
         List<HttpCookie> cookies = cookieHelper.parseCookies(cookieStr);
-        System.out.println(cookies + "lista w get session Cookie");
+        //System.out.println(cookies + "lista w get session Cookie");
         return cookieHelper.findCookieByName("email", cookies);
     }
+
 
 }
