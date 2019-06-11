@@ -49,6 +49,13 @@ public class MentorHandleStudents implements HttpHandler {
                 addQuestCompleted(httpExchange, inputs);
             } else if (inputs.get("formType").equals("addStudent")) {
                 addStudent(httpExchange, inputs);
+            } else if (inputs.get("formType").equals("deleteStudent")) {
+                try {
+                    deleteStudent(inputs);
+                    getPage(httpExchange);
+                } catch (DaoException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -77,6 +84,10 @@ public class MentorHandleStudents implements HttpHandler {
         } catch (DaoException e) {
             e.printStackTrace();
         }
+    }
+
+    private void deleteStudent(Map<String, String> inputs) throws DaoException {
+        studentDao.deleteStudent(Integer.valueOf(inputs.get("deleteStudentId")));
     }
 
     private void addQuestCompleted(HttpExchange httpExchange, Map<String, String> inputs) throws IOException {

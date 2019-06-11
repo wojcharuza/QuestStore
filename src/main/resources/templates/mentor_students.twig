@@ -129,6 +129,12 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <form  method="post">
+                                    <input name="formType" value="deleteStudent" hidden>
+                                    <input name="deleteStudentId" value="{{ student.getId() }}" HIDDEN >
+                                    <input type="submit" method="POST" class="btn btn-primary" value="Delete student"/>
+                                </form>
                             </div>
                         </div>
                     </div>

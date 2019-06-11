@@ -84,9 +84,9 @@ public class StudentDaoImpl implements StudentDao {
     public void deleteStudent(int idToDelete) throws DaoException {
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
             PreparedStatement stmt = null;
-            stmt = con.prepareStatement("DELETE FROM users WHERE id = ? AND permission = 'student'");
+            stmt = con.prepareStatement("DELETE FROM users WHERE id = ?");
             stmt.setInt(1, idToDelete);
-            stmt.executeQuery();
+            stmt.executeUpdate();
         } catch (SQLException e) {
             throw new DaoException();
         }

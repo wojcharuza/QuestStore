@@ -84,15 +84,15 @@
                                         </div>
 
                                         <div class="form-group-edit form-group">
-                                            <label class="col-md-3 control-label control-label-edit"></label>
-                                            <div class="col-md-8">
+                                            <div class="col-md-5">
                                                 <input id="saveButton" type="submit" method="POST" class="btn btn-primary" value="Save Changes" hidden disabled onclick="enableFormElements()">
-                                                <span></span>
                                                 <input id="editButton" type="button" class="btn btn-primary " onclick="enableFormElements()" value="Edit">
                                             </div>
                                         </div>
                                     </form>
+
                                 </div>
+
                                 <!-- right column -->
                                 <div class="col-md-5">
                                     <h2 id ="classroomTitle">Classes: </h2>
@@ -112,12 +112,12 @@
                                     {% endif %}
                                     {% endfor %}
                                         </ul>
+                                    <form method="post">
+                                        <input name="formType" value="deleteMentor" hidden>
+                                        <input name="deleteMentorId" value="{{ mentor.getId() }}" HIDDEN >
+                                        <input type="submit" method="POST" class="btn btn-primary" value="Delete mentor"/>
+                                    </form>
                             </div>
-                                <form  method="post">
-                                    <input name="formType" value="deleteMentor" hidden>
-                                    <input name="deleteMentorId" value="{{ mentor.getId() }}" HIDDEN >
-                                    <input type="submit" method="POST" class="deleteButton btn btn-primary" value="Delete mentor"/>
-                                </form>
                             </div>
                     </div>
                 </div>
