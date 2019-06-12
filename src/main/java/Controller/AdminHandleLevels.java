@@ -15,15 +15,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.net.HttpCookie;
+import java.util.*;
 
 public class AdminHandleLevels implements HttpHandler {
     LevelDao levelDao;
+    SessionHandler sessionHandler;
 
-    public AdminHandleLevels(LevelDao levelDao){
+    public AdminHandleLevels(LevelDao levelDao, SessionHandler sessionHandler){
         this.levelDao = levelDao;
+        this.sessionHandler = sessionHandler;
     }
 
 
@@ -38,25 +39,45 @@ public class AdminHandleLevels implements HttpHandler {
                 e.printStackTrace();
             }
         }
+
         if (method.equals("POST")) {
             Map<String, String> inputs = getFormData(httpExchange);
-            List<Level> levels = prepareLevels(inputs);
+
+            if(inputs.get("formType").equals("editLevel")){
+                List<Level> levels = prepareLevels(inputs);
             try {
                 levelDao.editLevels(levels);
                 getPage(httpExchange);
             } catch (DaoException e) {
                 e.printStackTrace();
             }
+            }
+            else if (inputs.get("formType").equals("logout")){
+                try {
+                    sessionHandler.deleteSession(httpExchange);
+                    getLoginPage(httpExchange);
+                } catch (DaoException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
     private void getPage(HttpExchange httpExchange) throws IOException, DaoException {
-        List<Level> levels = levelDao.getLevels();
-        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/admin_levels.twig");
-        JtwigModel model = JtwigModel.newModel();
-        model.with("levels", levels);
-        String response = template.render(model);
-        sendResponse(httpExchange, response);
+        SessionHandler sessionHandler = new SessionHandler();
+        Optional<HttpCookie> cookie = sessionHandler.getSessionCookie(httpExchange);
+        try {
+            int userId = sessionHandler.getUserId(httpExchange, cookie);
+            List<Level> levels = levelDao.getLevels();
+            JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/admin_levels.twig");
+            JtwigModel model = JtwigModel.newModel();
+            model.with("levels", levels);
+            String response = template.render(model);
+            sendResponse(httpExchange, response);
+        }
+        catch (DaoException | NoSuchElementException e){
+            getLoginPage(httpExchange);
+        }
     }
 
 
@@ -78,11 +99,18 @@ public class AdminHandleLevels implements HttpHandler {
     private List<Level> prepareLevels(Map<String, String> stringLevels){
         List<Level> levels = new ArrayList<>();
         for(Map.Entry<String, String> entry : stringLevels.entrySet()){
+            if(!entry.getKey().equals("formType")){
             Level level = new Level.Builder().withLevelNumber
                     (Integer.parseInt(entry.getKey())).withExperienceNeeded(Integer.parseInt(entry.getValue())).build();
-            levels.add(level);
+            levels.add(level);}
         }
         return levels;
+    }
+
+
+    private void getLoginPage(HttpExchange httpExchange) throws IOException{
+        httpExchange.getResponseHeaders().set("Location", "/login");
+        httpExchange.sendResponseHeaders(302,0);
     }
 
 

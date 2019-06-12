@@ -28,7 +28,11 @@
             <li class="nav-item">
                 <a class="nav-link " data-value="blog" href="/admin/levels">Levels</a></li>
             <li class="nav-item">
-                <a class="nav-link " data-value="blog" href="/login">Log out</a></li>
+                <form method="POST">
+                    <input  name="formType" value="logout" hidden>
+                    <button id="logout-button" class="navbar-button nav-link" data-value="blog" type="submit">Log out</button>
+                </form>
+            </li>
         </ul>
     </div>
 </nav>
@@ -40,8 +44,9 @@
 <header class="header ">
     <div class="container">
         <div class="accordion" id="accordionExample">
-            <form name ="levelForm" method="POST" onsubmit="return validateData()">
+            <form method="POST" onsubmit="return validateData()">
             <div class="card z-depth-0 bordered">
+                <input name="formType" value="editLevel" hidden disabled>
                 {% for level in levels %}
                     {% if level.getLevelNumber == 1 %}
                     <div class="card-header level-changer" >
