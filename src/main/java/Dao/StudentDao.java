@@ -11,4 +11,6 @@ public interface StudentDao {
     void deleteStudent(int id) throws DaoException;
     Student getStudent(int id) throws DaoException;
     Student getStudentByEmail(String email) throws DaoException;
+    List<Student> getStudentsByMentor(int id) throws DaoException;
+
 }

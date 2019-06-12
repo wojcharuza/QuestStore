@@ -12,15 +12,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.net.HttpCookie;
+import java.util.*;
 
 public class MentorHandleQuests implements HttpHandler {
     private CardDao cardDao;
+    private SessionHandler sessionHandler;
 
-    public MentorHandleQuests(CardDao cardDao) {
+    public MentorHandleQuests(CardDao cardDao, SessionHandler sessionHandler) {
         this.cardDao = cardDao;
+        this.sessionHandler = sessionHandler;
     }
 
 
@@ -52,6 +53,13 @@ public class MentorHandleQuests implements HttpHandler {
                 } catch (DaoException e) {
                     e.printStackTrace();
                 }
+            } else if(inputs.get("formType").equals("logout")){
+                try {
+                    sessionHandler.deleteSession(httpExchange);
+                    getLoginPage(httpExchange);
+                } catch (DaoException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -75,16 +83,28 @@ public class MentorHandleQuests implements HttpHandler {
 
 
     private void getPage(HttpExchange httpExchange) throws IOException, DaoException {
-        List<Card> quests = cardDao.getQuests();
-        List<String> cardTypes = new ArrayList<>();
-        cardTypes.add("quest_basic");
-        cardTypes.add("quest_rare");
-        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/mentor_quests.twig");
-        JtwigModel model = JtwigModel.newModel();
-        model.with("quests", quests);
-        model.with("cardTypes", cardTypes);
-        String response = template.render(model);
-        sendResponse(httpExchange, response);
+        SessionHandler sessionHandler = new SessionHandler();
+        Optional<HttpCookie> cookie = sessionHandler.getSessionCookie(httpExchange);
+        try {
+            int userId = sessionHandler.getUserId(httpExchange, cookie);
+            List<Card> quests = cardDao.getQuests();
+            List<String> cardTypes = new ArrayList<>();
+            cardTypes.add("quest_basic");
+            cardTypes.add("quest_rare");
+            JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/mentor_quests.twig");
+            JtwigModel model = JtwigModel.newModel();
+            model.with("quests", quests);
+            model.with("cardTypes", cardTypes);
+            String response = template.render(model);
+            sendResponse(httpExchange, response);
+        } catch (DaoException | NoSuchElementException e){
+            getLoginPage(httpExchange);
+        }
+    }
+
+    private void getLoginPage(HttpExchange httpExchange) throws IOException{
+        httpExchange.getResponseHeaders().set("Location", "/login");
+        httpExchange.sendResponseHeaders(302,0);
     }
 
     private void sendResponse(HttpExchange httpExchange, String response) throws IOException {

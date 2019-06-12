@@ -44,15 +44,30 @@ public class StudentDaoImpl implements StudentDao {
         }
     }
 
-
-
-
-
     public List<Student> getAllStudents() throws DaoException {
         List<Student> students = new ArrayList<>();
         try (Connection con = C3P0DataSource.getInstance().getConnection(); Statement stmt = con.createStatement()) {
 
             ResultSet rs = stmt.executeQuery("SELECT * FROM users WHERE permission = 'student'");
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                Student student = getStudent(id);
+                students.add(student);
+            }
+            students.sort(comparing(Student::getId));
+            return students;
+        } catch (SQLException e) {
+            throw new DaoException();
+        }
+    }
+
+    public List<Student> getStudentsByMentor(int mentorId) throws DaoException {
+        List<Student> students = new ArrayList<>();
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+            PreparedStatement stmt = null;
+            stmt = con.prepareStatement("SELECT * FROM users JOIN \"Classes\" on class_id = \"Classes\".id where mentor_id = ?");
+            stmt.setInt(1, mentorId);
+            ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("id");
                 Student student = getStudent(id);

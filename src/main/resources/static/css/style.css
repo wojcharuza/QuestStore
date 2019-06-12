@@ -216,3 +216,14 @@ footer {
 .deleteButton{
     float: right;
 }
+
+
+
+
+#navbar-button{
+    background-color: #1f2833;
+}
+
+.button[type="submit"]{
+    background-color: #1f2833;
+}

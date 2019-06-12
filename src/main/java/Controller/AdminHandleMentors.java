@@ -16,18 +16,23 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.HttpCookie;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 public class AdminHandleMentors implements HttpHandler {
     private MentorDao mentorDao;
     private ClassroomDao classroomDao;
     private StudentDao studentDao;
+    private SessionHandler sessionHandler;
 
-    public AdminHandleMentors(MentorDao mentorDao, ClassroomDao classroomDao, StudentDao studentDao){
+    public AdminHandleMentors(MentorDao mentorDao, ClassroomDao classroomDao, StudentDao studentDao, SessionHandler sessionHandler){
         this.mentorDao = mentorDao;
         this.studentDao = studentDao;
         this.classroomDao = classroomDao;
+        this.sessionHandler = sessionHandler;
     }
 
     @Override
@@ -63,6 +68,14 @@ public class AdminHandleMentors implements HttpHandler {
                     e.printStackTrace();
                 }
 
+            }
+            else if(inputs.get("formType").equals("logout")){
+                try {
+                    sessionHandler.deleteSession(httpExchange);
+                    getLoginPage(httpExchange);
+                } catch (DaoException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -108,19 +121,33 @@ public class AdminHandleMentors implements HttpHandler {
 
 
     private void getPage(HttpExchange httpExchange) throws IOException, DaoException {
-        List<Mentor> mentors = mentorDao.getMentors();
-        List<Classroom> classrooms = classroomDao.getClassrooms();
-        List<Student> students = studentDao.getAllStudents();
-        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/admin_mentors.twig");
-        JtwigModel model = JtwigModel.newModel();
-        model.with("mentors", mentors);
-        model.with("classrooms", classrooms);
-        model.with("students", students);
-        String response = template.render(model);
-        sendResponse(httpExchange, response);
+        SessionHandler sessionHandler = new SessionHandler();
+        Optional<HttpCookie> cookie = sessionHandler.getSessionCookie(httpExchange);
+
+        try{
+            int userId = sessionHandler.getUserId(httpExchange, cookie);
+            List<Mentor> mentors = mentorDao.getMentors();
+            List<Classroom> classrooms = classroomDao.getClassrooms();
+            List<Student> students = studentDao.getAllStudents();
+            JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/admin_mentors.twig");
+            JtwigModel model = JtwigModel.newModel();
+            model.with("mentors", mentors);
+            model.with("classrooms", classrooms);
+            model.with("students", students);
+            String response = template.render(model);
+            sendResponse(httpExchange, response);
+        }
+
+        catch (DaoException | NoSuchElementException e){
+            getLoginPage(httpExchange);
+        }
+
     }
 
-
+    private void getLoginPage(HttpExchange httpExchange) throws IOException{
+        httpExchange.getResponseHeaders().set("Location", "/login");
+        httpExchange.sendResponseHeaders(302,0);
+    }
 
 
     private void sendResponse(HttpExchange httpExchange, String response) throws IOException {

@@ -160,6 +160,11 @@ public class StudentHandleProfile  implements HttpHandler  {
             int levelExp = levels.get(i).getExperienceNeeded();
             int nextLevelExp = levels.get(i+1).getExperienceNeeded();
 
+
+            if(studentExp == 0){
+                return 0;
+            }
+
             if (studentExp <= levelExp ){
                 int expNeeded = levelExp;
                 percentExp = (studentExp*100)/expNeeded;

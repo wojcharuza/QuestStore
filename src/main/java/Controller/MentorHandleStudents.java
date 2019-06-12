@@ -13,8 +13,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.HttpCookie;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 
 public class MentorHandleStudents implements HttpHandler {
@@ -22,12 +25,14 @@ public class MentorHandleStudents implements HttpHandler {
     private CardDao cardDao;
     private TransactionDao transactionDao;
     private ClassroomDao classroomDao;
+    private SessionHandler sessionHandler;
 
-    public MentorHandleStudents(StudentDao studentDao, CardDao cardDao, TransactionDao transactionDao, ClassroomDao classroomDao) {
+    public MentorHandleStudents(StudentDao studentDao, CardDao cardDao, TransactionDao transactionDao, ClassroomDao classroomDao, SessionHandler sessionHandler) {
         this.studentDao = studentDao;
         this.cardDao = cardDao;
         this.transactionDao = transactionDao;
         this.classroomDao = classroomDao;
+        this.sessionHandler = sessionHandler;
     }
 
     @Override
@@ -53,6 +58,13 @@ public class MentorHandleStudents implements HttpHandler {
                 try {
                     deleteStudent(inputs);
                     getPage(httpExchange);
+                } catch (DaoException e) {
+                    e.printStackTrace();
+                }
+            } else if(inputs.get("formType").equals("logout")){
+                try {
+                    sessionHandler.deleteSession(httpExchange);
+                    getLoginPage(httpExchange);
                 } catch (DaoException e) {
                     e.printStackTrace();
                 }
@@ -102,16 +114,29 @@ public class MentorHandleStudents implements HttpHandler {
     }
 
     private void getPage(HttpExchange httpExchange) throws IOException, DaoException {
-        List<Student> students = studentDao.getAllStudents();
-        List<Card> quests = cardDao.getQuests();
-        List<Classroom> classrooms = classroomDao.getClassrooms();
-        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/mentor_students.twig");
-        JtwigModel model = JtwigModel.newModel();
-        model.with("students", students);
-        model.with("quests", quests);
-        model.with("classrooms", classrooms);
-        String response = template.render(model);
-        sendResponse(httpExchange, response);
+        SessionHandler sessionHandler = new SessionHandler();
+        Optional<HttpCookie> cookie = sessionHandler.getSessionCookie(httpExchange);
+        try {
+            int userId = sessionHandler.getUserId(httpExchange, cookie);
+            List<Student> students = studentDao.getStudentsByMentor(userId);
+            //List<Student> students = studentDao.getAllStudents();
+            List<Card> quests = cardDao.getQuests();
+            List<Classroom> classrooms = classroomDao.getClassrooms();
+            JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/mentor_students.twig");
+            JtwigModel model = JtwigModel.newModel();
+            model.with("students", students);
+            model.with("quests", quests);
+            model.with("classrooms", classrooms);
+            String response = template.render(model);
+            sendResponse(httpExchange, response);
+        } catch (DaoException | NoSuchElementException e){
+            getLoginPage(httpExchange);
+        }
+    }
+
+    private void getLoginPage(HttpExchange httpExchange) throws IOException{
+        httpExchange.getResponseHeaders().set("Location", "/login");
+        httpExchange.sendResponseHeaders(302,0);
     }
 
     private void sendResponse(HttpExchange httpExchange, String response) throws IOException {

@@ -28,8 +28,12 @@
             <a class="nav-link " data-value="Shop" href="/mentor/artifacts">Shop</a></li>
         <li class="nav-item">
             <a class="nav-link " data-value="Whipe-round" href="/mentor/quests">Quests</a></li>
-        <li class="nav-item">
-            <a class="nav-link " data-value="Sign-out" href="/login">Sign-out</a></li>
+            <li class="nav-item">
+                <form method="POST">
+                    <input class="navbar-button" name="formType" value="logout" hidden>
+                    <button class="nav-link" data-value="blog"  type="submit">Log out</button>
+                </form>
+            </li>
     </ul>
     </div>
 </nav>
