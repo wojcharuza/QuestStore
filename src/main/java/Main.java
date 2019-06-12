@@ -28,11 +28,11 @@ public class Main {
         server.createContext("/student/shop", new StudentHandleShop(cardDao, studentDao, transactionDao));
         server.createContext("/student/contribution", new StudentHandleContribution(cardDao, studentDao, transactionDao));
         server.createContext("/admin/mentors", new AdminHandleMentors(mentorDao, classroomDao, studentDao, sessionHandler));
-        server.createContext("/admin/classes", new AdminHandleClasses(classroomDao, mentorDao));
-        server.createContext("/admin/levels", new AdminHandleLevels(levelDao));
         server.createContext("/mentor/students", new MentorHandleStudents(studentDao, cardDao, transactionDao, classroomDao, sessionHandler));
         server.createContext("/mentor/artifacts", new MentorHandleArtifacts(cardDao, sessionHandler));
         server.createContext("/mentor/quests", new MentorHandleQuests(cardDao, sessionHandler));
+        server.createContext("/admin/classes", new AdminHandleClasses(classroomDao, mentorDao, sessionHandler));
+        server.createContext("/admin/levels", new AdminHandleLevels(levelDao, sessionHandler));
 
         server.setExecutor(null);
         server.start();
