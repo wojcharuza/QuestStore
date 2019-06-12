@@ -153,7 +153,7 @@ public class StudentDaoImpl implements StudentDao {
         int donations = 0;
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
             PreparedStatement stmt = null;
-            stmt = con.prepareStatement("SELECT donation FROM \"group_transactions\"  WHERE id_student = ?");
+            stmt = con.prepareStatement("SELECT donation FROM \"group_transactions\"  WHERE student_id = ?");
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
