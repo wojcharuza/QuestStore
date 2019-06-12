@@ -58,8 +58,8 @@ public class StudentHandleShop implements HttpHandler{
 
             if(inputs.get("formType").equals("title")) {
                 String title = inputs.get("title");
-                System.out.println(inputs+" this is title");
-                System.out.println(title +" this is title");
+                //System.out.println(inputs+" this is title");
+                //System.out.println(title +" this is title");
                 if (verifyAbilityOfPurchase(title, student.getCoolcoins())) {
                     addTransactionToDatabase(title, student);
                     getSuccessPage(httpExchange);
