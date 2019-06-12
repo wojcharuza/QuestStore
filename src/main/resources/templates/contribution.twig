@@ -25,7 +25,7 @@
             <a class="nav-link " data-value="My Profile" href="/student/profile">My Profile</a></li>
         <li class="nav-item">
             <a class="nav-link " data-value="Shop" href="/student/shop">Shop</a></li>
-            <li class="nav-item"><a class="nav-link " data-value="/student/contribution" href="/student/contribution">Contributions</a></li>
+        <li class="nav-item"><a class="nav-link " data-value="/student/contribution" href="/student/contribution">Contributions</a></li>
         <li class="nav-item">
             <a class="nav-link " data-value="Sign-out" href="/login">Sign-out</a></li>
     </ul>
@@ -33,7 +33,7 @@
 </nav>
 <header class="header">
 <div class="container">
-    <h2 class="title">Cards you can still buy</h2>
+    <h2 class="title">Cards you can still donate</h2>
 
     <div class="row">
 
@@ -46,11 +46,18 @@
             <div class="card-body">
                 <h5 class="card-title card-title-centered">{{ card.getTitle }}</h5>
                 <p class="card-text">{{ card.getDescription }}</p>
-
+                <h5 class="card-title card-title-centered">Total cost: $ {{ card.getCoolcoinValue }} </h5>
+                {% for groupTransaction in groupTransactions %}
+                {% if groupTransaction.getTitle == card.getTitle %}
+                    <h5 class="card-title card-title-centered">Colleceted: {{ groupTransaction.getDonationValue }} </h5>
+                {% endif %}
+                {% endfor %}
                 <form method="POST">
                     <input name="formType" value="title" hidden>
                     <input name="title" value="{{ card.getTitle }}" HIDDEN >
-                    <input type="submit" method="POST" class="deleteButton btn btn-primary" value="$ {{ card.getCoolcoinValue * -1 }} BUY"/>
+                    <input name="donation" value="{{ card.getTitle }}"  >
+
+                    <input type="submit" method="POST" class="deleteButton btn btn-primary" value="DONATE"/>
                 </form>
 
             </div>

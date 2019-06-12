@@ -136,7 +136,7 @@ public class StudentDaoImpl implements StudentDao {
                 String lastName = rs.getString("last_name");
                 String password = rs.getString("password");
                 int classroom = rs.getInt("class_id");
-                int coolcoins = getCoolcoinBalance(id);
+                int coolcoins = getCoolcoinBalance(id) - getStudentDonations(id);
                 List<Card> usedArtifacts = getUsedArtifacts(id);
                 student = new Student.Builder().wirhId(id)
                         .withFirstName(firstName)
@@ -173,6 +173,24 @@ public class StudentDaoImpl implements StudentDao {
         } catch (SQLException e) {
             throw new DaoException();
         }
+    }
+    public int getStudentDonations(int id) throws  DaoException {
+        int donations = 0;
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+            PreparedStatement stmt = null;
+            stmt = con.prepareStatement("SELECT donation FROM \"group_transactions\"  WHERE student_id = ?");
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                int value = rs.getInt("donation");
+                donations += value;
+            }
+            return donations;
+
+        } catch (SQLException e) {
+            throw new DaoException();
+        }
+
     }
 
     public List<Card> getUsedArtifacts(int id) throws DaoException {

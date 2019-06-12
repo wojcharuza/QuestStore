@@ -5,6 +5,7 @@ import Dao.DaoException;
 import Dao.StudentDao;
 import Dao.TransactionDao;
 import Model.Card;
+import Model.GroupTransaction;
 import Model.Student;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -16,24 +17,20 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpCookie;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
-public class StudentHandleShop implements HttpHandler{
+public class StudentHandleContribution implements HttpHandler {
 
     private CardDao cardDao;
     private StudentDao studentDao;
     private TransactionDao transactionDao;
     CookieHelper cookieHelper = new CookieHelper();
 
-    public StudentHandleShop(CardDao cardDao,StudentDao studentDao, TransactionDao transactionDao){
+    public StudentHandleContribution (CardDao cardDao,StudentDao studentDao, TransactionDao transactionDao){
         this.cardDao = cardDao;
         this.studentDao = studentDao;
         this.transactionDao = transactionDao;
     }
-
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
@@ -58,12 +55,15 @@ public class StudentHandleShop implements HttpHandler{
 
             if(inputs.get("formType").equals("title")) {
                 String title = inputs.get("title");
-                System.out.println(inputs+" this is title");
-                System.out.println(title +" this is title");
-                if (verifyAbilityOfPurchase(title, student.getCoolcoins())) {
-                    addTransactionToDatabase(title, student);
-                    getSuccessPage(httpExchange);
+                String donation = inputs.get("donation");
+                int donationValue = Integer.valueOf(donation);
 
+                //System.out.println(donation + donation);
+                //System.out.println(inputs);
+
+                if(donation.matches("[0-9]+") && donationValue>0 && donationValue<student.getCoolcoins()){
+                    addTransactionToDatabase(title, student, donationValue);
+                    getLoginPage(httpExchange);
                 } else {
                     getFailedPage(httpExchange);
 
@@ -76,33 +76,27 @@ public class StudentHandleShop implements HttpHandler{
 
     private void getLoginPage(HttpExchange httpExchange) throws IOException{
         List<Card> artifacts = getArtifacts();
-        List<Card> artifactsBasic = getBasicArtifacts(artifacts);
-        System.out.println(artifactsBasic.size()  + "   arti basi");
-        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/shop.twig");
-        JtwigModel model = JtwigModel.newModel();
-        model.with("artifacts", artifactsBasic);
-        String response = template.render(model);
-        sendResponse(httpExchange, response);
-    }
-    public void getSuccessPage(HttpExchange httpExchange)throws IOException{
-        List<Card> artifacts = getArtifacts();
-        List<Card> artifactsBasic = getBasicArtifacts(artifacts);
-        System.out.println(artifactsBasic.size());
-        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/purchase_success.twig");
-        JtwigModel model = JtwigModel.newModel();
-        model.with("artifacts", artifactsBasic);
-        String response = template.render(model);
-        sendResponse(httpExchange, response);
+        List<Card> artifactsRare = getRareArtifacts(artifacts);
+        List<GroupTransaction> groupTransactions = getGroupTransactions();
 
+        //System.out.println(artifactsRare.size()  + "   arti basi");
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/contribution.twig");
+        JtwigModel model = JtwigModel.newModel();
+        model.with("artifacts", artifactsRare);
+        model.with("groupTransactions", groupTransactions);
+        String response = template.render(model);
+        sendResponse(httpExchange, response);
     }
+
 
     public void getFailedPage (HttpExchange httpExchange)throws IOException{
         List<Card> artifacts = getArtifacts();
-        List<Card> artifactsBasic = getBasicArtifacts(artifacts);
-        System.out.println(artifacts.size());
-        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/purchase_failed.twig");
+        List<Card> artifactsRare = getRareArtifacts(artifacts);
+        //System.out.println(artifacts.size());
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/contribution_failed.twig");
         JtwigModel model = JtwigModel.newModel();
-        model.with("artifacts", artifactsBasic);
+        model.with("artifacts", artifactsRare);
+
         String response = template.render(model);
         sendResponse(httpExchange, response);
     }
@@ -125,10 +119,10 @@ public class StudentHandleShop implements HttpHandler{
         return artifacts;
     }
 
-    public List<Card> getBasicArtifacts(List<Card> artifacts){
+    public List<Card> getRareArtifacts(List<Card> artifacts){
         List<Card> basicArtifacts = new ArrayList<>();
         for (Card c: artifacts){
-            if (c.getCardType().contains("basic")){
+            if (c.getCardType().contains("rare")){
                 basicArtifacts.add(c);
 
             }
@@ -140,7 +134,7 @@ public class StudentHandleShop implements HttpHandler{
         Student student = new Student.Builder().build();
         try{
             student = studentDao.getStudentByEmail(email);
-            System.out.println(student.getLastName() + "this is name");
+            //System.out.println(student.getLastName() + "this is name");
 
 
         }catch (DaoException e){
@@ -162,38 +156,42 @@ public class StudentHandleShop implements HttpHandler{
         Map<String, String> inputs = LoginController.parseFormData(formData);
         return inputs;
     }
-    public void addTransactionToDatabase(String cardTitle, Student student){
+
+    public void addTransactionToDatabase(String cardTitle, Student student, int donation ){
         int studentId = student.getId();
 
         try{
-            transactionDao.addTransaction(studentId,cardTitle);
-
+            transactionDao.addGroupTransaction(studentId, cardTitle, donation);
         }catch (DaoException e){
             e.printStackTrace();
         }
-
     }
 
-    public boolean verifyAbilityOfPurchase(String cardTitle, int coolcoinBalance){
-        List<Card> artifacts = getArtifacts();
-        int coolcoinValueOfBuyingCard;
-        for (Card c: artifacts){
-            if(c.getTitle().equals(cardTitle)){
-                 coolcoinValueOfBuyingCard = c.getCoolcoinValue();
-                 if(coolcoinValueOfBuyingCard*(-1) < coolcoinBalance){
-                     return true;
-                 }
-            }
+    public List<GroupTransaction> getGroupTransactions(){
+        Map <String, Integer> groupTransactions = new HashMap<>();
+        List<GroupTransaction> transactions = new ArrayList<>();
+
+        try{
+            groupTransactions = transactionDao.getGroupTransactions();
+        }catch (DaoException e){
+            e.printStackTrace();
         }
-        return false;
+        for (Map.Entry<String, Integer> entry : groupTransactions.entrySet()) {
+            transactions.add(new GroupTransaction(entry.getKey(),entry.getValue()));
+        }
+        //System.out.println(groupTransactions + "grupowe tranzakcje");
+        return transactions;
 
     }
 
     private Optional<HttpCookie> getSessionCookie(HttpExchange httpExchange){
         String cookieStr = httpExchange.getRequestHeaders().getFirst("Cookie");
         List<HttpCookie> cookies = cookieHelper.parseCookies(cookieStr);
-        System.out.println(cookies + "lista w get session Cookie");
+        //System.out.println(cookies + "lista w get session Cookie");
         return cookieHelper.findCookieByName("email", cookies);
     }
 
+
 }
+
+
