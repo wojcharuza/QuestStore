@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <link rel="stylesheet"
+          href="http://fonts.googleapis.com/css?family=Comfortaa:100,300,400">
+    <link rel="stylesheet" href="fonts/Equinox.woff"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Title</title>
+</head>
+
+<body>
+
+<!-- navbar -->
+
+<nav class="navbar navbar-expand-sm fixed-top ">
+    <a class="navbar-brand" href="#">QUEST STORE</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse " id="navbarSupportedContent">     <ul class="navbar-nav mr-4">
+        <li class="nav-item">
+            <a class="nav-link " data-value="Shop" href="/mentor/students">Students</a></li>
+        <li class="nav-item">
+            <a class="nav-link " data-value="Shop" href="/mentor/artifacts">Shop</a></li>
+        <li class="nav-item">
+            <a class="nav-link " data-value="Whipe-round" href="/mentor/quests">Quests</a></li>
+        <li class="nav-item">
+            <a class="nav-link " data-value="Sign-out" href="/login">Sign-out</a></li>
+    </ul>
+    </div>
+</nav>
+<header class="header">
+    <div class="container">
+        <h1 class="title">SHOP</h1>
+        <hr />
+        <h2 class="title">Common artifacts</h2>
+        <div class="row">
+            <div class="card col-md-3 card-style" >
+            <form method="POST">
+                <input name="formType" value="addCard" hidden>
+                <div class="card-body">
+                    <div class="card-header">
+                        <select class="form-control" id="exampleSelect1" name="cardType">
+                            {% for cardType in cardTypes %}
+                                <option value={{ cardType }}>{{ cardType }} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                <img class="card-img-top" src="https://via.placeholder.com/130x125" alt="Card image cap">
+                    <h5 class="card-title card-title-centered"><input type="text" class="form-control" name="title" placeholder="Enter title"></h5>
+                    <p class="card-text"><textarea name="description" rows="1" cols="32" placeholder="Enter description"  ></textarea></p>
+                    <p class="card-text"><input type="text" class="form-control" name="price" placeholder="Enter price"></p>
+                    <input class="btn btn-primary" type="submit" value="ADD">
+                </div>
+            </form>
+            </div>
+
+            {% for artifact in artifacts %}
+            {% if artifact.getCardType == "artifact_basic" %}
+
+            <div class="card col-md-3 card-style" >
+                <form method="POST">
+                <input name="formType" value="editCard" hidden>
+                <input name="oldTitle" value="{{ artifact.getTitle }}" hidden>
+                <input name="cardType" value="{{ artifact.getCardType }}" hidden>
+                <div class="card-header">
+                    Common card
+                </div>
+                <img class="card-img-top" src="https://via.placeholder.com/130x125" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title card-title-centered"><input type="text" class="form-control" name="title" value="{{ artifact.getTitle }}"></h5>
+                    <p class="card-text"><textarea name="description" rows="1" cols="32" >{{ artifact.getDescription }}</textarea></p>
+                    <p class="card-text"><input type="text" class="form-control" name="price" value="{{ artifact.getCoolcoinValue * -1 }}"></p>
+                    <input class="btn btn-primary" type="submit" value="Edit">
+                </div>
+                </form>
+            </div>
+            {% endif %}
+            {% endfor %}
+
+
+
+
+
+        </div>
+    </div>
+
+    <div class="container">
+        <h2 class="title">Rare artifacts</h2>
+        <div class="row">
+
+            {% for artifact in artifacts %}
+            {% if artifact.getCardType == "artifact_rare" %}
+            <div class="card col-md-3 gold-card-style" >
+            <form method="POST">
+                <input name="formType" value="editCard" hidden>
+                <input name="cardType" value="{{ artifact.getCardType }}" hidden>
+                <input name="oldTitle" value="{{ artifact.getTitle }}" hidden>
+                <div class="card-header">
+                    Rare card
+                </div>
+                <img class="card-img-top" src="https://via.placeholder.com/130x125" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title card-title-centered"><input type="text" class="form-control" name="title" value="{{ artifact.getTitle }}"></h5>
+                    <p class="card-text"><textarea name="description" rows="1" cols="32" >{{ artifact.getDescription }}</textarea></p>
+                    <p class="card-text"><input type="text" class="form-control" name="price" value="{{ artifact.getCoolcoinValue * -1 }}"></p>
+                    <input class="btn btn-primary" type="submit" value="Edit">
+                </div>
+            </form>
+            </div>
+            {% endif %}
+            {% endfor %}
+
+
+
+        </div>
+    </div>
+</header>
+
+<footer class="footer">
+    <nav class="navbar navbar-expand-sm">
+        <p> number: 123456789 <br> email: example@example.com</p>
+    </nav>
+</footer>
+
+<script type="text/javascript" src="../static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
+<script type="text/javascript" src='../static/js/Main.js'></script>
+</body>
+</html>

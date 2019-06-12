@@ -5,6 +5,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Comparator.comparing;
+
 
 public class CardDaoImpl implements CardDao{
 
@@ -16,6 +18,7 @@ public class CardDaoImpl implements CardDao{
             cards = prepareCard(rs);
             stmt.close();
             rs.close();
+            cards.sort(comparing(Card::getTitle));
             return cards;
 
         } catch (SQLException e) {
@@ -33,6 +36,7 @@ public class CardDaoImpl implements CardDao{
             cards = prepareCard(rs);
             stmt.close();
             rs.close();
+            cards.sort(comparing(Card::getTitle));
             return cards;
 
         } catch (SQLException e) {
@@ -102,7 +106,6 @@ public class CardDaoImpl implements CardDao{
             throw new DaoException();
         }
     }
-
 
 
 }

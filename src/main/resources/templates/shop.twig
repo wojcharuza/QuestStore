@@ -50,7 +50,7 @@
                 <form method="POST">
                     <input name="formType" value="title" hidden>
                     <input name="title" value="{{ card.getTitle }}" HIDDEN >
-                    <input type="submit" method="POST" class="deleteButton btn btn-primary" value="$ {{ card.getCoolcoinValue }} BUY"/>
+                    <input type="submit" method="POST" class="deleteButton btn btn-primary" value="$ {{ card.getCoolcoinValue * -1 }} BUY"/>
                 </form>
 
             </div>

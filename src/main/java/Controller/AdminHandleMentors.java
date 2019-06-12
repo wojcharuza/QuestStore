@@ -55,6 +55,15 @@ public class AdminHandleMentors implements HttpHandler {
                     e.printStackTrace();
                 }
             }
+            else if (inputs.get("formType").equals("deleteMentor")) {
+                try {
+                    deleteMentor(inputs);
+                    getPage(httpExchange);
+                } catch (DaoException e) {
+                    e.printStackTrace();
+                }
+
+            }
         }
     }
 
@@ -89,6 +98,11 @@ public class AdminHandleMentors implements HttpHandler {
         } catch (DaoException e) {
             e.printStackTrace();
         }
+    }
+
+    private void deleteMentor(Map<String, String> inputs) throws DaoException {
+        mentorDao.deleteMentor(Integer.valueOf(inputs.get("deleteMentorId")));
+        classroomDao.setMentorIdAsNull(Integer.valueOf(inputs.get("deleteMentorId")));
     }
 
 

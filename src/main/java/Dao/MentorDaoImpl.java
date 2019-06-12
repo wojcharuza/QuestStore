@@ -3,7 +3,9 @@ package Dao;
 import Model.Mentor;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import static java.util.Comparator.comparing;
 
 public class MentorDaoImpl implements MentorDao {
 
@@ -53,6 +55,7 @@ public class MentorDaoImpl implements MentorDao {
                 Mentor mentor = new Mentor.Builder().withID(id).withFirstName(firstName).withLastName(lastName).withEmail(email).withPassword(password).build();
                 mentors.add(mentor);
             }
+            mentors.sort(comparing(Mentor::getId));
             return mentors;
 
         } catch (SQLException e) {
@@ -74,6 +77,19 @@ public class MentorDaoImpl implements MentorDao {
             e.printStackTrace();
         }
         return name;
+    }
+
+    public void deleteMentor(int id) throws DaoException {
+        try (Connection con = C3P0DataSource.getInstance().getConnection()){
+            PreparedStatement statement = null;
+            statement = con.prepareStatement("DELETE FROM users WHERE id = ?");
+            statement.setInt(1,id);
+            statement.executeUpdate();
+            statement.close();
+        }
+        catch (SQLException e){
+            throw new DaoException();
+        }
     }
 
 
