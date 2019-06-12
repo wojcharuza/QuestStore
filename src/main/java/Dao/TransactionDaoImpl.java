@@ -1,6 +1,8 @@
 package Dao;
 
 import Model.Card;
+import Model.GroupTransaction;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,6 +75,25 @@ public class TransactionDaoImpl implements TransactionDao {
             e.printStackTrace();
         }
     }
+
+    public void archivedGroupTransaction(int studentID, String cardTitle, int donation) throws DaoException{
+
+        try(Connection con = C3P0DataSource.getInstance().getConnection()){
+            PreparedStatement stmt = null;
+            stmt = con.prepareStatement("INSERT  INTO  \"archived_group_transactions\"(student_id, card_title, donation)VALUES "+
+                    "(?, ?, ?)");
+            stmt.setInt(1,studentID);
+            stmt.setString(2,cardTitle);
+            stmt.setInt(3, donation);
+            stmt.executeQuery();
+
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+
     public Map<String, Integer> getGroupTransactions () throws  DaoException{
         Map<String, Integer> transactionMap = new HashMap<>();
         try(Connection con = C3P0DataSource.getInstance().getConnection()){
@@ -100,7 +121,74 @@ public class TransactionDaoImpl implements TransactionDao {
             throw new DaoException();
         }
 
+    }
+    public List<GroupTransaction> getGroupTransactionsByIdAndTitle (int studentID, String title) throws  DaoException{
+        List<GroupTransaction> groupTransactionsList = new ArrayList<>();
+        GroupTransaction groupTransaction = new GroupTransaction(title,0);;
+        try(Connection con = C3P0DataSource.getInstance().getConnection()){
+            PreparedStatement stmt = null;
+            stmt = con.prepareStatement("SELECT * " +
+                    "FROM \"group_transactions\" WHERE card_title = ? AND student_id = ?");
+            stmt.setString(1,title);
+            stmt.setInt(2,studentID);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()){
+                String cardTitle = rs.getString("card_title");
+                int donateValue = rs.getInt("donation");
+                int sumOfDonateValue = groupTransaction.getDonationValue() + donateValue;
+                groupTransaction.setDonationValue(sumOfDonateValue);
 
+
+            }
+            groupTransactionsList.add(groupTransaction);
+            System.out.println(groupTransactionsList.size()+"list size in dao");
+            return groupTransactionsList;
+
+
+
+        }catch (SQLException e){
+            e.printStackTrace();
+            throw new DaoException();
+        }
+
+    }
+
+    public List<Integer> getDonatorsId (String title) throws DaoException{
+        List<Integer> donatorsId = new ArrayList<>();
+        try(Connection con = C3P0DataSource.getInstance().getConnection()){
+            PreparedStatement stmt = null;
+            stmt = con.prepareStatement("SELECT DISTINCT student_id " +
+                    "FROM \"group_transactions\" WHERE card_title = ?;");
+            stmt.setString(1,title);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()){
+
+                int donator = rs.getInt("student_id");
+                donatorsId.add(donator);
+
+            }
+            //System.out.println(donatorsId+"mapa w dao transa");
+            return donatorsId;
+
+        }catch (SQLException e){
+            e.printStackTrace();
+            throw new DaoException();
+        }
+
+    }
+    public void deleteComplitedContribution(String title) throws DaoException{
+
+        try (Connection con = C3P0DataSource.getInstance().getConnection()){
+            PreparedStatement statement = null;
+            statement = con.prepareStatement("DELETE FROM group_transactions WHERE card_title = ?");
+            statement.setString(1,title);
+            statement.executeUpdate();
+            statement.close();
+        }
+        catch (SQLException e){
+            throw new DaoException();
+        }
 
     }
 
