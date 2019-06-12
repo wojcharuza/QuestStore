@@ -106,5 +106,23 @@ public class LoginDaoImpl implements LoginDao {
     }
 
 
+    public int getIdByMail(String mail) throws DaoException{
+        int id = -1;
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+            PreparedStatement stmt = null;
+            stmt = con.prepareStatement("SELECT id from USERS WHERE email = ?");
+            stmt.setString(1, mail);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()){
+            id = rs.getInt("id");
+            }
+            return id;
+        }
+        catch (SQLException e){
+            throw new DaoException();
+        }
+    }
+
+
 
 }

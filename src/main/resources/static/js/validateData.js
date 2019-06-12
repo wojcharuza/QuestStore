@@ -5,7 +5,7 @@ function validateData() {
 
 
     var nameErrors = [];
-    for (let i = 0; i < inputs.length - 1; i++) {
+    for (let i = 1; i < inputs.length - 1; i++) {
 
         if(!inputs[i].value){
             nameErrors.push(`Level ${i+1} cannot be empty`)
@@ -15,11 +15,11 @@ function validateData() {
             nameErrors.push(`Level ${i+1} must be and integer`)
         }
 
-        if (Number(inputs[i].value) < 0){
+        if (Number(inputs[i].value) <= 0){
             nameErrors.push(`Level ${i+1} cannot be lower than 0`);
         }
-        if(Number(inputs[i].value) > Number(inputs[i+1].value)){
-            nameErrors.push(`Level ${i+1} cannot me higher than level ${i+2}`)
+        if(Number(inputs[i].value) >= Number(inputs[i+1].value)){
+            nameErrors.push(`Level ${i+1} cannot me higher or equal than level ${i+2}`)
         }
     }
     if(nameErrors.length === 0){

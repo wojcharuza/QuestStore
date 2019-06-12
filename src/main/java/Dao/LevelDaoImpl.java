@@ -3,7 +3,10 @@ package Dao;
 import Model.Level;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+
+import static java.util.Comparator.comparing;
 
 public class LevelDaoImpl implements LevelDao {
 
@@ -21,7 +24,7 @@ public class LevelDaoImpl implements LevelDao {
                 Level level = new Level.Builder().withLevelNumber(levelNumber).withExperienceNeeded(experienceNeeded).build();
                 levels.add(level);
             }
-            System.out.println(levels.get(1).getLevelNumber() + "level number in dao");
+            levels.sort(comparing(Level::getLevelNumber));
             return levels;
         } catch (SQLException e) {
             throw new DaoException();

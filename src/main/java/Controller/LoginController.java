@@ -3,8 +3,10 @@ package Controller;
 
 import Dao.DaoException;
 import Dao.LoginDao;
+import Dao.SessionDao;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import idGenerators.IdGenerator;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
 import java.io.*;
@@ -16,12 +18,15 @@ import java.util.Map;
 import java.util.Optional;
 
 public class LoginController implements HttpHandler {
-    LoginDao loginDao;
-    private static final String SESSION_COOKIE_NAME = "email";
+    private LoginDao loginDao;
+    private SessionDao sessionDao;
+
+    private static final String SESSION_COOKIE_NAME = "sessionId";
     CookieHelper cookieHelper = new CookieHelper();
 
-    public LoginController(LoginDao loginDao){
+    public LoginController(LoginDao loginDao, SessionDao sessionDao){
         this.loginDao = loginDao;
+        this.sessionDao = sessionDao;
     }
 
 
@@ -41,13 +46,20 @@ public class LoginController implements HttpHandler {
             InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
             BufferedReader br = new BufferedReader(isr);
             String formData = br.readLine();
-
             Map<String, String> data = parseFormData(formData);
-            //cookie = new HttpCookie("email",data.get("email"));
             String email = data.get("email");
-            cookie = new HttpCookie(SESSION_COOKIE_NAME, email);
+            IdGenerator idGenerator = new IdGenerator();
+            String sessionId = idGenerator.generateId(10);
+            try {
+                int userId = loginDao.getIdByMail(email);
+                sessionDao.addSession(userId, sessionId);
+
+            } catch (DaoException e) {
+                e.printStackTrace();
+            }
+
+            cookie = new HttpCookie(SESSION_COOKIE_NAME, sessionId);
             httpExchange.getResponseHeaders().add("Set-Cookie", cookie.toString());
-            System.out.println(cookie + " in Login controller");
 
             try {
                 String permission = loginDao.checkPermission(data.get("email"), data.get("password"));
