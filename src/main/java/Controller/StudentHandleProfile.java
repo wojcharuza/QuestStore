@@ -19,63 +19,65 @@ public class StudentHandleProfile  implements HttpHandler  {
 
     private StudentDao studentDao;
     private TransactionDao transactionDao;
-    private CardDao cardDao;
     private  LevelDao levelDao;
-    CookieHelper cookieHelper = new CookieHelper();
+    private SessionHandler sessionHandler;
 
 
-    public StudentHandleProfile(StudentDao studentDao, TransactionDao transactionDao, LevelDao levelDao){
+    public StudentHandleProfile(StudentDao studentDao, TransactionDao transactionDao, LevelDao levelDao, SessionHandler sessionHandler){
         this.studentDao = studentDao;
         this.transactionDao = transactionDao;
-        //this.cardDao = cardDao;
         this.levelDao = levelDao;
+        this.sessionHandler = sessionHandler;
     }
 
 
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        Optional<HttpCookie> cookie = getSessionCookie(httpExchange);
         String method = httpExchange.getRequestMethod();
 
-        //String sessionCookie = httpExchange.getRequestHeaders().getFirst("Cookie");
-        //cookie = HttpCookie.parse()
-
-        //System.out.println(cookie.get().getValue() + "   get 1 from session cookie");
-        String email = getEmailFromCookie(cookie.get().getValue());
-        //System.out.println(email + " get name");
-
-
-
         if (method.equals("GET")){
-            getLoginPage(httpExchange, email);
+            getPage(httpExchange);
+        } else if (method.equals("POST")) {
+            try {
+                sessionHandler.deleteSession(httpExchange);
+                getLoginPage(httpExchange);
+            } catch (DaoException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    private void getLoginPage(HttpExchange httpExchange, String email) throws IOException{
-        Student student = getLoggedStudentByMail(email);
+    private void getPage(HttpExchange httpExchange) throws IOException{
+        Optional<HttpCookie> cookie = sessionHandler.getSessionCookie(httpExchange);
+        try {
+            int userId = sessionHandler.getUserId(httpExchange, cookie);
 
-        List<Card> studentCards = getLoggedStudentCards(student.getId());
-        List<Card> studentQuests = getStudentQuests(student.getId());
+            Student student = studentDao.getStudent(userId);
+            List<Card> studentCards = getLoggedStudentCards(userId);
+            List<Card> studentQuests = getStudentQuests(userId);
+            int studentExp = getLoggedStudentEXP(studentQuests);
+            int percentExp = percentOfEXP(studentExp, getLevelsFromDatabase());
+            int studentLevel = getStudentLevel(getLevelsFromDatabase(), studentExp);
+            String fullname = student.getFirstName() + " " + student.getLastName();
+            JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/profile.twig");
+            JtwigModel model = JtwigModel.newModel();
+            model.with("Name", fullname);
+            model.with("experience", studentExp);
+            model.with("coolcoins", student.getCoolcoins());
+            model.with("studentCards", studentCards);
+            model.with("percentEXP", percentExp);
+            model.with("level", studentLevel);
+            String response = template.render(model);
+            sendResponse(httpExchange, response);
+        } catch (DaoException | NoSuchElementException e) {
+            getLoginPage(httpExchange);
+        }
+    }
 
-        int studentExp = getLoggedStudentEXP(studentQuests);
-        int percentExp = percentOfEXP(studentExp, getLevelsFromDatabase());
-        int studentLevel = getStudentLevel(getLevelsFromDatabase(), studentExp);
-
-
-        String fullname = student.getFirstName() + " " + student.getLastName();
-        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/profile.twig");
-        JtwigModel model = JtwigModel.newModel();
-        model.with("Name", fullname);
-        model.with("experience", studentExp);
-        model.with("coolcoins", student.getCoolcoins());
-        model.with("studentCards", studentCards);
-        model.with("percentEXP", percentExp);
-        model.with("level", studentLevel);
-
-
-        String response = template.render(model);
-        sendResponse(httpExchange, response);
+    private void getLoginPage(HttpExchange httpExchange) throws IOException{
+        httpExchange.getResponseHeaders().set("Location", "/login");
+        httpExchange.sendResponseHeaders(302,0);
     }
 
     private void sendResponse(HttpExchange httpExchange, String response) throws IOException {
@@ -207,13 +209,4 @@ public class StudentHandleProfile  implements HttpHandler  {
         System.out.println(levels.get(1).getLevelNumber());
         return levels;
     }
-
-    private Optional<HttpCookie> getSessionCookie(HttpExchange httpExchange){
-        String cookieStr = httpExchange.getRequestHeaders().getFirst("Cookie");
-        List<HttpCookie> cookies = cookieHelper.parseCookies(cookieStr);
-        //System.out.println(cookies + "lista w get session Cookie");
-        return cookieHelper.findCookieByName("email", cookies);
-    }
-
-
 }

@@ -24,7 +24,7 @@ public class Main {
         HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
         server.createContext("/login", new LoginController(loginDao, sessionDao));
         server.createContext("/static", new Static());
-        server.createContext("/student/profile", new StudentHandleProfile(studentDao,transactionDao, levelDao));
+        server.createContext("/student/profile", new StudentHandleProfile(studentDao,transactionDao, levelDao, sessionHandler));
         server.createContext("/student/shop", new StudentHandleShop(cardDao, studentDao, transactionDao));
         server.createContext("/student/contribution", new StudentHandleContribution(cardDao, studentDao, transactionDao));
         server.createContext("/admin/mentors", new AdminHandleMentors(mentorDao, classroomDao, studentDao, sessionHandler));

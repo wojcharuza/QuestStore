@@ -222,3 +222,7 @@ footer {
     border: none;
     color: white;
 }
+
+.navbar-button:hover {
+    color: #4DDABD;
+}

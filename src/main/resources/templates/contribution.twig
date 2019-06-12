@@ -26,8 +26,12 @@
         <li class="nav-item">
             <a class="nav-link " data-value="Shop" href="/student/shop">Shop</a></li>
         <li class="nav-item"><a class="nav-link " data-value="/student/contribution" href="/student/contribution">Contributions</a></li>
-        <li class="nav-item">
-            <a class="nav-link " data-value="Sign-out" href="/login">Sign-out</a></li>
+            <li class="nav-item">
+                <form method="POST">
+                    <input class="navbar-button" name="formType" value="logout" hidden>
+                    <button class="navbar-button nav-link" data-value="blog"  type="submit">Log out</button>
+                </form>
+            </li>
     </ul>
     </div>
 </nav>
@@ -46,7 +50,7 @@
             <div class="card-body">
                 <h5 class="card-title card-title-centered">{{ card.getTitle }}</h5>
                 <p class="card-text">{{ card.getDescription }}</p>
-                <h5 class="card-title card-title-centered">Total cost: $ {{ card.getCoolcoinValue }} </h5>
+                <h5 class="card-title card-title-centered">Total cost: $ {{ card.getCoolcoinValue * -1 }} </h5>
                 {% for groupTransaction in groupTransactions %}
                 {% if groupTransaction.getTitle == card.getTitle %}
                     <h5 class="card-title card-title-centered">Colleceted: {{ groupTransaction.getDonationValue }} </h5>
