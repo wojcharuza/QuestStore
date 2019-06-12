@@ -25,19 +25,23 @@ public class StudentHandleContribution implements HttpHandler {
     private StudentDao studentDao;
     private TransactionDao transactionDao;
     CookieHelper cookieHelper = new CookieHelper();
+    private SessionHandler sessionHandler;
 
-    public StudentHandleContribution (CardDao cardDao,StudentDao studentDao, TransactionDao transactionDao){
+    public StudentHandleContribution (CardDao cardDao,StudentDao studentDao, TransactionDao transactionDao,SessionHandler sessionHandler){
         this.cardDao = cardDao;
         this.studentDao = studentDao;
         this.transactionDao = transactionDao;
+        this.sessionHandler = sessionHandler;
     }
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        Optional<HttpCookie> cookie = getSessionCookie(httpExchange);
+        //Optional<HttpCookie> cookie = getSessionCookie(httpExchange);
         String method = httpExchange.getRequestMethod();
-        String email = getEmailFromCookie(cookie.get().getValue());
-
+        //String email = getEmailFromCookie(cookie.get().getValue());
+        //String email = "";
+        Optional<HttpCookie> cookie = sessionHandler.getSessionCookie(httpExchange);
+        String email = getEmailFromCookie(cookie,httpExchange);
 
 
 
@@ -46,6 +50,7 @@ public class StudentHandleContribution implements HttpHandler {
         }
 
         if (method.equals("POST")){
+
             Student student = getLoggedStudentByMail(email);
             Map<String, String> inputs = getFormData(httpExchange);
 
@@ -61,20 +66,17 @@ public class StudentHandleContribution implements HttpHandler {
                     addGroupTransactionToDatabase(title, student, donationValue);
 
                     if(isDonationComplete(title)){
-
                         List<Integer> donatorsIds = getDonatorsId(title);
 
                         for(Integer i: donatorsIds){
                             int studentId = i;
                             addTransactionToDatabase(title,studentId);
                             List<GroupTransaction> gropuTrans= getGropuTransactionByIDAndTitle(studentId,title);
-
                             System.out.println(gropuTrans.get(0).getDonationValue());
 
                         }
                         deleteComplitedContribution(title);
                         System.out.println("donation has been complited");
-
 
                     } else{
                         System.out.println( "donation not completed");
@@ -92,11 +94,11 @@ public class StudentHandleContribution implements HttpHandler {
     }
 
     private void getLoginPage(HttpExchange httpExchange) throws IOException{
+
+
         List<Card> artifacts = getArtifacts();
         List<Card> artifactsRare = getRareArtifacts(artifacts);
         List<GroupTransaction> groupTransactions = getGroupTransactions();
-
-
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/contribution.twig");
         JtwigModel model = JtwigModel.newModel();
         model.with("artifacts", artifactsRare);
@@ -161,13 +163,31 @@ public class StudentHandleContribution implements HttpHandler {
         }
         return student;
     }
+    public String getEmailFromCookie(Optional<HttpCookie> cookie, HttpExchange httpExchange){
+        String email = "";
 
-    public String getEmailFromCookie(String emailFromCookie){
-        System.out.println(emailFromCookie + "   cookie in method");
-        String trueMail = emailFromCookie.substring(1,emailFromCookie.length()-1);
-        System.out.println(trueMail + "mail in method");
-        return trueMail;
+        try{
+            int studentId = sessionHandler.getUserId(httpExchange,cookie);
+
+            Student student  = studentDao.getStudent(studentId);
+            email = student.getEmail();
+            System.out.println(email + "email in try catch");
+            return email;
+        }catch (DaoException | NoSuchElementException e){
+            e.printStackTrace();
+
+        }
+        System.out.println(email + "after try catch");
+        return email;
+
     }
+
+//    public String getEmailFromCookie(String emailFromCookie){
+//        System.out.println(emailFromCookie + "   cookie in method");
+//        String trueMail = emailFromCookie.substring(1,emailFromCookie.length()-1);
+//        System.out.println(trueMail + "mail in method");
+//        return trueMail;
+//    }
     private Map<String, String> getFormData(HttpExchange httpExchange) throws IOException {
         InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
         BufferedReader br = new BufferedReader(isr);
@@ -204,12 +224,12 @@ public class StudentHandleContribution implements HttpHandler {
 
     }
 
-    private Optional<HttpCookie> getSessionCookie(HttpExchange httpExchange){
-        String cookieStr = httpExchange.getRequestHeaders().getFirst("Cookie");
-        List<HttpCookie> cookies = cookieHelper.parseCookies(cookieStr);
-        //System.out.println(cookies + "lista w get session Cookie");
-        return cookieHelper.findCookieByName("email", cookies);
-    }
+//    private Optional<HttpCookie> getSessionCookie(HttpExchange httpExchange){
+//        String cookieStr = httpExchange.getRequestHeaders().getFirst("Cookie");
+//        List<HttpCookie> cookies = cookieHelper.parseCookies(cookieStr);
+//        //System.out.println(cookies + "lista w get session Cookie");
+//        return cookieHelper.findCookieByName("email", cookies);
+//    }
 
     public boolean isDonationComplete(String title){
 

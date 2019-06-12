@@ -25,8 +25,8 @@ public class Main {
         server.createContext("/login", new LoginController(loginDao, sessionDao));
         server.createContext("/static", new Static());
         server.createContext("/student/profile", new StudentHandleProfile(studentDao,transactionDao, levelDao, sessionHandler));
-        server.createContext("/student/shop", new StudentHandleShop(cardDao, studentDao, transactionDao));
-        server.createContext("/student/contribution", new StudentHandleContribution(cardDao, studentDao, transactionDao));
+        server.createContext("/student/shop", new StudentHandleShop(cardDao, studentDao, transactionDao, sessionHandler));
+        server.createContext("/student/contribution", new StudentHandleContribution(cardDao, studentDao, transactionDao, sessionHandler));
         server.createContext("/admin/mentors", new AdminHandleMentors(mentorDao, classroomDao, studentDao, sessionHandler));
         server.createContext("/mentor/students", new MentorHandleStudents(studentDao, cardDao, transactionDao, classroomDao, sessionHandler));
         server.createContext("/mentor/artifacts", new MentorHandleArtifacts(cardDao, sessionHandler));

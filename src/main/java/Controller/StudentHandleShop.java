@@ -16,10 +16,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpCookie;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class StudentHandleShop implements HttpHandler{
 
@@ -27,23 +24,23 @@ public class StudentHandleShop implements HttpHandler{
     private StudentDao studentDao;
     private TransactionDao transactionDao;
     CookieHelper cookieHelper = new CookieHelper();
+    private SessionHandler sessionHandler;
 
-    public StudentHandleShop(CardDao cardDao,StudentDao studentDao, TransactionDao transactionDao){
+    public StudentHandleShop(CardDao cardDao,StudentDao studentDao, TransactionDao transactionDao, SessionHandler sessionHandler){
         this.cardDao = cardDao;
         this.studentDao = studentDao;
         this.transactionDao = transactionDao;
+        this.sessionHandler = sessionHandler;
     }
 
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        Optional<HttpCookie> cookie = getSessionCookie(httpExchange);
         String method = httpExchange.getRequestMethod();
+        Optional<HttpCookie> cookie = sessionHandler.getSessionCookie(httpExchange);
+        String email = getEmailFromCookie(cookie,httpExchange);
 
-        //String sessionCookie = httpExchange.getRequestHeaders().getFirst("Cookie");
-        //cookie = HttpCookie.parse()
 
-        String email = getEmailFromCookie(cookie.get().getValue());
 
 
 
@@ -149,11 +146,23 @@ public class StudentHandleShop implements HttpHandler{
         return student;
     }
 
-    public String getEmailFromCookie(String emailFromCookie){
-        System.out.println(emailFromCookie + "   cookie in method");
-        String trueMail = emailFromCookie.substring(1,emailFromCookie.length()-1);
-        System.out.println(trueMail + "mail in method");
-        return trueMail;
+    public String getEmailFromCookie(Optional<HttpCookie> cookie, HttpExchange httpExchange){
+        String email = "";
+
+        try{
+            int studentId = sessionHandler.getUserId(httpExchange,cookie);
+
+            Student student  = studentDao.getStudent(studentId);
+            email = student.getEmail();
+            System.out.println(email + "email in try catch");
+            return email;
+        }catch (DaoException | NoSuchElementException e){
+            e.printStackTrace();
+
+        }
+        System.out.println(email + "after try catch");
+        return email;
+
     }
     private Map<String, String> getFormData(HttpExchange httpExchange) throws IOException {
         InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
@@ -189,11 +198,11 @@ public class StudentHandleShop implements HttpHandler{
 
     }
 
-    private Optional<HttpCookie> getSessionCookie(HttpExchange httpExchange){
-        String cookieStr = httpExchange.getRequestHeaders().getFirst("Cookie");
-        List<HttpCookie> cookies = cookieHelper.parseCookies(cookieStr);
-        System.out.println(cookies + "lista w get session Cookie");
-        return cookieHelper.findCookieByName("email", cookies);
-    }
+//    private Optional<HttpCookie> getSessionCookie(HttpExchange httpExchange){
+//        String cookieStr = httpExchange.getRequestHeaders().getFirst("Cookie");
+//        List<HttpCookie> cookies = cookieHelper.parseCookies(cookieStr);
+//        System.out.println(cookies + "lista w get session Cookie");
+//        return cookieHelper.findCookieByName("email", cookies);
+//    }
 
 }

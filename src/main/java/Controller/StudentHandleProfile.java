@@ -54,6 +54,7 @@ public class StudentHandleProfile  implements HttpHandler  {
             int userId = sessionHandler.getUserId(httpExchange, cookie);
 
             Student student = studentDao.getStudent(userId);
+
             List<Card> studentCards = getLoggedStudentCards(userId);
             List<Card> studentQuests = getStudentQuests(userId);
             int studentExp = getLoggedStudentEXP(studentQuests);

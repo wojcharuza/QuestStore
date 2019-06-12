@@ -121,7 +121,7 @@ public class StudentDaoImpl implements StudentDao {
                 String email = rs.getString("email");
                 String password = rs.getString("password");
                 int classroom = rs.getInt("class_id");
-                int coolcoins = getCoolcoinBalance(id);
+                int coolcoins = getCoolcoinBalance(id) - getStudentDonations(id);
                 List<Card> usedArtifacts = getCardsUsedByStudent(id);
                 student = new Student.Builder().wirhId(id)
                         .withFirstName(firstName)

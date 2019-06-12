@@ -51,7 +51,7 @@
             <div class="card-body">
                 <h5 class="card-title card-title-centered">{{ card.getTitle }}</h5>
                 <p class="card-text">{{ card.getDescription }}</p>
-                <h5 class="card-title card-title-centered">Total cost: $ {{ card.getCoolcoinValue }} </h5>
+                <h5 class="card-title card-title-centered">Total cost: $ {{ card.getCoolcoinValue  * -1}} </h5>
                 {% for groupTransaction in groupTransactions %}
                 {% if groupTransaction.getTitle == card.getTitle %}
                     <h5 class="card-title card-title-centered">Colleceted: {{ groupTransaction.getDonationValue }} </h5>
