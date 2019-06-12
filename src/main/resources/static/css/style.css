@@ -217,13 +217,9 @@ footer {
     float: right;
 }
 
-
-
-
-#navbar-button{
+.navbar-button{
     background-color: #1f2833;
+    border: none;
+    color: white;
 }
 
-.input[type="submit"]{
-    background-color: #1f2833;
-}
