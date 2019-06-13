@@ -175,16 +175,13 @@ public class StudentDaoImpl implements StudentDao {
         int balance = 0;
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
             PreparedStatement stmt = null;
-            stmt = con.prepareStatement("SELECT coolcoin_value FROM \"Transactions\" JOIN \"Cards\" ON " +
-                    "\"Transactions\".card_title = \"Cards\".title WHERE student_id = ?");
+            stmt = con.prepareStatement("SELECT coolcoin_value, card_type FROM \"Transactions\" JOIN \"Cards\" ON " +
+                    "\"Transactions\".card_title = \"Cards\".title WHERE student_id = ? AND card_type::text LIKE '%basic'");
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 int value = rs.getInt("coolcoin_value");
-                if (value > -40){
-                    balance += value;
-                }
-
+                balance += value;
             }
             return balance;
 

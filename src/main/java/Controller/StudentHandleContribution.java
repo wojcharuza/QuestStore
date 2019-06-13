@@ -62,32 +62,40 @@ public class StudentHandleContribution implements HttpHandler {
                 //System.out.println(donation + donation);
                 //System.out.println(inputs);
 
-                if(donation.matches("[0-9]+") && donationValue>0 && donationValue<student.getCoolcoins()){
+                if(donation.matches("[0-9]+") && donationValue>0 && donationValue<student.getCoolcoins()) {
                     addGroupTransactionToDatabase(title, student, donationValue);
 
-                    if(isDonationComplete(title)){
+                    if (isDonationComplete(title)) {
                         List<Integer> donatorsIds = getDonatorsId(title);
 
-                        for(Integer i: donatorsIds){
+                        for (Integer i : donatorsIds) {
                             int studentId = i;
-                            addTransactionToDatabase(title,studentId);
-                            List<GroupTransaction> gropuTrans= getGropuTransactionByIDAndTitle(studentId,title);
+                            addTransactionToDatabase(title, studentId);
+                            List<GroupTransaction> gropuTrans = getGropuTransactionByIDAndTitle(studentId, title);
                             System.out.println(gropuTrans.get(0).getDonationValue());
 
                         }
                         deleteComplitedContribution(title);
                         System.out.println("donation has been complited");
 
-                    } else{
-                        System.out.println( "donation not completed");
+                    } else {
+                        System.out.println("donation not completed");
                     }
 
                     getLoginPage(httpExchange);
+
+
                 } else {
                     getFailedPage(httpExchange);
 
                 }
-
+            }else if(inputs.get("formType").equals("logout")){
+                try {
+                    sessionHandler.deleteSession(httpExchange);
+                    getLogoutPage(httpExchange);
+                } catch (DaoException e) {
+                    e.printStackTrace();
+                }
             }
 
         }
@@ -297,6 +305,10 @@ public class StudentHandleContribution implements HttpHandler {
             e.printStackTrace();
         }
         return groupTransactionsList;
+    }
+    private void getLogoutPage(HttpExchange httpExchange) throws IOException{
+        httpExchange.getResponseHeaders().set("Location", "/login");
+        httpExchange.sendResponseHeaders(302,0);
     }
 
 }

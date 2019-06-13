@@ -38,22 +38,19 @@ public class StudentHandleShop implements HttpHandler{
     public void handle(HttpExchange httpExchange) throws IOException {
         String method = httpExchange.getRequestMethod();
         Optional<HttpCookie> cookie = sessionHandler.getSessionCookie(httpExchange);
-        String email = getEmailFromCookie(cookie,httpExchange);
+        String email = getEmailFromCookie(cookie, httpExchange);
 
 
-
-
-
-
-        if (method.equals("GET")){
+        if (method.equals("GET")) {
             getLoginPage(httpExchange);
         }
+        Map<String, String> inputs = getFormData(httpExchange);
 
-        if (method.equals("POST")){
+        if (method.equals("POST")) {
             Student student = getLoggedStudentByMail(email);
-            Map<String, String> inputs = getFormData(httpExchange);
 
-            if(inputs.get("formType").equals("title")) {
+
+            if (inputs.get("formType").equals("title")) {
                 String title = inputs.get("title");
                 //System.out.println(inputs+" this is title");
                 //System.out.println(title +" this is title");
@@ -66,8 +63,15 @@ public class StudentHandleShop implements HttpHandler{
 
                 }
 
-            }
 
+            } else if (inputs.get("formType").equals("logout")) {
+                try {
+                    sessionHandler.deleteSession(httpExchange);
+                    getLogoutPage(httpExchange);
+                } catch (DaoException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -154,7 +158,7 @@ public class StudentHandleShop implements HttpHandler{
 
             Student student  = studentDao.getStudent(studentId);
             email = student.getEmail();
-            System.out.println(email + "email in try catch");
+            //System.out.println(email + "email in try catch");
             return email;
         }catch (DaoException | NoSuchElementException e){
             e.printStackTrace();
@@ -197,12 +201,10 @@ public class StudentHandleShop implements HttpHandler{
         return false;
 
     }
+    private void getLogoutPage(HttpExchange httpExchange) throws IOException{
+        httpExchange.getResponseHeaders().set("Location", "/login");
+        httpExchange.sendResponseHeaders(302,0);
+    }
 
-//    private Optional<HttpCookie> getSessionCookie(HttpExchange httpExchange){
-//        String cookieStr = httpExchange.getRequestHeaders().getFirst("Cookie");
-//        List<HttpCookie> cookies = cookieHelper.parseCookies(cookieStr);
-//        System.out.println(cookies + "lista w get session Cookie");
-//        return cookieHelper.findCookieByName("email", cookies);
-//    }
 
 }
