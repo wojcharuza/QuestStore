@@ -78,34 +78,49 @@ public class StudentHandleShop implements HttpHandler{
     private void getLoginPage(HttpExchange httpExchange) throws IOException{
         List<Card> artifacts = getArtifacts();
         List<Card> artifactsBasic = getBasicArtifacts(artifacts);
-        System.out.println(artifactsBasic.size()  + "   arti basi");
-        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/shop.twig");
-        JtwigModel model = JtwigModel.newModel();
-        model.with("artifacts", artifactsBasic);
-        String response = template.render(model);
-        sendResponse(httpExchange, response);
+        Optional<HttpCookie> cookie = sessionHandler.getSessionCookie(httpExchange);
+        try {
+            int userId = sessionHandler.getUserId(httpExchange, cookie);
+            JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/shop.twig");
+            JtwigModel model = JtwigModel.newModel();
+            model.with("artifacts", artifactsBasic);
+            String response = template.render(model);
+            sendResponse(httpExchange, response);
+        }catch (DaoException | NoSuchElementException e){
+            getLogoutPage(httpExchange);
+        }
     }
     public void getSuccessPage(HttpExchange httpExchange)throws IOException{
         List<Card> artifacts = getArtifacts();
         List<Card> artifactsBasic = getBasicArtifacts(artifacts);
-        System.out.println(artifactsBasic.size());
-        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/purchase_success.twig");
-        JtwigModel model = JtwigModel.newModel();
-        model.with("artifacts", artifactsBasic);
-        String response = template.render(model);
-        sendResponse(httpExchange, response);
-
+        Optional<HttpCookie> cookie = sessionHandler.getSessionCookie(httpExchange);
+        try {
+            int userId = sessionHandler.getUserId(httpExchange, cookie);
+            JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/purchase_success.twig");
+            JtwigModel model = JtwigModel.newModel();
+            model.with("artifacts", artifactsBasic);
+            String response = template.render(model);
+            sendResponse(httpExchange, response);
+        }catch (DaoException | NoSuchElementException e){
+            getLogoutPage(httpExchange);
+        }
     }
 
     public void getFailedPage (HttpExchange httpExchange)throws IOException{
         List<Card> artifacts = getArtifacts();
         List<Card> artifactsBasic = getBasicArtifacts(artifacts);
-        System.out.println(artifacts.size());
-        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/purchase_failed.twig");
-        JtwigModel model = JtwigModel.newModel();
-        model.with("artifacts", artifactsBasic);
-        String response = template.render(model);
-        sendResponse(httpExchange, response);
+        Optional<HttpCookie> cookie = sessionHandler.getSessionCookie(httpExchange);
+        try {
+            int userId = sessionHandler.getUserId(httpExchange, cookie);
+
+            JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/purchase_failed.twig");
+            JtwigModel model = JtwigModel.newModel();
+            model.with("artifacts", artifactsBasic);
+            String response = template.render(model);
+            sendResponse(httpExchange, response);
+        }catch (DaoException | NoSuchElementException e){
+            getLogoutPage(httpExchange);
+        }
     }
 
     private void sendResponse(HttpExchange httpExchange, String response) throws IOException {
@@ -155,10 +170,8 @@ public class StudentHandleShop implements HttpHandler{
 
         try{
             int studentId = sessionHandler.getUserId(httpExchange,cookie);
-
             Student student  = studentDao.getStudent(studentId);
             email = student.getEmail();
-            //System.out.println(email + "email in try catch");
             return email;
         }catch (DaoException | NoSuchElementException e){
             e.printStackTrace();
