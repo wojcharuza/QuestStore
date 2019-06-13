@@ -31,7 +31,7 @@ public class Main {
         server.createContext("/mentor/students", new MentorHandleStudents(studentDao, cardDao, transactionDao, classroomDao, sessionHandler));
         server.createContext("/mentor/artifacts", new MentorHandleArtifacts(cardDao, sessionHandler));
         server.createContext("/mentor/quests", new MentorHandleQuests(cardDao, sessionHandler));
-        server.createContext("/admin/classes", new AdminHandleClasses(classroomDao, mentorDao, sessionHandler));
+        server.createContext("/admin/classes", new AdminHandleClasses(classroomDao, mentorDao, sessionHandler, studentDao, transactionDao));
         server.createContext("/admin/levels", new AdminHandleLevels(levelDao, sessionHandler));
 
         server.setExecutor(null);
