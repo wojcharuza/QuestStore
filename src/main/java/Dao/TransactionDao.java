@@ -18,5 +18,6 @@ public interface TransactionDao {
     void archivedGroupTransaction(int studentID, String cardTitle, int donation) throws DaoException;
     void deleteComplitedContribution(String title) throws DaoException;
     void deleteTransactionsByIds(List<Integer> studentIds);
+    void deleteTransactionsById(int studentId);
 
 }

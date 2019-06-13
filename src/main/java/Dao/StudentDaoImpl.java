@@ -176,7 +176,7 @@ public class StudentDaoImpl implements StudentDao {
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
             PreparedStatement stmt = null;
             stmt = con.prepareStatement("SELECT coolcoin_value, card_type FROM \"Transactions\" JOIN \"Cards\" ON " +
-                    "\"Transactions\".card_title = \"Cards\".title WHERE student_id = ? AND card_type::text LIKE '%basic'");
+                    "\"Transactions\".card_title = \"Cards\".title WHERE student_id = ? AND card_type::text NOT LIKE '%artifact_rare'");
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {

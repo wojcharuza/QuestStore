@@ -258,6 +258,18 @@ public class TransactionDaoImpl implements TransactionDao {
             e.printStackTrace();
         }
     }
+
+
+    public void deleteTransactionsById(int studentId){
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+            PreparedStatement stmt = null;
+            stmt = con.prepareStatement("DELETE FROM \"Transactions\" WHERE student_id = ?");
+            stmt.setInt(1, studentId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 

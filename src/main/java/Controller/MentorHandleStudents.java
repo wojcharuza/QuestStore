@@ -100,6 +100,7 @@ public class MentorHandleStudents implements HttpHandler {
 
     private void deleteStudent(Map<String, String> inputs) throws DaoException {
         studentDao.deleteStudent(Integer.valueOf(inputs.get("deleteStudentId")));
+        transactionDao.deleteTransactionsById(Integer.valueOf(inputs.get("deleteStudentId")));
     }
 
     private void addQuestCompleted(HttpExchange httpExchange, Map<String, String> inputs) throws IOException {
