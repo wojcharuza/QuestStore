@@ -3,6 +3,7 @@ package Controller;
 import Dao.DaoException;
 import Dao.LevelDao;
 import Model.Level;
+import Service.RequestResponseService;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.jtwig.JtwigModel;
@@ -15,12 +16,14 @@ import java.net.HttpCookie;
 import java.util.*;
 
 public class AdminHandleLevels implements HttpHandler {
-    LevelDao levelDao;
-    SessionHandler sessionHandler;
+    private LevelDao levelDao;
+    private SessionHandler sessionHandler;
+    private RequestResponseService reqRespServ;
 
-    public AdminHandleLevels(LevelDao levelDao, SessionHandler sessionHandler){
+    public AdminHandleLevels(LevelDao levelDao, SessionHandler sessionHandler, RequestResponseService reqRespServ){
         this.levelDao = levelDao;
         this.sessionHandler = sessionHandler;
+        this.reqRespServ = reqRespServ;
     }
 
 
@@ -38,7 +41,7 @@ public class AdminHandleLevels implements HttpHandler {
 
 
         else if (method.equals("POST")) {
-            Map<String, String> inputs = getFormData(httpExchange);
+            Map<String, String> inputs = reqRespServ.getFormData(httpExchange);
 
             if(inputs.get("formType").equals("editLevel")){
                 List<Level> levels = prepareLevels(inputs);
@@ -53,7 +56,7 @@ public class AdminHandleLevels implements HttpHandler {
             else if (inputs.get("formType").equals("logout")){
                 try {
                     sessionHandler.deleteSession(httpExchange);
-                    getLoginPage(httpExchange);
+                    reqRespServ.getLoginPage(httpExchange);
                 } catch (DaoException e) {
                     e.printStackTrace();
                 }
@@ -72,28 +75,11 @@ public class AdminHandleLevels implements HttpHandler {
             JtwigModel model = JtwigModel.newModel();
             model.with("levels", levels);
             String response = template.render(model);
-            sendResponse(httpExchange, response);
+            reqRespServ.sendResponse(httpExchange, response);
         }
         catch (DaoException | NoSuchElementException e){
-            getLoginPage(httpExchange);
+            reqRespServ.getLoginPage(httpExchange);
         }
-    }
-
-
-    private void sendResponse(HttpExchange httpExchange, String response) throws IOException {
-        httpExchange.sendResponseHeaders(200, response.getBytes().length);
-        OutputStream os = httpExchange.getResponseBody();
-        os.write(response.getBytes());
-        os.close();
-    }
-
-
-    private Map<String, String> getFormData(HttpExchange httpExchange) throws IOException {
-        InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
-        BufferedReader br = new BufferedReader(isr);
-        String formData = br.readLine();
-        Map<String, String> inputs = LoginController.parseFormData(formData);
-        return  inputs;
     }
 
 
@@ -106,11 +92,5 @@ public class AdminHandleLevels implements HttpHandler {
             levels.add(level);}
         }
         return levels;
-    }
-
-
-    private void getLoginPage(HttpExchange httpExchange) throws IOException{
-        httpExchange.getResponseHeaders().set("Location", "/login");
-        httpExchange.sendResponseHeaders(302,0);
     }
 }

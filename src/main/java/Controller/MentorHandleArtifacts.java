@@ -3,6 +3,7 @@ package Controller;
 import Dao.CardDao;
 import Dao.DaoException;
 import Model.Card;
+import Service.RequestResponseService;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.jtwig.JtwigModel;
@@ -17,10 +18,12 @@ import java.util.*;
 public class MentorHandleArtifacts implements HttpHandler {
     private CardDao cardDao;
     private SessionHandler sessionHandler;
+    private RequestResponseService reqRespServ;
 
-    public MentorHandleArtifacts(CardDao cardDao, SessionHandler sessionHandler) {
+    public MentorHandleArtifacts(CardDao cardDao, SessionHandler sessionHandler, RequestResponseService reqRespServ) {
         this.cardDao = cardDao;
         this.sessionHandler = sessionHandler;
+        this.reqRespServ = reqRespServ;
     }
 
 
@@ -38,7 +41,7 @@ public class MentorHandleArtifacts implements HttpHandler {
 
 
         else if(method.equals("POST")){
-            Map<String, String> inputs = getFormData(httpExchange);
+            Map<String, String> inputs = reqRespServ.getFormData(httpExchange);
 
             if(inputs.get("formType").equals("addCard")){
                 try {
@@ -60,7 +63,7 @@ public class MentorHandleArtifacts implements HttpHandler {
             } else if(inputs.get("formType").equals("logout")){
                 try {
                     sessionHandler.deleteSession(httpExchange);
-                    getLoginPage(httpExchange);
+                    reqRespServ.getLoginPage(httpExchange);
                 } catch (DaoException e) {
                     e.printStackTrace();
                 }
@@ -100,33 +103,10 @@ public class MentorHandleArtifacts implements HttpHandler {
             model.with("artifacts", artifacts);
             model.with("cardTypes", cardTypes);
             String response = template.render(model);
-            sendResponse(httpExchange, response);
+            reqRespServ.sendResponse(httpExchange, response);
         } catch (DaoException | NoSuchElementException e){
-            getLoginPage(httpExchange);
+            reqRespServ.getLoginPage(httpExchange);
         }
-    }
-
-
-    private void getLoginPage(HttpExchange httpExchange) throws IOException{
-        httpExchange.getResponseHeaders().set("Location", "/login");
-        httpExchange.sendResponseHeaders(302,0);
-    }
-
-
-    private void sendResponse(HttpExchange httpExchange, String response) throws IOException {
-        httpExchange.sendResponseHeaders(200, response.getBytes().length);
-        OutputStream os = httpExchange.getResponseBody();
-        os.write(response.getBytes());
-        os.close();
-    }
-
-
-    private Map<String, String> getFormData(HttpExchange httpExchange) throws IOException {
-        InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
-        BufferedReader br = new BufferedReader(isr);
-        String formData = br.readLine();
-        Map<String, String> inputs = LoginController.parseFormData(formData);
-        return inputs;
     }
 }
 
