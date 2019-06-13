@@ -8,6 +8,9 @@ import Service.RequestResponseService;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import idGenerators.IdGenerator;
+import org.jtwig.JtwigModel;
+import org.jtwig.JtwigTemplate;
+
 import java.io.*;
 import java.net.HttpCookie;
 import java.net.URLDecoder;
@@ -34,7 +37,7 @@ public class LoginController implements HttpHandler {
         HttpCookie cookie;
 
         if (method.equals("GET")){
-           reqRespServ.getLoginPage(httpExchange);
+           getLoginPage(httpExchange);
         }
 
         else if (method.equals("POST")){
@@ -63,7 +66,7 @@ public class LoginController implements HttpHandler {
                     case "admin":
 
                         httpExchange.getResponseHeaders().set("Location", "admin/mentors");
-                        httpExchange.sendResponseHeaders(302,0);
+                        httpExchange.sendResponseHeaders(302,-1);
 
                         break;
 
@@ -79,13 +82,20 @@ public class LoginController implements HttpHandler {
                         break;
 
                     default:
-                        reqRespServ.getLoginPage(httpExchange);
+                        getLoginPage(httpExchange);
                 }
 
             } catch (DaoException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void getLoginPage(HttpExchange httpExchange) throws IOException {
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/index.twig");
+        JtwigModel model = JtwigModel.newModel();
+        String response = template.render(model);
+        reqRespServ.sendResponse(httpExchange, response);
     }
 
 

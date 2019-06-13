@@ -10,16 +10,14 @@ import java.util.Map;
 
 public class RequestResponseService {
 
-    public void getLoginPage(HttpExchange httpExchange) throws IOException {
-        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/index.twig");
-        JtwigModel model = JtwigModel.newModel();
-        String response = template.render(model);
-        sendResponse(httpExchange, response);
+    public void getLoginPage(HttpExchange httpExchange) throws IOException{
+        httpExchange.getResponseHeaders().set("Location", "/login");
+        httpExchange.sendResponseHeaders(302,0);
     }
 
 
     public void sendResponse(HttpExchange httpExchange, String response) throws IOException {
-        httpExchange.sendResponseHeaders(200, response.length());
+        httpExchange.sendResponseHeaders(200, response.getBytes().length);
         OutputStream os = httpExchange.getResponseBody();
         os.write(response.getBytes());
         os.close();
