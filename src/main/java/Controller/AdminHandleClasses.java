@@ -1,8 +1,6 @@
 package Controller;
 
-import Dao.ClassroomDao;
-import Dao.DaoException;
-import Dao.MentorDao;
+import Dao.*;
 import Model.Classroom;
 import Model.Mentor;
 import com.sun.net.httpserver.HttpExchange;
@@ -22,11 +20,17 @@ public class AdminHandleClasses implements HttpHandler {
     private ClassroomDao classroomDao;
     private MentorDao mentorDao;
     private SessionHandler sessionHandler;
+    private StudentDao studentDao;
+    private TransactionDao transactionDao;
 
-    public AdminHandleClasses(ClassroomDao classroomDao, MentorDao mentorDao, SessionHandler sessionHandler) {
+    public AdminHandleClasses(ClassroomDao classroomDao,
+                              MentorDao mentorDao,
+                              SessionHandler sessionHandler, StudentDao studentDao, TransactionDao transactionDao) {
         this.classroomDao = classroomDao;
         this.mentorDao = mentorDao;
         this.sessionHandler = sessionHandler;
+        this.studentDao = studentDao;
+        this.transactionDao = transactionDao;
     }
 
     @Override
@@ -85,7 +89,13 @@ public class AdminHandleClasses implements HttpHandler {
 
 
     private void deleteClassroom(Map<String, String> inputs) throws DaoException {
-        classroomDao.deleteClassRoom(Integer.valueOf(inputs.get("deleteClassId")));
+        int classRoomId = Integer.valueOf(inputs.get("deleteClassId"));
+        classroomDao.deleteClassRoom(classRoomId);
+        studentDao.deleteStudentsFromClassroom(classRoomId);
+        List<Integer> studentsIds = studentDao.getStudentsIdsFromClassroom(classRoomId);
+        transactionDao.deleteTransactionsByIds(studentsIds);
+
+
     }
 
     private void assignNewMentor(Map<String, String> inputs) throws DaoException {

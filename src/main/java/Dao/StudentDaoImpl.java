@@ -268,4 +268,37 @@ public class StudentDaoImpl implements StudentDao {
             throw new DaoException();
         }
     }
-}
+
+
+    public void deleteStudentsFromClassroom(int classRoomId) throws DaoException{
+        try (Connection con = C3P0DataSource.getInstance().getConnection()){
+            PreparedStatement statement = null;
+            statement = con.prepareStatement("DELETE FROM users WHERE class_id = ? AND permission = 'student'");
+            statement.setInt(1,classRoomId);
+            statement.executeUpdate();
+            statement.close();
+        }
+        catch (SQLException e){
+            throw new DaoException();
+        }
+    }
+
+
+
+    public List<Integer> getStudentsIdsFromClassroom(int classRoomId) throws DaoException {
+        List<Integer> ids = new ArrayList<>();
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+            PreparedStatement statement = null;
+            statement = con.prepareStatement("SELECT id FROM users WHERE class_id = ? AND permission = 'student'");
+            statement.setInt(1, classRoomId);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                ids.add(rs.getInt("id"));
+            }
+            statement.close();
+            return ids;
+        } catch (SQLException e) {
+            throw new DaoException();
+        }
+    }}
+
