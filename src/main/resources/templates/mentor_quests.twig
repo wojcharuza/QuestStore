@@ -57,7 +57,7 @@
                         <img class="card-img-top" src="https://via.placeholder.com/130x125" alt="Card image cap">
                         <h5 class="card-title card-title-centered"><input type="text" class="form-control" name="title" placeholder="Enter title"></h5>
                         <p class="card-text"><textarea name="description" rows="1" cols="32" placeholder="Enter description"  ></textarea></p>
-                        <p class="card-text"><input type="text" class="form-control" name="price" placeholder="Enter price"></p>
+                        <p class="card-text"><input type="number" min="1" class="form-control" name="price" placeholder="Enter price"></p>
                         <input class="btn btn-primary" type="submit" value="ADD">
                     </div>
                 </form>
@@ -76,9 +76,9 @@
                             </div>
                             <img class="card-img-top" src="https://via.placeholder.com/130x125" alt="Card image cap">
                             <div class="card-body">
-                                <h5 class="card-title card-title-centered"><input type="text" class="form-control" name="title" value="{{ quest.getTitle }}"></h5>
-                                <p class="card-text"><textarea name="description" rows="1" cols="32" >{{ quest.getDescription }}</textarea></p>
-                                <p class="card-text"><input type="text" class="form-control" name="price" value="{{ quest.getCoolcoinValue }}"></p>
+                                <h5 class="card-title card-title-centered"><input type="text" required class="form-control" name="title" value="{{ quest.getTitle }}"></h5>
+                                <p class="card-text"><textarea name="description" rows="1" cols="32" required>{{ quest.getDescription }}</textarea></p>
+                                <p class="card-text"><input type="number" min="1" class="form-control" name="price" required value="{{ quest.getCoolcoinValue }}"></p>
                                 <input class="btn btn-primary" type="submit" value="Edit">
                             </div>
                         </form>
@@ -104,9 +104,9 @@
                             </div>
                             <img class="card-img-top" src="https://via.placeholder.com/130x125" alt="Card image cap">
                             <div class="card-body">
-                                <h5 class="card-title card-title-centered"><input type="text" class="form-control" name="title" value="{{ quest.getTitle }}"></h5>
-                                <p class="card-text"><textarea name="description" rows="1" cols="32" >{{ quest.getDescription }}</textarea></p>
-                                <p class="card-text"><input type="text" class="form-control" name="price" value="{{ quest.getCoolcoinValue }}"></p>
+                                <h5 class="card-title card-title-centered"><input type="text" class="form-control" name="title" required value="{{ quest.getTitle }}"></h5>
+                                <p class="card-text"><textarea name="description" rows="1" cols="32" required>{{ quest.getDescription }}</textarea></p>
+                                <p class="card-text"><input type="text" class="form-control" name="price" required value="{{ quest.getCoolcoinValue }}"></p>
                                 <input class="btn btn-primary" type="submit" value="Edit">
                             </div>
                         </form>

@@ -226,3 +226,13 @@ footer {
 .navbar-button:hover {
     color: #4DDABD;
 }
+
+.image-rounded {
+    border-radius: 50%;
+}
+
+.profile-image-small {
+    border-radius: 50%;
+    width: 5%;
+    height: 5%;
+}
