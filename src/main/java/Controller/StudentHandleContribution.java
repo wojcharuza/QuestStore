@@ -55,7 +55,7 @@ public class StudentHandleContribution implements HttpHandler {
                 String title = inputs.get("title");
                 String donation = inputs.get("donation");
                 int donationValue = Integer.valueOf(donation);
-                if (donation.matches("[0-9]+") && donationValue > 0 && donationValue < student.getCoolcoins()) {
+                if (donation.matches("[0-9]+") && donationValue > 0 && donationValue <= student.getCoolcoins()) {
                     addGroupTransactionToDatabase(title, student, donationValue);
                     if (isDonationComplete(title)) {
                         List<Integer> donatorsIds = getDonatorsId(title);
