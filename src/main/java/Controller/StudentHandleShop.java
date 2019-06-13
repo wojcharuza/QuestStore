@@ -44,10 +44,11 @@ public class StudentHandleShop implements HttpHandler{
         if (method.equals("GET")) {
             getLoginPage(httpExchange);
         }
+        Map<String, String> inputs = getFormData(httpExchange);
 
         if (method.equals("POST")) {
             Student student = getLoggedStudentByMail(email);
-            Map<String, String> inputs = getFormData(httpExchange);
+
 
             if (inputs.get("formType").equals("title")) {
                 String title = inputs.get("title");
@@ -56,7 +57,6 @@ public class StudentHandleShop implements HttpHandler{
                 if (verifyAbilityOfPurchase(title, student.getCoolcoins())) {
                     addTransactionToDatabase(title, student);
                     getSuccessPage(httpExchange);
-
 
                 } else {
                     getFailedPage(httpExchange);
@@ -158,7 +158,7 @@ public class StudentHandleShop implements HttpHandler{
 
             Student student  = studentDao.getStudent(studentId);
             email = student.getEmail();
-            System.out.println(email + "email in try catch");
+            //System.out.println(email + "email in try catch");
             return email;
         }catch (DaoException | NoSuchElementException e){
             e.printStackTrace();
@@ -206,11 +206,5 @@ public class StudentHandleShop implements HttpHandler{
         httpExchange.sendResponseHeaders(302,0);
     }
 
-//    private Optional<HttpCookie> getSessionCookie(HttpExchange httpExchange){
-//        String cookieStr = httpExchange.getRequestHeaders().getFirst("Cookie");
-//        List<HttpCookie> cookies = cookieHelper.parseCookies(cookieStr);
-//        System.out.println(cookies + "lista w get session Cookie");
-//        return cookieHelper.findCookieByName("email", cookies);
-//    }
 
 }
