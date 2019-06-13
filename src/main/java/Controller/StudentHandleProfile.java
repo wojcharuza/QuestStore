@@ -89,25 +89,6 @@ public class StudentHandleProfile  implements HttpHandler  {
     }
 
 
-    public String getEmailFromCookie(String emailFromCookie){
-        //System.out.println(emailFromCookie + "   cookie in method");
-        String trueMail = emailFromCookie.substring(1,emailFromCookie.length()-1);
-        //System.out.println(trueMail + "mail in method");
-        return trueMail;
-    }
-
-    public Student getLoggedStudentByMail(String email) throws IOException {
-        Student student = new Student.Builder().build();
-        try{
-            student = studentDao.getStudentByEmail(email);
-            //System.out.println(student.getLastName() + "this is name");
-
-
-        }catch (DaoException e){
-            e.printStackTrace();
-        }
-        return student;
-    }
 
     public List<Card> getLoggedStudentCards(int studentID) throws IOException {
         List<Card> userCards = new ArrayList<>();
@@ -140,7 +121,6 @@ public class StudentHandleProfile  implements HttpHandler  {
 
 
     public int getLoggedStudentEXP (List<Card> studentCards){
-
         int studentEXP = 0;
         for (Card c: studentCards){
             String type = c.getCardType();
@@ -148,7 +128,6 @@ public class StudentHandleProfile  implements HttpHandler  {
                 studentEXP = studentEXP + c.getCoolcoinValue();
             }
         }
-        //System.out.println(studentEXP + "");
         return studentEXP;
     }
 
@@ -159,11 +138,8 @@ public class StudentHandleProfile  implements HttpHandler  {
         int percentExp = 0;
 
         for (int i = 0; i <= levels.size(); i++){
-
             int levelExp = levels.get(i).getExperienceNeeded();
             int nextLevelExp = levels.get(i+1).getExperienceNeeded();
-
-
             if(studentExp == 0){
                 return 0;
             }
@@ -177,11 +153,8 @@ public class StudentHandleProfile  implements HttpHandler  {
                 int expNeeded = nextLevelExp - levelExp;
                 percentExp = ((studentExp-levelExp)*100)/expNeeded;
                 return percentExp;
-
             }
         }
-
-        //System.out.println(percentExp + "    percent exp");
         return percentExp;
     }
 
@@ -190,8 +163,6 @@ public class StudentHandleProfile  implements HttpHandler  {
         for (int i = 0; i <= levels.size(); i++){
             int levelExp = levels.get(i).getExperienceNeeded();
             int nextLevelExp = levels.get(i+1).getExperienceNeeded();
-
-
             if (studentExp >= levelExp && studentExp < nextLevelExp){
                 currentLevel = levels.get(i).getLevelNumber();
                 return currentLevel;
@@ -207,7 +178,7 @@ public class StudentHandleProfile  implements HttpHandler  {
         }catch (DaoException e){
             e.printStackTrace();
         }
-        System.out.println(levels.get(1).getLevelNumber());
+        //System.out.println(levels.get(1).getLevelNumber());
         return levels;
     }
 }

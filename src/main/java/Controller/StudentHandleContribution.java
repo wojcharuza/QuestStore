@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpCookie;
+import java.nio.file.NoSuchFileException;
 import java.util.*;
 
 public class StudentHandleContribution implements HttpHandler {
@@ -36,12 +37,8 @@ public class StudentHandleContribution implements HttpHandler {
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        //Optional<HttpCookie> cookie = getSessionCookie(httpExchange);
         String method = httpExchange.getRequestMethod();
-        //String email = getEmailFromCookie(cookie.get().getValue());
-        //String email = "";
-        Optional<HttpCookie> cookie = sessionHandler.getSessionCookie(httpExchange);
-        String email = getEmailFromCookie(cookie,httpExchange);
+
 
 
 
@@ -49,47 +46,33 @@ public class StudentHandleContribution implements HttpHandler {
             getLoginPage(httpExchange);
         }
 
-        if (method.equals("POST")){
+        if (method.equals("POST")) {
 
-            Student student = getLoggedStudentByMail(email);
+            Student student = getLoggedStudentByMail(httpExchange);
             Map<String, String> inputs = getFormData(httpExchange);
 
-            if(inputs.get("formType").equals("title")) {
+            if (inputs.get("formType").equals("title")) {
                 String title = inputs.get("title");
                 String donation = inputs.get("donation");
                 int donationValue = Integer.valueOf(donation);
-
-                //System.out.println(donation + donation);
-                //System.out.println(inputs);
-
-                if(donation.matches("[0-9]+") && donationValue>0 && donationValue<student.getCoolcoins()) {
+                if (donation.matches("[0-9]+") && donationValue > 0 && donationValue < student.getCoolcoins()) {
                     addGroupTransactionToDatabase(title, student, donationValue);
-
                     if (isDonationComplete(title)) {
                         List<Integer> donatorsIds = getDonatorsId(title);
-
                         for (Integer i : donatorsIds) {
                             int studentId = i;
                             addTransactionToDatabase(title, studentId);
-                            List<GroupTransaction> gropuTrans = getGropuTransactionByIDAndTitle(studentId, title);
-                            System.out.println(gropuTrans.get(0).getDonationValue());
-
                         }
                         deleteComplitedContribution(title);
-                        System.out.println("donation has been complited");
+                        getLoginPage(httpExchange);
 
                     } else {
-                        System.out.println("donation not completed");
+                        getFailedPage(httpExchange);
                     }
-
-                    getLoginPage(httpExchange);
-
-
-                } else {
-                    getFailedPage(httpExchange);
-
                 }
-            }else if(inputs.get("formType").equals("logout")){
+            }
+            if (inputs.get("formType").equals("logout")){
+                System.out.println(inputs + "inputs after logout");
                 try {
                     sessionHandler.deleteSession(httpExchange);
                     getLogoutPage(httpExchange);
@@ -97,35 +80,47 @@ public class StudentHandleContribution implements HttpHandler {
                     e.printStackTrace();
                 }
             }
-
         }
+
+
     }
 
     private void getLoginPage(HttpExchange httpExchange) throws IOException{
+        Optional<HttpCookie> cookie = sessionHandler.getSessionCookie(httpExchange);
+        //String email = getEmailFromCookie(cookie,httpExchange);
 
-
-        List<Card> artifacts = getArtifacts();
-        List<Card> artifactsRare = getRareArtifacts(artifacts);
-        List<GroupTransaction> groupTransactions = getGroupTransactions();
-        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/contribution.twig");
-        JtwigModel model = JtwigModel.newModel();
-        model.with("artifacts", artifactsRare);
-        model.with("groupTransactions", groupTransactions);
-        String response = template.render(model);
-        sendResponse(httpExchange, response);
+        try {
+            int userId = sessionHandler.getUserId(httpExchange, cookie);
+            List<Card> artifacts = getArtifacts();
+            List<Card> artifactsRare = getRareArtifacts(artifacts);
+            List<GroupTransaction> groupTransactions = getGroupTransactions();
+            JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/contribution.twig");
+            JtwigModel model = JtwigModel.newModel();
+            model.with("artifacts", artifactsRare);
+            model.with("groupTransactions", groupTransactions);
+            String response = template.render(model);
+            sendResponse(httpExchange, response);
+        }catch (DaoException | NoSuchFileException e){
+            getLogoutPage(httpExchange);
+        }
     }
 
 
     public void getFailedPage (HttpExchange httpExchange)throws IOException{
-        List<Card> artifacts = getArtifacts();
-        List<Card> artifactsRare = getRareArtifacts(artifacts);
-
-        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/contribution_failed.twig");
-        JtwigModel model = JtwigModel.newModel();
-        model.with("artifacts", artifactsRare);
-
-        String response = template.render(model);
-        sendResponse(httpExchange, response);
+        Optional<HttpCookie> cookie = sessionHandler.getSessionCookie(httpExchange);
+        String email = getEmailFromCookie(cookie,httpExchange);
+        try{
+            int userId = sessionHandler.getUserId(httpExchange, cookie);
+            List<Card> artifacts = getArtifacts();
+            List<Card> artifactsRare = getRareArtifacts(artifacts);
+            JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/contribution_failed.twig");
+            JtwigModel model = JtwigModel.newModel();
+            model.with("artifacts", artifactsRare);
+            String response = template.render(model);
+            sendResponse(httpExchange, response);
+        }catch (DaoException | NoSuchFileException e){
+            getLogoutPage(httpExchange);
+        }
     }
 
     private void sendResponse(HttpExchange httpExchange, String response) throws IOException {
@@ -159,13 +154,12 @@ public class StudentHandleContribution implements HttpHandler {
     }
 
 
-    public Student getLoggedStudentByMail(String email) throws IOException {
+    public Student getLoggedStudentByMail(HttpExchange httpExchange) throws IOException {
+        Optional<HttpCookie> cookie = sessionHandler.getSessionCookie(httpExchange);
+        String email = getEmailFromCookie(cookie,httpExchange);
         Student student = new Student.Builder().build();
         try{
             student = studentDao.getStudentByEmail(email);
-            //System.out.println(student.getLastName() + "this is name");
-
-
         }catch (DaoException e){
             e.printStackTrace();
         }
@@ -173,19 +167,15 @@ public class StudentHandleContribution implements HttpHandler {
     }
     public String getEmailFromCookie(Optional<HttpCookie> cookie, HttpExchange httpExchange){
         String email = "";
-
         try{
             int studentId = sessionHandler.getUserId(httpExchange,cookie);
-
             Student student  = studentDao.getStudent(studentId);
             email = student.getEmail();
-            System.out.println(email + "email in try catch");
             return email;
         }catch (DaoException | NoSuchElementException e){
             e.printStackTrace();
-
         }
-        System.out.println(email + "after try catch");
+
         return email;
 
     }
@@ -267,11 +257,8 @@ public class StudentHandleContribution implements HttpHandler {
         return false;
     }
     public void addTransactionToDatabase(String cardTitle, Integer studentId){
-
         try{
             transactionDao.addTransaction(studentId,cardTitle);
-
-
         }catch (DaoException e){
             e.printStackTrace();
         }
@@ -287,7 +274,6 @@ public class StudentHandleContribution implements HttpHandler {
         return donatorsId;
     }
     public void deleteComplitedContribution(String title){
-
         try {
             transactionDao.deleteComplitedContribution(title);
 
@@ -296,16 +282,7 @@ public class StudentHandleContribution implements HttpHandler {
         }
 
     }
-    public List<GroupTransaction> getGropuTransactionByIDAndTitle(int studentID, String title){
-        List<GroupTransaction> groupTransactionsList = new ArrayList<>();
-        try {
-            groupTransactionsList = transactionDao.getGroupTransactionsByIdAndTitle(studentID,title);
-            return groupTransactionsList;
-        }catch (DaoException e){
-            e.printStackTrace();
-        }
-        return groupTransactionsList;
-    }
+
     private void getLogoutPage(HttpExchange httpExchange) throws IOException{
         httpExchange.getResponseHeaders().set("Location", "/login");
         httpExchange.sendResponseHeaders(302,0);

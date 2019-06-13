@@ -20,7 +20,6 @@ public class MentorHandleArtifacts implements HttpHandler {
     private SessionHandler sessionHandler;
 
     public MentorHandleArtifacts(CardDao cardDao, SessionHandler sessionHandler) {
-
         this.cardDao = cardDao;
         this.sessionHandler = sessionHandler;
     }
