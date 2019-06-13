@@ -17,5 +17,6 @@ public interface TransactionDao {
     List<GroupTransaction> getGroupTransactionsByIdAndTitle (int studentID, String title) throws  DaoException;
     void archivedGroupTransaction(int studentID, String cardTitle, int donation) throws DaoException;
     void deleteComplitedContribution(String title) throws DaoException;
+    void deleteTransactionsByIds(List<Integer> studentIds);
 
 }

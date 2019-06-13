@@ -12,6 +12,8 @@ import java.util.Map;
 public class TransactionDaoImpl implements TransactionDao {
 
 
+
+
     public List<Card> getCardsUsedByStudent(int studentId) throws DaoException {
         List<Card> usedCards = new ArrayList<>();
         try(Connection con = C3P0DataSource.getInstance().getConnection()){
@@ -229,8 +231,6 @@ public class TransactionDaoImpl implements TransactionDao {
     }
 
 
-
-
     public void markQuestCompletedByStudent(String questTitle, int studentId) throws DaoException {
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
             PreparedStatement stmt = null;
@@ -242,4 +242,23 @@ public class TransactionDaoImpl implements TransactionDao {
             e.printStackTrace();
         }
     }
+
+
+    public void deleteTransactionsByIds(List<Integer> studentIds){
+        try (Connection con = C3P0DataSource.getInstance().getConnection()) {
+            Integer[] arrayOfIds = studentIds.toArray(new Integer[studentIds.size()]);
+
+            Array sqlArray = con.createArrayOf("int4", arrayOfIds);
+
+            PreparedStatement stmt = null;
+            stmt = con.prepareStatement("DELETE FROM \"Transactions\" WHERE student_id = ANY(?)");
+            stmt.setArray(1, sqlArray);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
+
+
+
