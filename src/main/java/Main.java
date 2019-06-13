@@ -25,7 +25,7 @@ public class Main {
             e.printStackTrace();
         }
         server.createContext("/login", new LoginController(loginDao, sessionDao));
-//        server.createContext("/static", new Static());
+        server.createContext("/static", new Static());
         server.createContext("/student/profile", new StudentHandleProfile(studentDao,transactionDao, levelDao, sessionHandler));
         server.createContext("/student/shop", new StudentHandleShop(cardDao, studentDao, transactionDao, sessionHandler));
         server.createContext("/student/contribution", new StudentHandleContribution(cardDao, studentDao, transactionDao, sessionHandler));
