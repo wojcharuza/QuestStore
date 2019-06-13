@@ -51,7 +51,7 @@ public class TransactionDaoImpl implements TransactionDao {
                     "(?, ?)");
             stmt.setInt(1,studentID);
             stmt.setString(2,cardTitle);
-            stmt.executeQuery();
+            stmt.executeUpdate();
 
 
             } catch (SQLException e){
@@ -70,7 +70,7 @@ public class TransactionDaoImpl implements TransactionDao {
             stmt.setInt(1,studentID);
             stmt.setString(2,cardTitle);
             stmt.setInt(3, donation);
-            stmt.executeQuery();
+            stmt.executeUpdate();
 
 
         } catch (SQLException e){
@@ -87,7 +87,7 @@ public class TransactionDaoImpl implements TransactionDao {
             stmt.setInt(1,studentID);
             stmt.setString(2,cardTitle);
             stmt.setInt(3, donation);
-            stmt.executeQuery();
+            stmt.executeUpdate();
 
 
         } catch (SQLException e){

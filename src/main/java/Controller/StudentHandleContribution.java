@@ -147,7 +147,6 @@ public class StudentHandleContribution implements HttpHandler {
         for (Card c: artifacts){
             if (c.getCardType().contains("rare")){
                 rareArtifacts.add(c);
-
             }
         }
         return rareArtifacts;
@@ -180,12 +179,6 @@ public class StudentHandleContribution implements HttpHandler {
 
     }
 
-//    public String getEmailFromCookie(String emailFromCookie){
-//        System.out.println(emailFromCookie + "   cookie in method");
-//        String trueMail = emailFromCookie.substring(1,emailFromCookie.length()-1);
-//        System.out.println(trueMail + "mail in method");
-//        return trueMail;
-//    }
     private Map<String, String> getFormData(HttpExchange httpExchange) throws IOException {
         InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
         BufferedReader br = new BufferedReader(isr);
@@ -217,17 +210,11 @@ public class StudentHandleContribution implements HttpHandler {
         for (Map.Entry<String, Integer> entry : groupTransactions.entrySet()) {
             transactions.add(new GroupTransaction(entry.getKey(),entry.getValue()));
         }
-        //System.out.println(groupTransactions + "grupowe tranzakcje");
+
         return transactions;
 
     }
 
-//    private Optional<HttpCookie> getSessionCookie(HttpExchange httpExchange){
-//        String cookieStr = httpExchange.getRequestHeaders().getFirst("Cookie");
-//        List<HttpCookie> cookies = cookieHelper.parseCookies(cookieStr);
-//        //System.out.println(cookies + "lista w get session Cookie");
-//        return cookieHelper.findCookieByName("email", cookies);
-//    }
 
     public boolean isDonationComplete(String title){
 
@@ -243,8 +230,6 @@ public class StudentHandleContribution implements HttpHandler {
                     if (c.getTitle().contains(g.getTitle())){
                         int valueOfArtifact = c.getCoolcoinValue();
                         int coolcoinsCollected = lastDonatedCard.getDonationValue();
-                        //System.out.println(valueOfArtifact + "value of artifact");
-                        //System.out.println(coolcoinsCollected + "value of coolcoins collected");
                         if (valueOfArtifact*(-1) <= coolcoinsCollected){
                             return true;
                         }

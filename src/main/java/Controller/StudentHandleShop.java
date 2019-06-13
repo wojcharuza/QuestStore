@@ -38,7 +38,7 @@ public class StudentHandleShop implements HttpHandler{
     public void handle(HttpExchange httpExchange) throws IOException {
         String method = httpExchange.getRequestMethod();
         Optional<HttpCookie> cookie = sessionHandler.getSessionCookie(httpExchange);
-        String email = getEmailFromCookie(cookie, httpExchange);
+        Student student = getStudentByID(httpExchange,cookie);
 
 
         if (method.equals("GET")) {
@@ -47,13 +47,9 @@ public class StudentHandleShop implements HttpHandler{
         Map<String, String> inputs = getFormData(httpExchange);
 
         if (method.equals("POST")) {
-            Student student = getLoggedStudentByMail(email);
-
 
             if (inputs.get("formType").equals("title")) {
                 String title = inputs.get("title");
-                //System.out.println(inputs+" this is title");
-                //System.out.println(title +" this is title");
                 if (verifyAbilityOfPurchase(title, student.getCoolcoins())) {
                     addTransactionToDatabase(title, student);
                     getSuccessPage(httpExchange);
@@ -152,33 +148,17 @@ public class StudentHandleShop implements HttpHandler{
         return basicArtifacts;
     }
 
-    public Student getLoggedStudentByMail(String email) throws IOException {
+    public Student getStudentByID(HttpExchange httpExchange, Optional<HttpCookie> cookie){
         Student student = new Student.Builder().build();
         try{
-            student = studentDao.getStudentByEmail(email);
-            System.out.println(student.getLastName() + "this is name");
+            int userId = sessionHandler.getUserId(httpExchange, cookie);
+            student = studentDao.getStudent(userId);
+            return student;
 
-
-        }catch (DaoException e){
+        }catch (DaoException | NoSuchElementException e){
             e.printStackTrace();
         }
         return student;
-    }
-
-    public String getEmailFromCookie(Optional<HttpCookie> cookie, HttpExchange httpExchange){
-        String email = "";
-
-        try{
-            int studentId = sessionHandler.getUserId(httpExchange,cookie);
-            Student student  = studentDao.getStudent(studentId);
-            email = student.getEmail();
-            return email;
-        }catch (DaoException | NoSuchElementException e){
-            e.printStackTrace();
-
-        }
-        System.out.println(email + "after try catch");
-        return email;
 
     }
     private Map<String, String> getFormData(HttpExchange httpExchange) throws IOException {
