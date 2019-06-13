@@ -27,7 +27,6 @@ public class StudentDaoImpl implements StudentDao {
     }
 
 
-
     public void addNewStudent(String firstName, String lastName, String email, String password, int classRoomId) throws DaoException {
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
             PreparedStatement stmt = null;
@@ -43,6 +42,7 @@ public class StudentDaoImpl implements StudentDao {
             throw new DaoException();
         }
     }
+
 
     public List<Student> getAllStudents() throws DaoException {
         List<Student> students = new ArrayList<>();
@@ -60,6 +60,7 @@ public class StudentDaoImpl implements StudentDao {
             throw new DaoException();
         }
     }
+
 
     public List<Student> getStudentsByMentor(int mentorId) throws DaoException {
         List<Student> students = new ArrayList<>();
@@ -80,6 +81,7 @@ public class StudentDaoImpl implements StudentDao {
         }
     }
 
+
     public void editStudent(int id, String firstName, String lastName, String email) throws DaoException {
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
             PreparedStatement stmt = null;
@@ -96,6 +98,7 @@ public class StudentDaoImpl implements StudentDao {
         }
     }
 
+
     public void deleteStudent(int idToDelete) throws DaoException {
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
             PreparedStatement stmt = null;
@@ -107,8 +110,8 @@ public class StudentDaoImpl implements StudentDao {
         }
     }
 
-    public Student getStudent(int id) throws DaoException {
 
+    public Student getStudent(int id) throws DaoException {
         Student student = new Student.Builder().build();
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
             PreparedStatement stmt = null;
@@ -138,6 +141,8 @@ public class StudentDaoImpl implements StudentDao {
         }
             return student;
     }
+
+
     public Student getStudentByEmail(String email) throws DaoException{
         Student student = new Student.Builder().build();
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
@@ -167,11 +172,10 @@ public class StudentDaoImpl implements StudentDao {
             e.printStackTrace();
             throw new DaoException();
         }
-
     }
 
-    public int getCoolcoinBalance(int id) throws DaoException {
 
+    public int getCoolcoinBalance(int id) throws DaoException {
         int balance = 0;
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
             PreparedStatement stmt = null;
@@ -189,6 +193,8 @@ public class StudentDaoImpl implements StudentDao {
             throw new DaoException();
         }
     }
+
+
     public int getStudentDonations(int id) throws  DaoException {
         int donations = 0;
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
@@ -205,11 +211,10 @@ public class StudentDaoImpl implements StudentDao {
         } catch (SQLException e) {
             throw new DaoException();
         }
-
     }
 
-    public List<Card> getUsedArtifacts(int id) throws DaoException {
 
+    public List<Card> getUsedArtifacts(int id) throws DaoException {
         List<Card> usedArtifacts = new ArrayList<>();
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
             PreparedStatement stmt = null;
@@ -236,6 +241,7 @@ public class StudentDaoImpl implements StudentDao {
         }
             return usedArtifacts;
     }
+
 
     public List<Card> getCardsUsedByStudent(int studentId) throws DaoException {
         List<Card> usedCards = new ArrayList<>();
@@ -279,7 +285,6 @@ public class StudentDaoImpl implements StudentDao {
             throw new DaoException();
         }
     }
-
 
 
     public List<Integer> getStudentsIdsFromClassroom(int classRoomId) throws DaoException {

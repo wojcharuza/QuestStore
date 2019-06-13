@@ -7,7 +7,6 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -35,6 +34,8 @@ public class MentorHandleQuests implements HttpHandler {
                 e.printStackTrace();
             }
         }
+
+
         else if(method.equals("POST")){
             Map<String, String> inputs = getFormData(httpExchange);
 
@@ -46,6 +47,7 @@ public class MentorHandleQuests implements HttpHandler {
                     e.printStackTrace();
                 }
             }
+
             else if(inputs.get("formType").equals("editQuest")){
                 try {
                     editCard(inputs);
@@ -53,7 +55,9 @@ public class MentorHandleQuests implements HttpHandler {
                 } catch (DaoException e) {
                     e.printStackTrace();
                 }
-            } else if(inputs.get("formType").equals("logout")){
+            }
+
+            else if(inputs.get("formType").equals("logout")){
                 try {
                     sessionHandler.deleteSession(httpExchange);
                     getLoginPage(httpExchange);
@@ -102,10 +106,12 @@ public class MentorHandleQuests implements HttpHandler {
         }
     }
 
+
     private void getLoginPage(HttpExchange httpExchange) throws IOException{
         httpExchange.getResponseHeaders().set("Location", "/login");
         httpExchange.sendResponseHeaders(302,0);
     }
+
 
     private void sendResponse(HttpExchange httpExchange, String response) throws IOException {
         httpExchange.sendResponseHeaders(200, response.getBytes().length);
@@ -114,6 +120,7 @@ public class MentorHandleQuests implements HttpHandler {
         os.close();
     }
 
+
     private Map<String, String> getFormData(HttpExchange httpExchange) throws IOException {
         InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
         BufferedReader br = new BufferedReader(isr);
@@ -121,7 +128,5 @@ public class MentorHandleQuests implements HttpHandler {
         Map<String, String> inputs = LoginController.parseFormData(formData);
         return inputs;
     }
-
-
 }
 

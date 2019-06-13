@@ -3,7 +3,6 @@ package Dao;
 import Model.Mentor;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import static java.util.Comparator.comparing;
 
@@ -21,8 +20,8 @@ public class MentorDaoImpl implements MentorDao {
         } catch (SQLException e) {
             throw new DaoException();
         }
-
     }
+
 
     public void editMentor(int id, String firstName, String lastName, String email) throws DaoException {
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
@@ -38,8 +37,8 @@ public class MentorDaoImpl implements MentorDao {
         } catch (SQLException e) {
             throw new DaoException();
         }
-
     }
+
 
     public List<Mentor> getMentors() throws DaoException {
         List<Mentor> mentors = new ArrayList<>();
@@ -63,6 +62,7 @@ public class MentorDaoImpl implements MentorDao {
         }
     }
 
+
     public String getMentorNameById(int mentorId) {
         String name = null;
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
@@ -79,6 +79,7 @@ public class MentorDaoImpl implements MentorDao {
         return name;
     }
 
+
     public void deleteMentor(int id) throws DaoException {
         try (Connection con = C3P0DataSource.getInstance().getConnection()){
             PreparedStatement statement = null;
@@ -91,7 +92,4 @@ public class MentorDaoImpl implements MentorDao {
             throw new DaoException();
         }
     }
-
-
-
 }

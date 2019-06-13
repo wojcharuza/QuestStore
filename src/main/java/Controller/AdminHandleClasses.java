@@ -7,7 +7,6 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
-
 import java.io.*;
 import java.net.HttpCookie;
 import java.util.List;
@@ -25,7 +24,10 @@ public class AdminHandleClasses implements HttpHandler {
 
     public AdminHandleClasses(ClassroomDao classroomDao,
                               MentorDao mentorDao,
-                              SessionHandler sessionHandler, StudentDao studentDao, TransactionDao transactionDao) {
+                              SessionHandler sessionHandler,
+                              StudentDao studentDao,
+                              TransactionDao transactionDao) {
+
         this.classroomDao = classroomDao;
         this.mentorDao = mentorDao;
         this.sessionHandler = sessionHandler;
@@ -38,14 +40,15 @@ public class AdminHandleClasses implements HttpHandler {
         String method = httpExchange.getRequestMethod();
 
         if (method.equals("GET")){
-
             try {
                 getPage(httpExchange);
             } catch (DaoException e) {
                 e.printStackTrace();
             }
         }
-        if (method.equals("POST")) {
+
+
+        else if (method.equals("POST")) {
             Map<String, String> inputs = getFormData(httpExchange);
 
             if(inputs.get("formType").equals("addClass")){
@@ -65,6 +68,7 @@ public class AdminHandleClasses implements HttpHandler {
                     e.printStackTrace();
                 }
             }
+
             else if (inputs.get("formType").equals("assignMentor")) {
                 try {
                     assignNewMentor(inputs);
@@ -94,16 +98,14 @@ public class AdminHandleClasses implements HttpHandler {
         studentDao.deleteStudentsFromClassroom(classRoomId);
         List<Integer> studentsIds = studentDao.getStudentsIdsFromClassroom(classRoomId);
         transactionDao.deleteTransactionsByIds(studentsIds);
-
-
     }
+
 
     private void assignNewMentor(Map<String, String> inputs) throws DaoException {
         int classId = Integer.valueOf(inputs.get("AssignedClassId"));
         int mentorId = Integer.valueOf(inputs.get("mentor"));
         classroomDao.assignNewMentor(classId, mentorId);
     }
-
 
 
     private void addClassroom(Map<String, String> inputs){
@@ -122,8 +124,6 @@ public class AdminHandleClasses implements HttpHandler {
         httpExchange.getResponseHeaders().set("Location", "/login");
         httpExchange.sendResponseHeaders(302,0);
     }
-
-
 
 
     private void getPage(HttpExchange httpExchange) throws IOException, DaoException {
@@ -145,12 +145,14 @@ public class AdminHandleClasses implements HttpHandler {
         }
     }
 
+
     private void sendResponse(HttpExchange httpExchange, String response) throws IOException {
         httpExchange.sendResponseHeaders(200, response.getBytes().length);
         OutputStream os = httpExchange.getResponseBody();
         os.write(response.getBytes());
         os.close();
     }
+
 
     private Map<String, String> getFormData(HttpExchange httpExchange) throws IOException {
         InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");

@@ -8,7 +8,6 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -27,7 +26,10 @@ public class MentorHandleStudents implements HttpHandler {
     private ClassroomDao classroomDao;
     private SessionHandler sessionHandler;
 
-    public MentorHandleStudents(StudentDao studentDao, CardDao cardDao, TransactionDao transactionDao, ClassroomDao classroomDao, SessionHandler sessionHandler) {
+    public MentorHandleStudents(StudentDao studentDao, CardDao cardDao,
+                                TransactionDao transactionDao, ClassroomDao classroomDao,
+                                SessionHandler sessionHandler) {
+
         this.studentDao = studentDao;
         this.cardDao = cardDao;
         this.transactionDao = transactionDao;
@@ -35,9 +37,11 @@ public class MentorHandleStudents implements HttpHandler {
         this.sessionHandler = sessionHandler;
     }
 
+
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
         String method = httpExchange.getRequestMethod();
+
         if (method.equals("GET")){
             try {
                 getPage(httpExchange);
@@ -46,22 +50,28 @@ public class MentorHandleStudents implements HttpHandler {
             }
         }
 
-        if (method.equals("POST")) {
+
+        else if (method.equals("POST")) {
             Map<String, String> inputs = getFormData(httpExchange);
+
             if (inputs.get("formType").equals("editStudent")) {
                 editStudent(inputs);
-            } else if (inputs.get("formType").equals("addQuest")) {
+            }
+            else if (inputs.get("formType").equals("addQuest")) {
                 addQuestCompleted(httpExchange, inputs);
-            } else if (inputs.get("formType").equals("addStudent")) {
+            }
+            else if (inputs.get("formType").equals("addStudent")) {
                 addStudent(httpExchange, inputs);
-            } else if (inputs.get("formType").equals("deleteStudent")) {
+            }
+            else if (inputs.get("formType").equals("deleteStudent")) {
                 try {
                     deleteStudent(inputs);
                     getPage(httpExchange);
                 } catch (DaoException e) {
                     e.printStackTrace();
                 }
-            } else if(inputs.get("formType").equals("logout")){
+            }
+            else if(inputs.get("formType").equals("logout")){
                 try {
                     sessionHandler.deleteSession(httpExchange);
                     getLoginPage(httpExchange);
@@ -71,6 +81,7 @@ public class MentorHandleStudents implements HttpHandler {
             }
         }
     }
+
 
     private void editStudent(Map<String, String> inputs) {
         String firstName = inputs.get("firstName");
@@ -83,6 +94,7 @@ public class MentorHandleStudents implements HttpHandler {
             e.printStackTrace();
         }
     }
+
 
     private void addStudent(HttpExchange httpExchange, Map<String, String> inputs) throws IOException {
         String name = inputs.get("firstName");
@@ -98,10 +110,12 @@ public class MentorHandleStudents implements HttpHandler {
         }
     }
 
+
     private void deleteStudent(Map<String, String> inputs) throws DaoException {
         studentDao.deleteStudent(Integer.valueOf(inputs.get("deleteStudentId")));
         transactionDao.deleteTransactionsById(Integer.valueOf(inputs.get("deleteStudentId")));
     }
+
 
     private void addQuestCompleted(HttpExchange httpExchange, Map<String, String> inputs) throws IOException {
         int id = Integer.valueOf(inputs.get("student"));
@@ -113,6 +127,7 @@ public class MentorHandleStudents implements HttpHandler {
             e.printStackTrace();
         }
     }
+
 
     private void getPage(HttpExchange httpExchange) throws IOException, DaoException {
         SessionHandler sessionHandler = new SessionHandler();
@@ -140,12 +155,14 @@ public class MentorHandleStudents implements HttpHandler {
         httpExchange.sendResponseHeaders(302,0);
     }
 
+
     private void sendResponse(HttpExchange httpExchange, String response) throws IOException {
         httpExchange.sendResponseHeaders(200, response.getBytes().length);
         OutputStream os = httpExchange.getResponseBody();
         os.write(response.getBytes());
         os.close();
     }
+
 
     private Map<String, String> getFormData(HttpExchange httpExchange) throws IOException {
         InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");

@@ -36,7 +36,6 @@ public class SessionDaoImpl implements SessionDao{
     }
 
 
-
     public int getUserId(String sessionId) throws DaoException{
         int userId = -1;
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
