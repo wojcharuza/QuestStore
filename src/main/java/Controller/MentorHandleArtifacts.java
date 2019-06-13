@@ -79,7 +79,7 @@ public class MentorHandleArtifacts implements HttpHandler {
 
     private void addCard(Map<String, String> inputs) throws DaoException {
         cardDao.addCard(inputs.get("title"), inputs.get("description"),
-                "", inputs.get("cardType"), Integer.valueOf(inputs.get("price")));
+                "", inputs.get("cardType"), Integer.valueOf(inputs.get("price")) * -1);
     }
 
 
