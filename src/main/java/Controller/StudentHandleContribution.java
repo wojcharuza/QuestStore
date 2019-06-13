@@ -7,6 +7,7 @@ import Dao.TransactionDao;
 import Model.Card;
 import Model.GroupTransaction;
 import Model.Student;
+import Service.RequestResponseService;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.jtwig.JtwigModel;
@@ -25,31 +26,30 @@ public class StudentHandleContribution implements HttpHandler {
     private CardDao cardDao;
     private StudentDao studentDao;
     private TransactionDao transactionDao;
-    CookieHelper cookieHelper = new CookieHelper();
     private SessionHandler sessionHandler;
+    private RequestResponseService reqRespServ;
 
-    public StudentHandleContribution (CardDao cardDao,StudentDao studentDao, TransactionDao transactionDao,SessionHandler sessionHandler){
+    public StudentHandleContribution (CardDao cardDao,StudentDao studentDao,
+                                      TransactionDao transactionDao,SessionHandler sessionHandler,
+                                      RequestResponseService reqRespServ){
         this.cardDao = cardDao;
         this.studentDao = studentDao;
         this.transactionDao = transactionDao;
         this.sessionHandler = sessionHandler;
+        this.reqRespServ = reqRespServ;
     }
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
         String method = httpExchange.getRequestMethod();
 
-
-
-
         if (method.equals("GET")){
-            getLoginPage(httpExchange);
+            getPage(httpExchange);
         }
 
-        if (method.equals("POST")) {
-
+        else if (method.equals("POST")) {
             Student student = getLoggedStudentByMail(httpExchange);
-            Map<String, String> inputs = getFormData(httpExchange);
+            Map<String, String> inputs = reqRespServ.getFormData(httpExchange);
 
             if (inputs.get("formType").equals("title")) {
                 String title = inputs.get("title");
@@ -64,7 +64,7 @@ public class StudentHandleContribution implements HttpHandler {
                             addTransactionToDatabase(title, studentId);
                         }
                         deleteComplitedContribution(title);
-                        getLoginPage(httpExchange);
+                        getPage(httpExchange);
 
                     } else {
                         getFailedPage(httpExchange);
@@ -75,20 +75,17 @@ public class StudentHandleContribution implements HttpHandler {
                 System.out.println(inputs + "inputs after logout");
                 try {
                     sessionHandler.deleteSession(httpExchange);
-                    getLogoutPage(httpExchange);
+                    reqRespServ.getLoginPage(httpExchange);
                 } catch (DaoException e) {
                     e.printStackTrace();
                 }
             }
         }
-
-
     }
 
-    private void getLoginPage(HttpExchange httpExchange) throws IOException{
-        Optional<HttpCookie> cookie = sessionHandler.getSessionCookie(httpExchange);
-        //String email = getEmailFromCookie(cookie,httpExchange);
 
+    private void getPage(HttpExchange httpExchange) throws IOException{
+        Optional<HttpCookie> cookie = sessionHandler.getSessionCookie(httpExchange);
         try {
             int userId = sessionHandler.getUserId(httpExchange, cookie);
             List<Card> artifacts = getArtifacts();
@@ -99,9 +96,9 @@ public class StudentHandleContribution implements HttpHandler {
             model.with("artifacts", artifactsRare);
             model.with("groupTransactions", groupTransactions);
             String response = template.render(model);
-            sendResponse(httpExchange, response);
+            reqRespServ.sendResponse(httpExchange, response);
         }catch (DaoException | NoSuchFileException e){
-            getLogoutPage(httpExchange);
+            reqRespServ.getLoginPage(httpExchange);
         }
     }
 
@@ -117,18 +114,12 @@ public class StudentHandleContribution implements HttpHandler {
             JtwigModel model = JtwigModel.newModel();
             model.with("artifacts", artifactsRare);
             String response = template.render(model);
-            sendResponse(httpExchange, response);
+            reqRespServ.sendResponse(httpExchange, response);
         }catch (DaoException | NoSuchFileException e){
-            getLogoutPage(httpExchange);
+            reqRespServ.getLoginPage(httpExchange);
         }
     }
 
-    private void sendResponse(HttpExchange httpExchange, String response) throws IOException {
-        httpExchange.sendResponseHeaders(200, response.getBytes().length);
-        OutputStream os = httpExchange.getResponseBody();
-        os.write(response.getBytes());
-        os.close();
-    }
 
     public List<Card> getArtifacts(){
         List<Card> artifacts = new ArrayList<>();
@@ -164,6 +155,8 @@ public class StudentHandleContribution implements HttpHandler {
         }
         return student;
     }
+
+
     public String getEmailFromCookie(Optional<HttpCookie> cookie, HttpExchange httpExchange){
         String email = "";
         try{
@@ -174,18 +167,9 @@ public class StudentHandleContribution implements HttpHandler {
         }catch (DaoException | NoSuchElementException e){
             e.printStackTrace();
         }
-
         return email;
-
     }
 
-    private Map<String, String> getFormData(HttpExchange httpExchange) throws IOException {
-        InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
-        BufferedReader br = new BufferedReader(isr);
-        String formData = br.readLine();
-        Map<String, String> inputs = LoginController.parseFormData(formData);
-        return inputs;
-    }
 
     public void addGroupTransactionToDatabase(String cardTitle, Student student, int donation ){
         int studentId = student.getId();
@@ -197,6 +181,7 @@ public class StudentHandleContribution implements HttpHandler {
             e.printStackTrace();
         }
     }
+
 
     public List<GroupTransaction> getGroupTransactions(){
         Map <String, Integer> groupTransactions = new HashMap<>();
@@ -210,9 +195,7 @@ public class StudentHandleContribution implements HttpHandler {
         for (Map.Entry<String, Integer> entry : groupTransactions.entrySet()) {
             transactions.add(new GroupTransaction(entry.getKey(),entry.getValue()));
         }
-
         return transactions;
-
     }
 
 
@@ -241,6 +224,8 @@ public class StudentHandleContribution implements HttpHandler {
 
         return false;
     }
+
+
     public void addTransactionToDatabase(String cardTitle, Integer studentId){
         try{
             transactionDao.addTransaction(studentId,cardTitle);
@@ -248,6 +233,8 @@ public class StudentHandleContribution implements HttpHandler {
             e.printStackTrace();
         }
     }
+
+
     public List<Integer> getDonatorsId(String title){
         List<Integer> donatorsId = new ArrayList<>();
         try{
@@ -258,6 +245,8 @@ public class StudentHandleContribution implements HttpHandler {
         }
         return donatorsId;
     }
+
+
     public void deleteComplitedContribution(String title){
         try {
             transactionDao.deleteComplitedContribution(title);
@@ -265,12 +254,6 @@ public class StudentHandleContribution implements HttpHandler {
         }catch (DaoException e){
             e.printStackTrace();
         }
-
-    }
-
-    private void getLogoutPage(HttpExchange httpExchange) throws IOException{
-        httpExchange.getResponseHeaders().set("Location", "/login");
-        httpExchange.sendResponseHeaders(302,0);
     }
 
 }

@@ -37,9 +37,9 @@ public class Main {
         server.createContext("/mentor/artifacts", new MentorHandleArtifacts(cardDao, sessionHandler, reqRespServ));
         server.createContext("/mentor/quests", new MentorHandleQuests(cardDao, sessionHandler, reqRespServ));
 
-        server.createContext("/student/profile", new StudentHandleProfile(studentDao,transactionDao, levelDao, sessionHandler));
-        server.createContext("/student/shop", new StudentHandleShop(cardDao, studentDao, transactionDao, sessionHandler));
-        server.createContext("/student/contribution", new StudentHandleContribution(cardDao, studentDao, transactionDao, sessionHandler));
+        server.createContext("/student/profile", new StudentHandleProfile(studentDao,transactionDao, levelDao, sessionHandler, reqRespServ));
+        server.createContext("/student/shop", new StudentHandleShop(cardDao, studentDao, transactionDao, sessionHandler, reqRespServ));
+        server.createContext("/student/contribution", new StudentHandleContribution(cardDao, studentDao, transactionDao, sessionHandler, reqRespServ));
 
         server.setExecutor(null);
         server.start();

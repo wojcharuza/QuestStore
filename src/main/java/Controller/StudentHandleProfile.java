@@ -4,6 +4,7 @@ import Dao.*;
 import Model.Card;
 import Model.Level;
 import Model.Student;
+import Service.RequestResponseService;
 import com.google.common.collect.Lists;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -21,13 +22,17 @@ public class StudentHandleProfile  implements HttpHandler  {
     private TransactionDao transactionDao;
     private  LevelDao levelDao;
     private SessionHandler sessionHandler;
+    private RequestResponseService reqRespServ;
 
 
-    public StudentHandleProfile(StudentDao studentDao, TransactionDao transactionDao, LevelDao levelDao, SessionHandler sessionHandler){
+    public StudentHandleProfile(StudentDao studentDao, TransactionDao transactionDao,
+                                LevelDao levelDao, SessionHandler sessionHandler,
+                                RequestResponseService reqRespServ){
         this.studentDao = studentDao;
         this.transactionDao = transactionDao;
         this.levelDao = levelDao;
         this.sessionHandler = sessionHandler;
+        this.reqRespServ = reqRespServ;
     }
 
 
@@ -41,12 +46,13 @@ public class StudentHandleProfile  implements HttpHandler  {
         } else if (method.equals("POST")) {
             try {
                 sessionHandler.deleteSession(httpExchange);
-                getLoginPage(httpExchange);
+                reqRespServ.getLoginPage(httpExchange);
             } catch (DaoException e) {
                 e.printStackTrace();
             }
         }
     }
+
 
     private void getPage(HttpExchange httpExchange) throws IOException{
         Optional<HttpCookie> cookie = sessionHandler.getSessionCookie(httpExchange);
@@ -70,24 +76,11 @@ public class StudentHandleProfile  implements HttpHandler  {
             model.with("percentEXP", percentExp);
             model.with("level", studentLevel);
             String response = template.render(model);
-            sendResponse(httpExchange, response);
+            reqRespServ.sendResponse(httpExchange, response);
         } catch (DaoException | NoSuchElementException e) {
-            getLoginPage(httpExchange);
+            reqRespServ.getLoginPage(httpExchange);
         }
     }
-
-    private void getLoginPage(HttpExchange httpExchange) throws IOException{
-        httpExchange.getResponseHeaders().set("Location", "/login");
-        httpExchange.sendResponseHeaders(302,0);
-    }
-
-    private void sendResponse(HttpExchange httpExchange, String response) throws IOException {
-        httpExchange.sendResponseHeaders(200, response.getBytes().length);
-        OutputStream os = httpExchange.getResponseBody();
-        os.write(response.getBytes());
-        os.close();
-    }
-
 
 
     public List<Card> getLoggedStudentCards(int studentID) throws IOException {
@@ -99,7 +92,6 @@ public class StudentHandleProfile  implements HttpHandler  {
         }
         return userCards;
     }
-
 
 
     public List<Card> getStudentQuests(int studentID){
@@ -115,11 +107,6 @@ public class StudentHandleProfile  implements HttpHandler  {
     }
 
 
-
-
-
-
-
     public int getLoggedStudentEXP (List<Card> studentCards){
         int studentEXP = 0;
         for (Card c: studentCards){
@@ -130,8 +117,6 @@ public class StudentHandleProfile  implements HttpHandler  {
         }
         return studentEXP;
     }
-
-
 
 
     private int percentOfEXP (int studentExp, List<Level> levels){
@@ -165,6 +150,7 @@ public class StudentHandleProfile  implements HttpHandler  {
         return percentExp;
     }
 
+
     private int getStudentLevel(List<Level> levels, int studentExp){
         int currentLevel = 1;
         for (int i = 0; i <= levels.size(); i++){
@@ -184,6 +170,7 @@ public class StudentHandleProfile  implements HttpHandler  {
         return currentLevel;
     }
 
+
     private List<Level> getLevelsFromDatabase(){
         List<Level> levels = new ArrayList<>();
         try {
@@ -191,7 +178,6 @@ public class StudentHandleProfile  implements HttpHandler  {
         }catch (DaoException e){
             e.printStackTrace();
         }
-        //System.out.println(levels.get(1).getLevelNumber());
         return levels;
     }
 }
