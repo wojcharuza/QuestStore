@@ -157,9 +157,6 @@ public class StudentHandleProfile  implements HttpHandler  {
                 int expNeeded = nextLevelExp - levelExp;
                 percentExp = ((studentExp-levelExp)*100)/expNeeded;
                 return percentExp;
-            } else {
-                percentExp = 1;
-                return percentExp;
             }
         }
         return percentExp;
