@@ -6,6 +6,7 @@ import Dao.StudentDao;
 import Dao.TransactionDao;
 import Model.Card;
 import Model.Student;
+import Service.RequestResponseService;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.jtwig.JtwigModel;
@@ -23,14 +24,17 @@ public class StudentHandleShop implements HttpHandler{
     private CardDao cardDao;
     private StudentDao studentDao;
     private TransactionDao transactionDao;
-    CookieHelper cookieHelper = new CookieHelper();
     private SessionHandler sessionHandler;
+    private RequestResponseService reqRespServ;
 
-    public StudentHandleShop(CardDao cardDao,StudentDao studentDao, TransactionDao transactionDao, SessionHandler sessionHandler){
+    public StudentHandleShop(CardDao cardDao,StudentDao studentDao,
+                             TransactionDao transactionDao, SessionHandler sessionHandler,
+                             RequestResponseService reqRespServ){
         this.cardDao = cardDao;
         this.studentDao = studentDao;
         this.transactionDao = transactionDao;
         this.sessionHandler = sessionHandler;
+        this.reqRespServ = reqRespServ;
     }
 
 
@@ -40,11 +44,10 @@ public class StudentHandleShop implements HttpHandler{
         Optional<HttpCookie> cookie = sessionHandler.getSessionCookie(httpExchange);
         Student student = getStudentByID(httpExchange,cookie);
 
-
         if (method.equals("GET")) {
-            getLoginPage(httpExchange);
+            getPage(httpExchange);
         }
-        Map<String, String> inputs = getFormData(httpExchange);
+        Map<String, String> inputs = reqRespServ.getFormData(httpExchange);
 
         if (method.equals("POST")) {
 
@@ -63,7 +66,7 @@ public class StudentHandleShop implements HttpHandler{
             } else if (inputs.get("formType").equals("logout")) {
                 try {
                     sessionHandler.deleteSession(httpExchange);
-                    getLogoutPage(httpExchange);
+                    reqRespServ.getLoginPage(httpExchange);
                 } catch (DaoException e) {
                     e.printStackTrace();
                 }
@@ -71,7 +74,7 @@ public class StudentHandleShop implements HttpHandler{
         }
     }
 
-    private void getLoginPage(HttpExchange httpExchange) throws IOException{
+    private void getPage(HttpExchange httpExchange) throws IOException{
         List<Card> artifacts = getArtifacts();
         List<Card> artifactsBasic = getBasicArtifacts(artifacts);
         Optional<HttpCookie> cookie = sessionHandler.getSessionCookie(httpExchange);
@@ -81,11 +84,13 @@ public class StudentHandleShop implements HttpHandler{
             JtwigModel model = JtwigModel.newModel();
             model.with("artifacts", artifactsBasic);
             String response = template.render(model);
-            sendResponse(httpExchange, response);
+            reqRespServ.sendResponse(httpExchange, response);
         }catch (DaoException | NoSuchElementException e){
-            getLogoutPage(httpExchange);
+            reqRespServ.getLoginPage(httpExchange);
         }
     }
+    
+
     public void getSuccessPage(HttpExchange httpExchange)throws IOException{
         List<Card> artifacts = getArtifacts();
         List<Card> artifactsBasic = getBasicArtifacts(artifacts);
@@ -96,11 +101,12 @@ public class StudentHandleShop implements HttpHandler{
             JtwigModel model = JtwigModel.newModel();
             model.with("artifacts", artifactsBasic);
             String response = template.render(model);
-            sendResponse(httpExchange, response);
+            reqRespServ.sendResponse(httpExchange, response);
         }catch (DaoException | NoSuchElementException e){
-            getLogoutPage(httpExchange);
+            reqRespServ.getLoginPage(httpExchange);
         }
     }
+
 
     public void getFailedPage (HttpExchange httpExchange)throws IOException{
         List<Card> artifacts = getArtifacts();
@@ -113,17 +119,10 @@ public class StudentHandleShop implements HttpHandler{
             JtwigModel model = JtwigModel.newModel();
             model.with("artifacts", artifactsBasic);
             String response = template.render(model);
-            sendResponse(httpExchange, response);
+            reqRespServ.sendResponse(httpExchange, response);
         }catch (DaoException | NoSuchElementException e){
-            getLogoutPage(httpExchange);
+            reqRespServ.getLoginPage(httpExchange);
         }
-    }
-
-    private void sendResponse(HttpExchange httpExchange, String response) throws IOException {
-        httpExchange.sendResponseHeaders(200, response.getBytes().length);
-        OutputStream os = httpExchange.getResponseBody();
-        os.write(response.getBytes());
-        os.close();
     }
 
     public List<Card> getArtifacts(){
@@ -137,6 +136,7 @@ public class StudentHandleShop implements HttpHandler{
         return artifacts;
     }
 
+
     public List<Card> getBasicArtifacts(List<Card> artifacts){
         List<Card> basicArtifacts = new ArrayList<>();
         for (Card c: artifacts){
@@ -147,6 +147,7 @@ public class StudentHandleShop implements HttpHandler{
         }
         return basicArtifacts;
     }
+
 
     public Student getStudentByID(HttpExchange httpExchange, Optional<HttpCookie> cookie){
         Student student = new Student.Builder().build();
@@ -159,15 +160,9 @@ public class StudentHandleShop implements HttpHandler{
             e.printStackTrace();
         }
         return student;
+    }
 
-    }
-    private Map<String, String> getFormData(HttpExchange httpExchange) throws IOException {
-        InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
-        BufferedReader br = new BufferedReader(isr);
-        String formData = br.readLine();
-        Map<String, String> inputs = LoginController.parseFormData(formData);
-        return inputs;
-    }
+
     public void addTransactionToDatabase(String cardTitle, Student student){
         int studentId = student.getId();
 
@@ -177,8 +172,8 @@ public class StudentHandleShop implements HttpHandler{
         }catch (DaoException e){
             e.printStackTrace();
         }
-
     }
+
 
     public boolean verifyAbilityOfPurchase(String cardTitle, int coolcoinBalance){
         List<Card> artifacts = getArtifacts();
@@ -192,12 +187,5 @@ public class StudentHandleShop implements HttpHandler{
             }
         }
         return false;
-
     }
-    private void getLogoutPage(HttpExchange httpExchange) throws IOException{
-        httpExchange.getResponseHeaders().set("Location", "/login");
-        httpExchange.sendResponseHeaders(302,0);
-    }
-
-
 }

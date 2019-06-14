@@ -7,15 +7,12 @@ import Dao.StudentDao;
 import Model.Classroom;
 import Model.Mentor;
 import Model.Student;
+import Service.RequestResponseService;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.HttpCookie;
 import java.util.List;
 import java.util.Map;
@@ -27,17 +24,22 @@ public class AdminHandleMentors implements HttpHandler {
     private ClassroomDao classroomDao;
     private StudentDao studentDao;
     private SessionHandler sessionHandler;
+    private RequestResponseService reqRespServ;
 
-    public AdminHandleMentors(MentorDao mentorDao, ClassroomDao classroomDao, StudentDao studentDao, SessionHandler sessionHandler){
+    public AdminHandleMentors(MentorDao mentorDao, ClassroomDao classroomDao,
+                              StudentDao studentDao, SessionHandler sessionHandler,
+                              RequestResponseService reqRespServ){
         this.mentorDao = mentorDao;
         this.studentDao = studentDao;
         this.classroomDao = classroomDao;
         this.sessionHandler = sessionHandler;
+        this.reqRespServ = reqRespServ;
     }
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
         String method = httpExchange.getRequestMethod();
+
         if (method.equals("GET")){
             try {
                 getPage(httpExchange);
@@ -45,8 +47,10 @@ public class AdminHandleMentors implements HttpHandler {
                 e.printStackTrace();
             }
         }
-        if (method.equals("POST")) {
-            Map<String, String> inputs = getFormData(httpExchange);
+
+
+        else if (method.equals("POST")) {
+            Map<String, String> inputs = reqRespServ.getFormData(httpExchange);
 
             if(inputs.get("formType").equals("editMentor")){
                 editMentor(inputs);
@@ -60,6 +64,7 @@ public class AdminHandleMentors implements HttpHandler {
                     e.printStackTrace();
                 }
             }
+
             else if (inputs.get("formType").equals("deleteMentor")) {
                 try {
                     deleteMentor(inputs);
@@ -69,19 +74,17 @@ public class AdminHandleMentors implements HttpHandler {
                 }
 
             }
+
             else if(inputs.get("formType").equals("logout")){
                 try {
                     sessionHandler.deleteSession(httpExchange);
-                    getLoginPage(httpExchange);
+                    reqRespServ.getLoginPage(httpExchange);
                 } catch (DaoException e) {
                     e.printStackTrace();
                 }
             }
         }
     }
-
-
-
 
 
     private void addMentor(Map<String, String> inputs){
@@ -98,7 +101,6 @@ public class AdminHandleMentors implements HttpHandler {
     }
 
 
-
     private void editMentor(Map<String, String> inputs){
         String firstName = inputs.get("firstName");
         String lastName = inputs.get("lastName");
@@ -111,11 +113,11 @@ public class AdminHandleMentors implements HttpHandler {
         }
     }
 
+
     private void deleteMentor(Map<String, String> inputs) throws DaoException {
         mentorDao.deleteMentor(Integer.valueOf(inputs.get("deleteMentorId")));
         classroomDao.setMentorIdAsNull(Integer.valueOf(inputs.get("deleteMentorId")));
     }
-
 
 
     private void getPage(HttpExchange httpExchange) throws IOException, DaoException {
@@ -133,33 +135,10 @@ public class AdminHandleMentors implements HttpHandler {
             model.with("classrooms", classrooms);
             model.with("students", students);
             String response = template.render(model);
-            sendResponse(httpExchange, response);
+            reqRespServ.sendResponse(httpExchange, response);
         }
-
         catch (DaoException | NoSuchElementException e){
-            getLoginPage(httpExchange);
+            reqRespServ.getLoginPage(httpExchange);
         }
-
-    }
-
-    private void getLoginPage(HttpExchange httpExchange) throws IOException{
-        httpExchange.getResponseHeaders().set("Location", "/login");
-        httpExchange.sendResponseHeaders(302,0);
-    }
-
-
-    private void sendResponse(HttpExchange httpExchange, String response) throws IOException {
-        httpExchange.sendResponseHeaders(200, response.getBytes().length);
-        OutputStream os = httpExchange.getResponseBody();
-        os.write(response.getBytes());
-        os.close();
-    }
-
-    private Map<String, String> getFormData(HttpExchange httpExchange) throws IOException {
-        InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
-        BufferedReader br = new BufferedReader(isr);
-        String formData = br.readLine();
-        Map<String, String> inputs = LoginController.parseFormData(formData);
-        return inputs;
     }
 }

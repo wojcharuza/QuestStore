@@ -2,15 +2,14 @@ package Dao;
 
 import Model.Classroom;
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 import static java.util.Comparator.comparing;
 
 public class ClassroomDaoImpl implements ClassroomDao {
 
     private MentorDao mentorDao = new MentorDaoImpl();
+
 
     public List<Classroom> getClassrooms() throws DaoException {
         List<Classroom> classrooms = new ArrayList<>();
@@ -46,6 +45,7 @@ public class ClassroomDaoImpl implements ClassroomDao {
         }
     }
 
+
     @Override
     public void addClassroom(String date, int mentorId) throws DaoException {
             try (Connection con = C3P0DataSource.getInstance().getConnection()) {
@@ -59,6 +59,7 @@ public class ClassroomDaoImpl implements ClassroomDao {
             }
     }
 
+
     public void setMentorIdAsNull(int id) throws DaoException {
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {
             PreparedStatement stmt = null;
@@ -69,6 +70,7 @@ public class ClassroomDaoImpl implements ClassroomDao {
             e.printStackTrace();
         }
     }
+
 
     public void assignNewMentor(int classId, int mentorId) throws DaoException {
         try (Connection con = C3P0DataSource.getInstance().getConnection()) {

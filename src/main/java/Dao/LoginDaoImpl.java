@@ -1,14 +1,10 @@
 package Dao;
 
 import Model.*;
-
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class LoginDaoImpl implements LoginDao {
-
-
 
     public String checkPermission(String email, String password) throws DaoException {
         String permissionType = new String();
@@ -24,7 +20,6 @@ public class LoginDaoImpl implements LoginDao {
         } catch (SQLException e) {
             throw new DaoException();
         }
-
     }
 
     public Mentor getMentor(String email, String password) throws DaoException {
@@ -47,6 +42,7 @@ public class LoginDaoImpl implements LoginDao {
             throw new DaoException();
         }
     }
+
 
     public Student getStudent (String email, String password) throws DaoException {
         StudentDaoImpl studentDao = new StudentDaoImpl();
@@ -83,8 +79,9 @@ public class LoginDaoImpl implements LoginDao {
 
 
     }
-    public Admin getAdmin(String email, String password) throws DaoException {
 
+
+    public Admin getAdmin(String email, String password) throws DaoException {
         Admin tempAdmin = new Admin.Builder().build();
         try (Connection con = C3P0DataSource.getInstance().getConnection(); Statement stmt = con.createStatement()) {
 
@@ -122,7 +119,4 @@ public class LoginDaoImpl implements LoginDao {
             throw new DaoException();
         }
     }
-
-
-
 }
