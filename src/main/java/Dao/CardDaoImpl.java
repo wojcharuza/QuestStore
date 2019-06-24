@@ -11,7 +11,7 @@ import static java.util.Comparator.comparing;
 public class CardDaoImpl implements CardDao{
 
     public List<Card> getQuests() throws DaoException {
-        List<Card> cards = new ArrayList<>();
+        List<Card> cards;
         try(Connection con = C3P0DataSource.getInstance().getConnection();
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM \"Cards\" WHERE card_type::text LIKE 'quest%'")){
@@ -25,7 +25,6 @@ public class CardDaoImpl implements CardDao{
             throw new DaoException();
         }
     }
-
 
 
     public List<Card> getArtifacts() throws DaoException {
@@ -45,7 +44,6 @@ public class CardDaoImpl implements CardDao{
     }
 
 
-
     private List<Card> prepareCard(ResultSet rs) throws SQLException {
         List<Card> cards = new ArrayList<>();
         while (rs.next()) {
@@ -61,7 +59,6 @@ public class CardDaoImpl implements CardDao{
         }
             return cards;
     }
-
 
 
     public void addCard(String title, String description, String imagePath, String cardType, int coolcoinValue) throws DaoException {
@@ -82,7 +79,6 @@ public class CardDaoImpl implements CardDao{
             throw new DaoException();
         }
     }
-
 
 
     public void editCard(String oldTitle, String newTitle,
@@ -106,6 +102,4 @@ public class CardDaoImpl implements CardDao{
             throw new DaoException();
         }
     }
-
-
 }

@@ -3,11 +3,11 @@ package Controller;
 import Dao.*;
 import Model.Classroom;
 import Model.Mentor;
+import Service.RequestResponseService;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
-
 import java.io.*;
 import java.net.HttpCookie;
 import java.util.List;
@@ -22,10 +22,15 @@ public class AdminHandleClasses implements HttpHandler {
     private SessionHandler sessionHandler;
     private StudentDao studentDao;
     private TransactionDao transactionDao;
+    private RequestResponseService reqRespServ;
 
     public AdminHandleClasses(ClassroomDao classroomDao,
                               MentorDao mentorDao,
-                              SessionHandler sessionHandler, StudentDao studentDao, TransactionDao transactionDao) {
+                              SessionHandler sessionHandler,
+                              StudentDao studentDao,
+                              TransactionDao transactionDao,
+                              RequestResponseService reqRespServ) {
+        this.reqRespServ = reqRespServ;
         this.classroomDao = classroomDao;
         this.mentorDao = mentorDao;
         this.sessionHandler = sessionHandler;
@@ -38,15 +43,16 @@ public class AdminHandleClasses implements HttpHandler {
         String method = httpExchange.getRequestMethod();
 
         if (method.equals("GET")){
-
             try {
                 getPage(httpExchange);
             } catch (DaoException e) {
                 e.printStackTrace();
             }
         }
-        if (method.equals("POST")) {
-            Map<String, String> inputs = getFormData(httpExchange);
+
+
+        else if (method.equals("POST")) {
+            Map<String, String> inputs = reqRespServ.getFormData(httpExchange);
 
             if(inputs.get("formType").equals("addClass")){
                 addClassroom(inputs);
@@ -65,6 +71,7 @@ public class AdminHandleClasses implements HttpHandler {
                     e.printStackTrace();
                 }
             }
+
             else if (inputs.get("formType").equals("assignMentor")) {
                 try {
                     assignNewMentor(inputs);
@@ -77,7 +84,7 @@ public class AdminHandleClasses implements HttpHandler {
             else if(inputs.get("formType").equals("logout")){
                 try {
                     sessionHandler.deleteSession(httpExchange);
-                    getLoginPage(httpExchange);
+                    reqRespServ.getLoginPage(httpExchange);
                 } catch (DaoException e) {
                     e.printStackTrace();
                 }
@@ -86,24 +93,20 @@ public class AdminHandleClasses implements HttpHandler {
     }
 
 
-
-
     private void deleteClassroom(Map<String, String> inputs) throws DaoException {
         int classRoomId = Integer.valueOf(inputs.get("deleteClassId"));
         classroomDao.deleteClassRoom(classRoomId);
         studentDao.deleteStudentsFromClassroom(classRoomId);
         List<Integer> studentsIds = studentDao.getStudentsIdsFromClassroom(classRoomId);
         transactionDao.deleteTransactionsByIds(studentsIds);
-
-
     }
+
 
     private void assignNewMentor(Map<String, String> inputs) throws DaoException {
         int classId = Integer.valueOf(inputs.get("AssignedClassId"));
         int mentorId = Integer.valueOf(inputs.get("mentor"));
         classroomDao.assignNewMentor(classId, mentorId);
     }
-
 
 
     private void addClassroom(Map<String, String> inputs){
@@ -118,14 +121,6 @@ public class AdminHandleClasses implements HttpHandler {
     }
 
 
-    private void getLoginPage(HttpExchange httpExchange) throws IOException{
-        httpExchange.getResponseHeaders().set("Location", "/login");
-        httpExchange.sendResponseHeaders(302,0);
-    }
-
-
-
-
     private void getPage(HttpExchange httpExchange) throws IOException, DaoException {
         SessionHandler sessionHandler = new SessionHandler();
         Optional<HttpCookie> cookie = sessionHandler.getSessionCookie(httpExchange);
@@ -138,25 +133,10 @@ public class AdminHandleClasses implements HttpHandler {
             model.with("classrooms", classrooms);
             model.with("mentors", mentors);
             String response = template.render(model);
-            sendResponse(httpExchange, response);
+            reqRespServ.sendResponse(httpExchange, response);
         }
         catch (DaoException | NoSuchElementException e){
-            getLoginPage(httpExchange);
+            reqRespServ.getLoginPage(httpExchange);
         }
-    }
-
-    private void sendResponse(HttpExchange httpExchange, String response) throws IOException {
-        httpExchange.sendResponseHeaders(200, response.getBytes().length);
-        OutputStream os = httpExchange.getResponseBody();
-        os.write(response.getBytes());
-        os.close();
-    }
-
-    private Map<String, String> getFormData(HttpExchange httpExchange) throws IOException {
-        InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
-        BufferedReader br = new BufferedReader(isr);
-        String formData = br.readLine();
-        Map<String, String> inputs = LoginController.parseFormData(formData);
-        return  inputs;
     }
 }

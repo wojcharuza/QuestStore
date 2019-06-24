@@ -9,9 +9,10 @@ public class CookieHelper {
 
     public List<HttpCookie> parseCookies(String cookieString){
         List<HttpCookie> cookies = new ArrayList<>();
-        if(cookieString == null || cookieString.isEmpty()){ // what happens if cookieString = null?
+        if(cookieString == null || cookieString.isEmpty()){
             return cookies;
         }
+
         for(String cookie : cookieString.split(";")){
             int indexOfEq = cookie.indexOf('=');
             String cookieName = cookie.substring(0, indexOfEq);
@@ -21,6 +22,7 @@ public class CookieHelper {
         }
         return cookies;
     }
+
 
     public Optional<HttpCookie> findCookieByName(String name, List<HttpCookie> cookies){
         for(HttpCookie cookie : cookies){

@@ -4,8 +4,6 @@ import Dao.DaoException;
 import Dao.SessionDao;
 import Dao.SessionDaoImpl;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-
 import java.net.HttpCookie;
 import java.util.List;
 import java.util.NoSuchElementException;

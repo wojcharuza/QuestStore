@@ -3,13 +3,11 @@ package Dao;
 import Model.Level;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import static java.util.Comparator.comparing;
 
 public class LevelDaoImpl implements LevelDao {
-
 
 
     public List<Level> getLevels() throws DaoException {
@@ -32,7 +30,6 @@ public class LevelDaoImpl implements LevelDao {
     }
 
 
-
     public void editLevels(List<Level> levels) throws DaoException {
         try(Connection con = C3P0DataSource.getInstance().getConnection()){
             for(Level level: levels){
@@ -50,8 +47,4 @@ public class LevelDaoImpl implements LevelDao {
             throw new DaoException();
         }
     }
-
-
-
-
 }
