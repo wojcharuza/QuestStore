@@ -67,8 +67,10 @@ public class StudentHandleContribution implements HttpHandler {
                         getLoginPage(httpExchange);
 
                     } else {
-                        getFailedPage(httpExchange);
+                        getLoginPage(httpExchange);
                     }
+                }else {
+                    getFailedPage(httpExchange);
                 }
             }
             if (inputs.get("formType").equals("logout")){
@@ -113,9 +115,11 @@ public class StudentHandleContribution implements HttpHandler {
             int userId = sessionHandler.getUserId(httpExchange, cookie);
             List<Card> artifacts = getArtifacts();
             List<Card> artifactsRare = getRareArtifacts(artifacts);
+            List<GroupTransaction> groupTransactions = getGroupTransactions();
             JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/contribution_failed.twig");
             JtwigModel model = JtwigModel.newModel();
             model.with("artifacts", artifactsRare);
+            model.with("groupTransactions", groupTransactions);
             String response = template.render(model);
             sendResponse(httpExchange, response);
         }catch (DaoException | NoSuchFileException e){

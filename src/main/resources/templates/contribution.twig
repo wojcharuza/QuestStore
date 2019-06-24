@@ -53,7 +53,7 @@
                 <h5 class="card-title card-title-centered">Total cost: $ {{ card.getCoolcoinValue * -1 }} </h5>
                 {% for groupTransaction in groupTransactions %}
                 {% if groupTransaction.getTitle == card.getTitle %}
-                    <h5 class="card-title card-title-centered">Colleceted: {{ groupTransaction.getDonationValue }} </h5>
+                    <h5 class="card-title card-title-centered">Collected: {{ groupTransaction.getDonationValue }} </h5>
                 {% endif %}
                 {% endfor %}
                 <form method="POST">

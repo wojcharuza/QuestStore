@@ -140,8 +140,9 @@ public class StudentHandleProfile  implements HttpHandler  {
         for (int i = 0; i <= levels.size(); i++){
             int levelExp = levels.get(i).getExperienceNeeded();
             int nextLevelExp = levels.get(i+1).getExperienceNeeded();
+
             if(studentExp == 0){
-                return 0;
+                return 1;
             }
             if (studentExp >= levels.get(levels.size() - 1).getExperienceNeeded()){
                 percentExp = 99;
@@ -188,7 +189,7 @@ public class StudentHandleProfile  implements HttpHandler  {
         }catch (DaoException e){
             e.printStackTrace();
         }
-        //System.out.println(levels.get(1).getLevelNumber());
+
         return levels;
     }
 }
