@@ -1,42 +1,30 @@
 package Dao;
 
-import java.beans.PropertyVetoException;
-import java.sql.Connection;
+import org.apache.commons.dbcp2.BasicDataSource;
+
 import java.sql.SQLException;
-import com.mchange.v2.c3p0.ComboPooledDataSource;
+import java.sql.Connection;
 
 public class C3P0DataSource {
-    private static C3P0DataSource dataSource;
-    private ComboPooledDataSource comboPooledDataSource;
 
-    private C3P0DataSource() {
-        try {
-            comboPooledDataSource = new ComboPooledDataSource();
-            comboPooledDataSource
-                    .setDriverClass("org.postgresql.Driver");
-            comboPooledDataSource
-                    .setJdbcUrl("jdbc:postgresql://dumbo.db.elephantsql.com:5432/ijkqajbr");
-            comboPooledDataSource.setUser("ijkqajbr");
-            comboPooledDataSource.setPassword("9utjfradeOktE8cgHrrvxiDUvjP0wFRd");
-        }
-        catch (PropertyVetoException ex1) {
-            ex1.printStackTrace();
-        }
+    private static BasicDataSource ds = new BasicDataSource();
+
+    static {
+        ds.setUrl("jdbc:postgresql://localhost:5432/codecool");
+        ds.setUsername("postgres");
+        ds.setPassword("postgres");
+        ds.setMinIdle(5);
+        ds.setMaxIdle(10);
+        ds.setMaxOpenPreparedStatements(100);
     }
 
-    public static C3P0DataSource getInstance() {
-        if (dataSource == null)
-            dataSource = new C3P0DataSource();
-        return dataSource;
+    public static C3P0DataSource getInstance(){
+        return new C3P0DataSource();
     }
 
-    public Connection getConnection() {
-        Connection con = null;
-        try {
-            con = comboPooledDataSource.getConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return con;
+    public static Connection getConnection() throws SQLException {
+        return ds.getConnection();
     }
+
+    private C3P0DataSource(){ }
 }

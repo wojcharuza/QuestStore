@@ -4,11 +4,19 @@ import Service.RequestResponseService;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.sql.SQLException;
 
 
 public class Main {
 
     public static void main(String[] args){
+        try {
+            C3P0DataSource.getConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
         RequestResponseService reqRespServ = new RequestResponseService();
         SessionDao sessionDao = new SessionDaoImpl();
         LoginDao loginDao = new LoginDaoImpl();

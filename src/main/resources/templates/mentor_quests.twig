@@ -73,7 +73,7 @@
                             <div class="card-header">
                                 Basic quest
                             </div>
-                            <img class="card-img-top" src="https://via.placeholder.com/130x125" alt="Card image cap">
+                            <img class="card-img-top" src="/static/images/moon.jpg" alt="Card image cap">
                             <div class="card-body">
                                 <h5 class="card-title card-title-centered"><input type="text" required class="form-control" name="title" value="{{ quest.getTitle }}"></h5>
                                 <p class="card-text"><textarea name="description" rows="1" cols="32" required>{{ quest.getDescription }}</textarea></p>
@@ -90,7 +90,6 @@
     <div class="container">
         <h2 class="title">Extra Quests</h2>
         <div class="row">
-
             {% for quest in quests %}
                 {% if quest.getCardType == "quest_rare" %}
                     <div class="card col-md-3 gold-card-style" >
@@ -101,7 +100,7 @@
                             <div class="card-header">
                                 Rare Quest
                             </div>
-                            <img class="card-img-top" src="https://via.placeholder.com/130x125" alt="Card image cap">
+                            <img class="card-img-top" src="/static/images/moon.jpg" alt="Card image cap">
                             <div class="card-body">
                                 <h5 class="card-title card-title-centered"><input type="text" class="form-control" name="title" required value="{{ quest.getTitle }}"></h5>
                                 <p class="card-text"><textarea name="description" rows="1" cols="32" required>{{ quest.getDescription }}</textarea></p>
