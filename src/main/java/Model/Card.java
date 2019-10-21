@@ -1,6 +1,7 @@
 package Model;
 
 
+
 public class Card {
 
     private String title;
@@ -46,6 +47,7 @@ public class Card {
         private String imagePath;
         private String cardType;
         private int coolcoinValue;
+
 
         public Builder withTitle (String title){
             this.title = title;

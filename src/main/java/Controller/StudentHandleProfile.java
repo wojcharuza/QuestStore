@@ -130,7 +130,7 @@ public class StudentHandleProfile  implements HttpHandler  {
                 return 1;
             }
             if (studentExp >= levels.get(levels.size() - 1).getExperienceNeeded()){
-                percentExp = 99;
+                percentExp = 100;
                 return percentExp;
             }
 
@@ -149,20 +149,12 @@ public class StudentHandleProfile  implements HttpHandler  {
     }
 
 
-    private int getStudentLevel(List<Level> levels, int studentExp){
+    private int getStudentLevel(List<Level> levels, int studentExp) {
         int currentLevel = 1;
-        for (int i = 0; i <= levels.size(); i++){
+        for (int i = 0; i < levels.size(); i++) {
             int levelExp = levels.get(i).getExperienceNeeded();
-            int nextLevelExp = levels.get(i+1).getExperienceNeeded();
-            if (studentExp >= levelExp && studentExp < nextLevelExp){
+            if (studentExp >= levelExp) {
                 currentLevel = levels.get(i).getLevelNumber();
-                return currentLevel;
-            } else if(studentExp > levels.get(levels.size() - 1).getLevelNumber()){
-                currentLevel = levels.get(levels.size() - 1).getLevelNumber();
-                return currentLevel;
-            } else {
-                currentLevel = 999;
-                return currentLevel;
             }
         }
         return currentLevel;
