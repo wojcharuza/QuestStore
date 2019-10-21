@@ -1,0 +1,238 @@
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    font: 300 16px/22px "Comfortaa", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background-image: url('../images/space_mirror.jpg');
+    background-size: cover;
+}
+.card-style {
+    border-radius: 10%;
+    margin: 10px;
+    width: 20rem;
+    color: white;
+    background-color: #1f2833;
+    font-size: 10px;
+}
+
+.card-small {
+    width: 100px;
+}
+
+
+.gold-card-style{
+    border-radius: 10%;
+    margin: 10px;
+    width: 20rem;
+    color: white;
+    background-color: #1f2833;
+    border-style: groove;
+    border-color: goldenrod;
+    font-size: 10px;
+}
+
+
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background-color:#1f2833;
+    color: aqua;
+}
+
+
+.navbar-collapse {
+    justify-content: flex-end;
+}
+
+.header {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+}
+
+.navbar{
+    background-color: #1f2833;
+    color: white;
+    text-transform: uppercase;
+    font-family: Equinox, sans-serif;
+}
+
+
+
+.description {
+    position: absolute;
+    margin: auto;
+    padding: 1em;
+
+}
+.description h1 {
+    color: #fff;
+    font-family: Equinox, sans-serif;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+.description p {
+    color: #ffffff;
+    font-size: 20px;
+    width: 50%;
+    line-height: 1.5;
+}
+
+.navbar a:hover{
+    color: #4DDABD;
+}
+.navbar a{
+    color: white;
+}
+
+.form-inline {
+    padding: 20px;
+}
+
+.form-group {
+    width: 50%;
+}
+
+.form-group label {
+    font-size: 20px;
+    color: #4DDABD;
+}
+
+.btn {
+    background: #4ddabd;
+    border: 0px ;
+    margin-top: 10px;
+}
+
+.btn:hover {
+    background: #3aa28a;
+}
+
+.navbar-toggler{
+    background-color: white;
+}
+
+
+footer .navbar {
+    justify-content: flex-end;
+}
+
+footer {
+    text-align: right;
+    margin-top: 20px;
+}
+
+
+
+.card-body-edit {
+    background: #fff;
+}
+
+
+.accordion {
+    width: 100%;
+}
+
+.container {
+    padding-top: 10%;
+    padding-bottom: 10%;
+}
+
+
+
+.accordion .btn-link {
+    background: rgba(255, 255, 255, 0);
+    color: #ffffff;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.accordion .btn-link:hover {
+    color: #4DDABD;
+}
+
+.navbar-brand {
+    font-size: 25px;
+}
+
+.card-title-centered {
+    text-align: center;
+}
+
+.row {
+    justify-content: center;
+}
+
+.title {
+    text-align: center;
+    color: #fff;
+}
+
+
+
+.form-group-edit{
+    width: 100%;
+}
+
+.control-label-edit{
+    width: 100%;
+}
+
+.accordion .card {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.level-changer p {
+    display: inline-block;
+    color: white !important;
+}
+
+.mySlider{
+    background-color: black;
+}
+
+
+.class-cell{
+    color: white;
+    text-align: left;
+    height: 30px;
+    line-height: 30px;
+}
+
+#classroomTitle{
+    color: #4DDABD;
+}
+
+.addButton{
+    margin-bottom: 100px;
+}
+
+.deleteButton{
+    float: right;
+}
+
+.navbar-button{
+    background-color: #1f2833;
+    border: none;
+    color: white;
+}
+
+.navbar-button:hover {
+    color: #4DDABD;
+}
+
+.image-rounded {
+    border-radius: 50%;
+}
+
+.profile-image-small {
+    border-radius: 50%;
+    width: 5%;
+    height: 5%;
+}

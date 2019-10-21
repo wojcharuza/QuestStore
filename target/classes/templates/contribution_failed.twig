@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <link rel="stylesheet"
+          href="http://fonts.googleapis.com/css?family=Comfortaa:100,300,400">
+
+    <title>Title</title>
+</head>
+
+<body>
+
+<!-- navbar -->
+
+<nav class="navbar navbar-expand-sm fixed-top ">
+    <a class="navbar-brand" href="#">QUEST STORE</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse " id="navbarSupportedContent">     <ul class="navbar-nav mr-4">
+        <li class="nav-item">
+            <a class="nav-link " data-value="My Profile" href="/student/profile">My Profile</a></li>
+        <li class="nav-item">
+            <a class="nav-link " data-value="Shop" href="/student/shop">Shop</a></li>
+        <li class="nav-item"><a class="nav-link " data-value="/student/contribution" href="/student/contribution">Contributions</a></li>
+            <li class="nav-item">
+                <form method="POST">
+                    <input class="navbar-button" name="formType" value="logout" hidden>
+                    <button class="navbar-button nav-link" data-value="blog" href="/login" type="submit">Log out</button>
+                </form>
+            </li>
+    </ul>
+    </div>
+</nav>
+<header class="header">
+<div class="container">
+    <h2 class="title">Cards you can still donate</h2>
+    <h3 class="title">Incorrect input or value</h3>
+
+    <div class="row">
+
+        {% for card in artifacts  %}
+        <div class="card col-md-3 card-style" >
+            <div class="card-header">
+                {{ card.getCardType }}
+            </div>
+            <img class="card-img-top" src="/static/images/art1.jpg" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title card-title-centered">{{ card.getTitle }}</h5>
+                <p class="card-text">{{ card.getDescription }}</p>
+                <h5 class="card-title card-title-centered">Total cost: $ {{ card.getCoolcoinValue  * -1}} </h5>
+                {% for groupTransaction in groupTransactions %}
+                {% if groupTransaction.getTitle == card.getTitle %}
+                    <h5 class="card-title card-title-centered">Collected: {{ groupTransaction.getDonationValue }} </h5>
+                {% endif %}
+                {% endfor %}
+                <form method="POST">
+                    <input name="formType" value="title" hidden>
+                    <input name="title" value="{{ card.getTitle }}" HIDDEN >
+                    <input name="donation" value=""  >
+
+                    <input type="submit" method="POST" class="btn btn-primary" value="DONATE"/>
+                </form>
+
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+</header>
+
+<footer class="footer">
+    <nav class="navbar navbar-expand-sm">
+        <p> number: 123456789 <br> email: example@example.com</p>
+    </nav>
+</footer>
+
+<script type="text/javascript" src="../static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
+
+</body>
+</html>
