@@ -1,0 +1,97 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <link rel="stylesheet"
+          href="http://fonts.googleapis.com/css?family=Comfortaa:100,300,400">
+    <title>Title</title>
+</head>
+<body>
+<!-- navbar -->
+
+<nav class="navbar navbar-expand-sm fixed-top ">
+    <a class="navbar-brand" href="#">QUEST STORE</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse " id="navbarSupportedContent">     <ul class="navbar-nav mr-4">
+            <li class="nav-item">
+                <a class="nav-link" data-value="about" href="/admin/mentors">Mentors</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " data-value="portfolio"href="/admin/classes">Classes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " data-value="blog" href="/admin/levels">Levels</a></li>
+            <li class="nav-item">
+                <form method="POST">
+                    <input  name="formType" value="logout" hidden>
+                    <button id="logout-button" class="navbar-button nav-link" data-value="blog" type="submit">Log out</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
+
+
+<!-- header -->
+<header class="header ">
+    <div class="container">
+        <div class="accordion" id="accordionExample">
+            <form method="POST" onsubmit="return validateData()">
+            <div class="card z-depth-0 bordered">
+                <input name="formType" value="editLevel" hidden disabled>
+                {% for level in levels %}
+                    {% if level.getLevelNumber == 1 %}
+                    <div class="card-header level-changer" >
+                        <p>Level {{ level.getLevelNumber }}
+                            <input class="levelExp form-control" name="{{ level.getLevelNumber }}" type="number" min="1" max="1000" step="1" value="{{ level.getExperienceNeeded }}" required readonly disabled>
+                        </p>
+                    </div>
+
+                {% else %}
+                <div class="card-header level-changer" >
+                    <p>Level {{ level.getLevelNumber }}
+                        <input class="levelExp form-control" name="{{ level.getLevelNumber }}" type="number" min="1" max="1000" step="1" value="{{ level.getExperienceNeeded }}" required disabled>
+                    </p>
+                </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+                <div class="form-group-edit form-group">
+                    <label class="col-md-3 control-label control-label-edit"></label>
+                    <div class="col-md-8">
+                        <input id="saveButton" type="submit" class="btn btn-primary"
+                               value="Save Changes" hidden disabled >
+                        <span></span>
+                        <input id="editButton" type="button" class="btn btn-primary " onclick="enableFormElements()" value="Edit">
+                    </div>
+                </div>
+            </form>
+            <div id="wrongInputsMessage" class="class-cell"></div>
+        </div>
+    </div>
+</header>
+
+
+
+
+
+<footer class="footer">
+    <nav class="navbar navbar-expand-sm">
+        <p> number: 123456789 <br> email: example@example.com</p>
+    </nav>
+</footer>
+
+
+<script type="text/javascript" src="../static/js/validateData.js"></script>
+<script type="text/javascript" src="../static/js/toggleFormButton.js"></script>
+<script type="text/javascript" src="../static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
+</body>
+</html>
