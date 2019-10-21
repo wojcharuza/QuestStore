@@ -1,4 +1,23 @@
-*.idea
+
 *.class
 *.DS_Store
 
+# Maven folders
+
+target/
+
+# Miscellaneous
+
+*.settings
+*.classpath
+*.project
+*.pdf
+*.iml
+*.DS_Store
+*.xml
+
+*.vscode/
+*.idea/
+
+
+*.xml
