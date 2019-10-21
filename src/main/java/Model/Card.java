@@ -1,7 +1,6 @@
 package Model;
 
 
-import java.io.IOException;
 
 public class Card {
 
@@ -49,11 +48,10 @@ public class Card {
         private String cardType;
         private int coolcoinValue;
 
-        public Builder withTitle (String title) {
 
+        public Builder withTitle (String title){
             this.title = title;
             return this;
-
         }
         public Builder withDescription (String description){
             this.description = description;
