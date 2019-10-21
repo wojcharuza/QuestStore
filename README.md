@@ -21,3 +21,17 @@ We present you our take on Codecool management system. Our app is dedicated to p
 - JTwig template engine
 - working with agile methodology
 
+# How to run Quest Store
+1. Clone this repo on your computer
+2. Enter following command in terminal: pg_restore -C -d postgres [path to CreateDB file]
+3. Run main.java and go to localhost:8000/login (preferrably in Chrome)
+ Example login credentials:
+ - admin:
+   - login: admin@codecool.com
+   - password: admin
+ - mentor:
+   - login: mentor4@codecool.com
+   - password: pass
+ - student:
+   - login: kamil@demo
+   - password: 123
